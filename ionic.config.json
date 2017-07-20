@@ -1,0 +1,13 @@
+{
+  "name": "activity-manager",
+  "app_id": "",
+  "v2": true,
+  "typescript": true,
+  "proxies": [
+    {
+      "path": "/wcf",
+      "proxyUrl": "https://www.eshbelsaas.com/ests/wcf",
+      "rejectUnauthorized": false
+    }
+  ]
+}

@@ -1,0 +1,48 @@
+<!--
+  Generated template for the ActivityManager page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header no-border>
+  <ion-navbar hideBackButton="true">
+    <ion-title>ניהול פעילויות</ion-title>
+    <ion-buttons end>
+      <button ion-button icon-only (click)="loadActivities()">
+        <ion-icon name="refresh"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-navbar>
+  <ion-toolbar>
+    <!--<ion-searchbar></ion-searchbar>-->
+    הפרויקטים שלי 
+    <ion-chip>
+      <ion-label>MOBILE</ion-label>
+      <button ion-button clear color="light">
+    <ion-icon name="close"></ion-icon>
+  </button>
+    </ion-chip>
+    <ion-chip>
+      <ion-label>PLATFORM</ion-label>
+      <button ion-button clear color="light">
+         <ion-icon name="close"></ion-icon>
+       </button>
+    </ion-chip>
+    <button ion-button icon-only clear>
+        <ion-icon name="add"></ion-icon>
+      </button>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <div class="backgroud-div"></div>
+
+  <ion-split-pane dir="ltr">
+    <!-- the main content -->
+    <ion-content main #content dir="rtl">
+      <activity-list></activity-list>
+    </ion-content>
+    <ion-menu [content]="content" dir="rtl">
+      <activity-editor></activity-editor>
+    </ion-menu>
+  </ion-split-pane>
+</ion-content>

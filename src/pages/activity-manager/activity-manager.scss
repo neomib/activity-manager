@@ -1,0 +1,21 @@
+page-activity-manager 
+{
+     background-color: #c1eeee;
+     ion-split-pane
+     {
+        /*margin: 30px;*/
+        box-shadow: 0 3px 10px grey;
+        ion-menu
+        {
+            min-width: 400px !important;
+        }
+     }
+     .backgroud-div {
+    height: 40%;
+    background-color: #edeeef;
+    bottom: -60%;
+    position: relative;
+   }
+
+   
+}

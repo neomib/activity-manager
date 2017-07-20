@@ -1,0 +1,30 @@
+<!--
+  Generated template for the Login page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<div >
+  <ion-card-header >
+      PRIORITY
+    </ion-card-header>
+  <ion-card class="login-content" (keypress)="eventHandler($event)">
+    <ion-card-header>
+      כניסה
+    </ion-card-header>
+     <ion-card-content>
+    <ion-item [style.direction]="dirByLang" margin>
+      <ion-input type="text" placeholder="שם משתמש" [(ngModel)]="usrValue"></ion-input>
+    </ion-item>
+   
+      <ion-item [style.direction]="dirByLang" margin>
+        <ion-input type="password" placeholder="סיסמא" [(ngModel)]="pswValue"></ion-input>
+      </ion-item>
+    </ion-card-content>
+    <ion-buttons margin>
+      <button class="login-button" block (click)="login()" padding color="login">
+      היכנס
+      </button>
+    </ion-buttons>
+  </ion-card>
+</div>
