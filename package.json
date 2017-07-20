@@ -41,8 +41,7 @@
     "vanilla-masker": "1.2.0",
     "moment": "2.18.1",
     "numeral": "2.0.6",
-    "@angular/cdk": "^2.0.0-beta.8",
-    "@angular/material": "^2.0.0-beta.8",
+    
     "priority-ionic": "^1.0.3"
   },
   "devDependencies": {

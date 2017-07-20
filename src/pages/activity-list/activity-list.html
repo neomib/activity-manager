@@ -19,18 +19,18 @@
 </ion-header>
 <ion-content padding>
   <div class="activity-container">
-    <ion-card *ngFor="let activity of activities" [ngClass]="{'title-activity':activity.LEVEL=='3'}">
+    <div *ngFor="let activity of activities" [ngClass]="{'title-activity':activity.LEVEL=='3'}">
       <ion-card-header>
         {{activity["ACTDES"]}}
          <ion-note>{{activity["WBS"]}}</ion-note>
       </ion-card-header>
       <ion-card-content *ngIf="activity.subActivities.length>0">
-        <ion-item *ngFor="let subAct of activity.subActivities">
+        <ion-card *ngFor="let subAct of activity.subActivities" [style.borderColor]="getSubActColor(subAct)" class="sub-activity" padding>
           <span>{{subAct["WBS"]}}</span>&nbsp;
           <span>{{subAct["ACTDES"]}}</span>
-        </ion-item>
+        </ion-card>
       </ion-card-content>
-    </ion-card>
+    </div>
   </div>
 
 </ion-content>

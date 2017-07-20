@@ -39,6 +39,19 @@ export class ActivityList
   {
     this.appService.getActivities();
   }
+  getSubActColor(act)
+  {
+    switch (act.STEPSTATUSDES)
+    {
+      case 'בוצעה':
+        return "green";
+      case "חזר מ QA":
+        return "crimson";
+      case 'בדיקת QA':
+      return '#d6d6d6';
+    }
+   return "#9c24c3";
+  }
 
   organizeActivities()
   {

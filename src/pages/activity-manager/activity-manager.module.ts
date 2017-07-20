@@ -3,7 +3,7 @@ import { IonicPageModule } from 'ionic-angular';
 import { ActivityManager } from './activity-manager';
 import {ActivityList} from'../activity-list/activity-list';
 import {ActivityEditor} from'../activity-editor/activity-editor';
-import {MdInputModule} from '@angular/material';
+// import {MdInputModule} from '@angular/material';
 
 @NgModule({
   declarations: [
@@ -12,7 +12,7 @@ import {MdInputModule} from '@angular/material';
     ActivityEditor
   ],
   imports: [
-    MdInputModule,
+    // MdInputModule,
     IonicPageModule.forChild(ActivityManager),
   ],
   exports: [
