@@ -13,7 +13,7 @@ page-login
     width: 80%;
     >ion-card-header
     {
-        background-color: #064248;
+        background-color: color($colors,dark);
         color: white !important;
     }
       ion-card

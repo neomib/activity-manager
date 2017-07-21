@@ -12,7 +12,7 @@ activity-list {
     box-shadow: 0 0 2px #b9b7b7;
     ion-card-header
     {
-        color:#4a6775;
+        color:#062f43;
     }
   }
   .activity-container
@@ -25,6 +25,15 @@ activity-list {
           border-right-style: solid;
           margin-bottom: 10px;
           color: black;
+          position: relative;
+          padding-left: 35px;
+          .start-activity
+          {
+              position: absolute;
+              top: 5px;
+              left: 0px;
+              transform: rotate(180deg);
+          }
       }
   }
   ion-note

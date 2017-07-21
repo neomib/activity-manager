@@ -28,6 +28,9 @@
         <ion-card *ngFor="let subAct of activity.subActivities" [style.borderColor]="getSubActColor(subAct)" class="sub-activity" padding>
           <span>{{subAct["WBS"]}}</span>&nbsp;
           <span>{{subAct["ACTDES"]}}</span>
+            <button ion-button  clear class="start-activity">
+              <ion-icon name="ios-play-outline" color="secondary"></ion-icon>
+            </button>
         </ion-card>
       </ion-card-content>
     </div>

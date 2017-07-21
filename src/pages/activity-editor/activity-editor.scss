@@ -1,13 +1,10 @@
 activity-editor {
-.mat-input-placeholder-wrapper
-{
-    top: -1.84375em;
-    padding-top: .84375em;
-    font-size: 13px;
-    color: rgba(0,0,0,.38);
-}
-.mat-input-underline
-{
-    background-color: #cecaca;
-}
+ .toolbar-background
+ {
+     background: transparent;
+ }
+ .toolbar-title
+ {
+     color:color($colors,secondary)
+ }
 }

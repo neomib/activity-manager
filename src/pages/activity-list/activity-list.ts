@@ -50,7 +50,7 @@ export class ActivityList
       case 'בדיקת QA':
       return '#d6d6d6';
     }
-   return "#9c24c3";
+   return "black";
   }
 
   organizeActivities()

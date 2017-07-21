@@ -7,15 +7,39 @@ page-activity-manager
         box-shadow: 0 3px 10px grey;
         ion-menu
         {
-            min-width: 400px !important;
+            min-width: 350px !important;
         }
      }
-     .backgroud-div {
-    height: 40%;
-    background-color: #edeeef;
-    bottom: -60%;
-    position: relative;
+     ion-navbar
+     {
+         min-height: initial !important;
+         padding: 0 4px !important;
+     }
+//      .backgroud-div 
+//      {
+//     height: 40%;
+//     background-color: #edeeef;
+//     bottom: -60%;
+//     position: relative;
+//    }
+    :not(ion-navbar)>.toolbar-content
+    {
+        text-align: center;
+        h2
+        {
+            color: #2d9ec8;
+        }
+    }
+   ion-chip
+   {
+       height:20px;
+       line-height: 20px;
+       border: 1px solid color($colors,chip);
+       background: transparent !important;
+       color: #6c6c6c;
+       button
+       {
+           height: 20px;
+       }
    }
-
-   
 }
