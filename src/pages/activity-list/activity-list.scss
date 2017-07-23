@@ -10,15 +10,18 @@ activity-list {
     background-color: rgba(253, 253, 253, 0.7);
     margin-bottom: 16px;
     box-shadow: 0 0 2px #b9b7b7;
-    ion-card-header
-    {
-        color:#062f43;
-    }
+    // ion-card-header
+    // {
+    //     color:#062f43;
+    // }
   }
   .activity-container
   {
       column-count: 3;
-
+      ion-card-header
+      {
+         white-space: normal;
+      }
       .sub-activity
       {
           border-right-width: 3px;
@@ -27,13 +30,6 @@ activity-list {
           color: black;
           position: relative;
           padding-left: 35px;
-          .start-activity
-          {
-              position: absolute;
-              top: 5px;
-              left: 0px;
-              transform: rotate(180deg);
-          }
       }
   }
   ion-note

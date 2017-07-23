@@ -22,17 +22,17 @@
     <div *ngFor="let activity of activities" [ngClass]="{'title-activity':activity.LEVEL=='3'}">
       <ion-card-header>
         {{activity["ACTDES"]}}
-         <ion-note>{{activity["WBS"]}}</ion-note>
+        <ion-note>{{activity["WBS"]}}</ion-note>
       </ion-card-header>
       <ion-card-content *ngIf="activity.subActivities.length>0">
-        <ion-card *ngFor="let subAct of activity.subActivities" [style.borderColor]="getSubActColor(subAct)" class="sub-activity" padding>
+        <ion-card *ngFor="let subAct of activity.subActivities" [style.borderColor]="getSubActColor(subAct)" class="sub-activity"
+          padding>
           <span>{{subAct["WBS"]}}</span>&nbsp;
           <span>{{subAct["ACTDES"]}}</span>
-            <button ion-button  clear class="start-activity">
-              <ion-icon name="ios-play-outline" color="secondary"></ion-icon>
-            </button>
+          <activity-options [activity]="subAct"></activity-options>
         </ion-card>
       </ion-card-content>
+      
     </div>
   </div>
 

@@ -12,9 +12,9 @@
         <ion-icon name="arrow-back"></ion-icon>
       </button>
         </ion-buttons>-->
-        <ion-title padding-top color="secondary">פעילות חדשה</ion-title>
-        <ion-buttons end padding-top>
-            <button ion-button icon-only (click)="save()" color="secondary">
+        <ion-title  padding-top padding-bottom color="dark">פעילות חדשה</ion-title>
+        <ion-buttons end padding-top padding-bottom> 
+            <button ion-button icon-only (click)="save()" color="dark">
                 <ion-icon name="checkmark"></ion-icon>
             </button>
         </ion-buttons>
@@ -24,11 +24,11 @@
 <ion-list>
         <ion-item>
             <ion-label stacked>כותרת</ion-label>
-            <ion-input type="text" [value]="title" (input)="titleChanged($event.target.value)"></ion-input>
+            <ion-input type="text" [value]="getActTitle(title)" (input)="titleChanged($event.target.value)"></ion-input>
         </ion-item>
 
         <button ion-item *ngFor="let item of titleList" (click)="chooseTitle(item)">
-            {{item}}
+            {{getActTitle(item)}}
         </button>
 
         <ion-item>

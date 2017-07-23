@@ -27,17 +27,11 @@ export class ActivityList
           this.activities = list;
       })
       .catch(() => { });
-    this.appService.newActivityList.subscribe(list =>
+    this.appService.activityListObsr.subscribe(list =>
     {
       this.activityList = this.objToIterable.transform(list);
       this.organizeActivities();
     });
-    this.loadActivities();
-  }
-
-  loadActivities()
-  {
-    this.appService.getActivities();
   }
   getSubActColor(act)
   {
@@ -48,9 +42,9 @@ export class ActivityList
       case "חזר מ QA":
         return "crimson";
       case 'בדיקת QA':
-      return '#d6d6d6';
+        return '#d6d6d6';
     }
-   return "black";
+    return "#1e6bc6";
   }
 
   organizeActivities()
@@ -96,5 +90,8 @@ export class ActivityList
       return (item.toLowerCase().indexOf(val.toLowerCase()) > -1);
     });
   }
-
+  startReport(activity)
+  {
+    this.appService.startActReport(activity);
+  }
 }

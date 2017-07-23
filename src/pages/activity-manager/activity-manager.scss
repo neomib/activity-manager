@@ -7,7 +7,14 @@ page-activity-manager
         box-shadow: 0 3px 10px grey;
         ion-menu
         {
-            min-width: 350px !important;
+            min-width: 325px !important;
+        }
+        > ion-content
+        {
+            ion-row
+            {
+                height: 100%;
+            }
         }
      }
      ion-navbar

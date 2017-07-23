@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, PopoverController } from 'ionic-angular';
 import { AppService } from '../../providers/app-service';
+import { UserHours } from '../user-hours/user-hours';
 /**
  * Generated class for the ActivityManager page.
  *
@@ -12,13 +13,21 @@ import { AppService } from '../../providers/app-service';
   selector: 'page-activity-manager',
   templateUrl: 'activity-manager.html',
 })
-export class ActivityManager {
+export class ActivityManager
+{
 
-  constructor(public navCtrl: NavController, public navParams: NavParams,private appService:AppService) {
-  }
-loadActivities()
+  constructor(public navCtrl: NavController, public navParams: NavParams, private appService: AppService, private popoverCtrl: PopoverController)
   {
-    this.appService.getActivities();
+  }
+  ionViewDidLoad()
+  {
+    this.loadData();
+  }
+  loadData()
+  {
+    this.appService.getActivities()
+      .then(() => this.appService.getTodaysReports())
+      .catch(() => { });
   }
 
 }

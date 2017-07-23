@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams,IonicPage } from 'ionic-angular';
+import { NavController, NavParams, IonicPage } from 'ionic-angular';
 import { FormService, ObjToIterable } from 'priority-ionic';
-import {AppService} from '../../providers/app-service';
+import { AppService } from '../../providers/app-service';
 
 /**
  * Generated class for the ActivityEditor page.
@@ -18,7 +18,7 @@ export class ActivityEditor
 {
   list;
   titleList: string[] = [];
-  title: string;
+  title = {};
   subject: string;
   hours: number;
   constructor(private appService: AppService,
@@ -27,7 +27,7 @@ export class ActivityEditor
     private objToIterable: ObjToIterable)
   {
     this.list = this.appService.activityList;
-    this.appService.newActivityList.subscribe(list =>
+    this.appService.activityListObsr.subscribe(list =>
     {
 
       this.list = list;
@@ -37,17 +37,21 @@ export class ActivityEditor
   {
     console.log('ionViewDidLoad ActivityEditor');
   }
-
+  getActTitle(item)
+  {
+    if (!item || !item.ACTDES)
+      return "";
+    return item.ACTDES;
+  }
   titleChanged(title: string)
   {
-    this.title = title;
     if (title != '')
     {
-      this.titleList = Object.keys(this.list)
-        .filter((item, index, array) =>
-        this.list[item].LEVEL=="3" &&
-          item.toLocaleLowerCase()
-            .includes(title.toLocaleLowerCase()))
+      this.titleList = this.list.filter((item, index, array) =>
+      {
+        return item.LEVEL == "3" && this.getActTitle(item).toLocaleLowerCase().includes(title.toLocaleLowerCase())
+      })
+
     }
     else
     {
@@ -55,15 +59,15 @@ export class ActivityEditor
     }
 
   }
-  chooseTitle(item)
+  chooseTitle(activity)
   {
-    this.title = item;
+    this.title = activity;
     this.titleList = [];
   }
   save()
   {
-     this.appService.addActivity(this.list[this.title],this.subject);
-    this.title = "";
+    this.appService.createNewActivity(this.title, this.subject);
+    this.title = {};
     this.subject = "";
     this.titleList = [];
     this.hours = 0;
