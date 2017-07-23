@@ -26,3 +26,13 @@ ion-card
               text-align: center;
           }
       }
+.transparentBlock  .loading-wrapper 
+{
+   background-color: transparent !important;
+   box-shadow: none !important;
+}
+
+.transparentBlock ion-backdrop {
+   opacity: 0 !important;
+     
+}

@@ -18,11 +18,14 @@
     <ion-note>{{"פעילות"+" "+time['PROJACT']}} </ion-note>
     <h3>{{time['ACTDES']}}</h3>
     <p>{{time.STIMEI+" - "+time.ETIMEI}}</p>
-    <ion-row *ngIf="time.isActive">
+    <ion-row>
       <ion-col>
-        <button ion-button clear class="start-activity" (click)="endReport(time)">
-              <ion-icon name="ios-stop-outline" color="secondary"></ion-icon>
-            </button>
+        <button ion-button *ngIf="time.isActive" clear class="start-activity" (click)="endReport(time)">
+              <ion-icon name="ios-pause-outline" color="crimson"></ion-icon>
+        </button>
+        <button ion-button *ngIf="!time.isActive" clear class="start-activity" (click)="startReport(time)">
+              <ion-icon name="ios-play-outline" color="secondary"></ion-icon>
+        </button>
       </ion-col>
     </ion-row>
     <!--<p>{{time['CURDATE']}}</p>-->

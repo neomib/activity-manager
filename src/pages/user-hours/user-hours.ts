@@ -28,6 +28,10 @@ export class UserHours
   {
     this.appService.endActREport(report);
   }
+  startReport(report)
+  {
+    
+  }
 
 
 }

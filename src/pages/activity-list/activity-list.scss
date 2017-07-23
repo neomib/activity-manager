@@ -1,4 +1,11 @@
 activity-list {
+    ion-spinner
+    {
+            left: 50%;
+    position: absolute;
+    top: -10px;
+    margin-left: -15px;
+    }
    .toolbar-title
    {
        color:#a0d7d7;
@@ -10,10 +17,6 @@ activity-list {
     background-color: rgba(253, 253, 253, 0.7);
     margin-bottom: 16px;
     box-shadow: 0 0 2px #b9b7b7;
-    // ion-card-header
-    // {
-    //     color:#062f43;
-    // }
   }
   .activity-container
   {
@@ -31,12 +34,17 @@ activity-list {
           position: relative;
           padding-left: 35px;
       }
+      &.activity-container-narrow
+      {
+          column-count: 1;
+          max-width: 30%;
+      }
   }
   ion-note
   {
       display: block;
   }
-  ion-card *
+  .activity-container>div *
   {
      -webkit-column-break-inside: avoid; /* Chrome, Safari */
     page-break-inside: avoid;           /* Theoretically FF 20+ */

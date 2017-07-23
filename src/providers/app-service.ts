@@ -91,9 +91,9 @@ export class AppService
     {
         this.configService.config({
             url: '',
-            tabulaini: 'tabests.ini',
+            tabulaini: '',
             language: 1,
-            company: 'geshbel',
+            company: '',
             appname: 'Time_Tracking',
             devicename: ''
         });
@@ -207,6 +207,28 @@ export class AppService
                         "isdesc": 1
                     }]
             };
+            let thirdfilter = {
+                or: 0,
+                ignorecase: 1,
+                QueryValues:
+                [
+                    {
+                        "field": "ESHB_EPROJDES",
+                        "fromval": 'UI',
+                        "toval": "",
+                        "op": "=",
+                        "sort": 0,
+                        "isdesc": 0
+                    },
+                    {
+                        "field": "LEVEL",
+                        "fromval": "3",
+                        "toval": "",
+                        "op": ">=",
+                        "sort": 0,
+                        "isdesc": 1
+                    }]
+            };
             this.formService.startFormAndGetRows(this.activityFormName, this.getCompanyName(), filter)
                 .then(form =>
                 {
@@ -214,6 +236,17 @@ export class AppService
                     this.activityList = this.activityList.concat(rows);
                     this.activityListObsr.next(this.activityList);
                     return this.formService.setSearchFilter(form, secondfilter);
+                })
+                .then(() =>
+                {
+                    return this.formService.getRows(this.formService.getForm(this.activityFormName), 1);
+                })
+                .then((rows: any[]) =>
+                {
+                    rows = this.objToArray(rows);
+                    this.activityList = this.activityList.concat(rows);
+                    this.activityListObsr.next(this.activityList);
+                    return this.formService.setSearchFilter(this.formService.getForm(this.activityFormName), thirdfilter);
                 })
                 .then(() =>
                 {
@@ -313,6 +346,14 @@ export class AppService
                     "op": "=",
                     "sort": 0,
                     "isdesc": 0
+                },
+                {
+                    "field": "STIMEI",
+                    "fromval": "00:00",
+                    "toval": "",
+                    "op": "<>",
+                    "sort": 1,
+                    "isdesc": 1
                 }
             ]
         };
@@ -330,9 +371,12 @@ export class AppService
             })
             .then(rows =>
             {
-                if (rows[1]['ETIMEI'] == "00:00")
-                    rows[1].isActive = true;
-                this.reportList = rows;
+                if (rows)
+                {
+                    if (rows[1]['ETIMEI'] == "00:00")
+                        rows[1].isActive = true;
+                    this.reportList = rows;
+                }
                 this.reportListObsr.next(this.objToIterable.transform(rows));
             })
             .catch(() => { });

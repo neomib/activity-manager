@@ -1,4 +1,4 @@
-import { Platform, NavController,IonicPage } from 'ionic-angular';
+import { Platform, NavController, IonicPage } from 'ionic-angular';
 import { Component, ChangeDetectorRef } from "@angular/core";
 import { ConfigurationService, MessageHandler } from 'priority-ionic';
 import { AppService } from '../../providers/app-service';
@@ -26,24 +26,30 @@ export class Login
     private platform: Platform,
     private messageHandler: MessageHandler,
     private appService: AppService,
-   // private constants: Strings,
+    // private constants: Strings,
     private changeRef: ChangeDetectorRef)
   {
-   // this.dirByLang = this.constants.dirByLang;
-   // this.dirOpposite = this.constants.dirOpposite;
+    // this.dirByLang = this.constants.dirByLang;
+    // this.dirOpposite = this.constants.dirOpposite;
   }
 
   login()
   {
+    this.messageHandler.showTransLoading();
     this.appService.login(this.usrValue, this.pswValue).then(
       res =>
       {
+        this.messageHandler.hideLoading();
         this.nav.setRoot("ActivityManager");
         this.changeRef.detectChanges();
       },
       reason =>
       {
-        this.messageHandler.showToast(reason, 3000);
+        this.messageHandler.hideLoading(() =>
+        {
+          this.messageHandler.showToast(reason, 3000);
+        });
+
       }
     ).catch(() => { });
   }

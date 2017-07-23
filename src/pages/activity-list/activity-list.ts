@@ -15,9 +15,11 @@ export class ActivityList
   activityManager;
   activityManagerArr;
   activities: any[];
+  isLoadingActs: boolean;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, private appService: AppService, private objToIterable: ObjToIterable)
   {
+    this.isLoadingActs = false;
     this.activityManager = {};
     this.activities = [];
     this.appService.getKeyVkaue("priority-activities")
@@ -29,7 +31,8 @@ export class ActivityList
       .catch(() => { });
     this.appService.activityListObsr.subscribe(list =>
     {
-      this.activityList = this.objToIterable.transform(list);
+      this.isLoadingActs = true;
+      this.activityList = list;
       this.organizeActivities();
     });
   }
@@ -38,6 +41,7 @@ export class ActivityList
     switch (act.STEPSTATUSDES)
     {
       case 'בוצעה':
+      case 'התקבל':
         return "green";
       case "חזר מ QA":
         return "crimson";
@@ -75,11 +79,12 @@ export class ActivityList
     this.activities.splice(0);
     Object.keys(this.activityManager).map((value, index, arr) => { this.activities.push(this.activityManager[value]) });
     this.activityManagerArr = this.activities;
+    this.isLoadingActs = false;
   }
   getActsBySearch(event)
   {
     let val = event.target.value;
-    if (!val || val.trim() == "")
+    if (!val || val.trim() == "" || !this.activityManagerArr)
     {
       this.updateActivities();
       return;

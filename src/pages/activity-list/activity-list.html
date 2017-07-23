@@ -18,18 +18,18 @@
   <ion-searchbar (ionInput)="getActsBySearch($event)"></ion-searchbar>
 </ion-header>
 <ion-content padding>
-  <div class="activity-container">
+  <ion-spinner name="dots" *ngIf="isLoadingActs"></ion-spinner>
+  <div class="activity-container" [ngClass]="{'activity-container-narrow':activities.length<4}">
     <div *ngFor="let activity of activities" [ngClass]="{'title-activity':activity.LEVEL=='3'}">
       <ion-card-header>
         {{activity["ACTDES"]}}
         <ion-note>{{activity["WBS"]}}</ion-note>
       </ion-card-header>
       <ion-card-content *ngIf="activity.subActivities.length>0">
-        <ion-card *ngFor="let subAct of activity.subActivities" [style.borderColor]="getSubActColor(subAct)" class="sub-activity"
-          padding>
-          <span>{{subAct["WBS"]}}</span>&nbsp;
+        <ion-card *ngFor="let subAct of activity.subActivities" [style.borderColor]="getSubActColor(subAct)" class="sub-activity" padding>
           <span>{{subAct["ACTDES"]}}</span>
-          <activity-options [activity]="subAct"></activity-options>
+            <ion-note>{{subAct["WBS"]}}</ion-note>
+             <activity-options [activity]="subAct"></activity-options>
         </ion-card>
       </ion-card-content>
       
