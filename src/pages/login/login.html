@@ -4,27 +4,30 @@
   See http://ionicframework.com/docs/components/#navigation for more info on
   Ionic pages and navigation.
 -->
-<div >
-  <ion-card-header >
-      PRIORITY
-    </ion-card-header>
-  <ion-card class="login-content" (keypress)="eventHandler($event)">
+<ion-content>
+  <ion-card-header>
+    PRIORITY
+  </ion-card-header>
+  <ion-list  (keypress)="eventHandler($event)"  margin-right margin-left padding-right padding-left padding-top>
     <ion-card-header>
       כניסה
     </ion-card-header>
-     <ion-card-content>
-    <ion-item [style.direction]="'rtl'" margin padding>
-      <ion-input type="text" placeholder="שם משתמש" [(ngModel)]="usrValue"></ion-input>
+    <ion-item [style.direction]="'rtl'"  padding-right padding-left padding-top>
+      <ion-label floating>שם משתמש</ion-label>
+      <ion-input type="text"  [(ngModel)]="usrValue"></ion-input>
     </ion-item>
-   
-      <ion-item [style.direction]="'rtl'" margin padding>
-        <ion-input type="password" placeholder="סיסמא" [(ngModel)]="pswValue"></ion-input>
-      </ion-item>
-    </ion-card-content>
-    <ion-buttons margin>
-      <button class="login-button" block (click)="login()" padding color="login">
+
+    <ion-item [style.direction]="'rtl'"  padding-right padding-left padding-top>
+      <ion-label floating>סיסמא</ion-label>
+      <ion-input type="password"  [(ngModel)]="pswValue"></ion-input>
+    </ion-item>
+    <ion-item margin-top margin-right margin-left padding-right padding-left padding-top no-border> 
+      
+        <button class="login-button" block (click)="login()" padding margin-right margin-left item-end color="login">
       היכנס
       </button>
-    </ion-buttons>
-  </ion-card>
-</div>
+      
+    </ion-item>
+
+  </ion-list>
+</ion-content>

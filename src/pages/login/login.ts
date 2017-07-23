@@ -40,14 +40,14 @@ export class Login
       res =>
       {
         this.messageHandler.hideLoading();
-        this.nav.setRoot("ActivityManager");
+        this.nav.setRoot("Main");
         this.changeRef.detectChanges();
       },
       reason =>
       {
         this.messageHandler.hideLoading(() =>
         {
-          this.messageHandler.showToast(reason, 3000);
+          this.messageHandler.showToast(reason.message, 5000);
         });
 
       }

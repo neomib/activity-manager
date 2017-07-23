@@ -31,6 +31,10 @@ ion-card
    background-color: transparent !important;
    box-shadow: none !important;
 }
+.label[floating]
+{
+   transform-origin: right top;
+}
 
 .transparentBlock ion-backdrop {
    opacity: 0 !important;

@@ -1,23 +1,17 @@
 import { NgModule } from '@angular/core';
 import { IonicPageModule } from 'ionic-angular';
 import { ActivityManager } from './activity-manager';
-import {ActivityList} from'../activity-list/activity-list';
-import {ActivityEditor} from'../activity-editor/activity-editor';
-import {UserHours} from '../user-hours/user-hours';
-import {ActivityOptions} from '../../components/activity-options/activity-options';
-// import {MdInputModule} from '@angular/material';
+import {ActivityListModule} from'../activity-list/activity-list.module';
+import {ActivityEditorModule} from'../activity-editor/activity-editor.module';
 
 @NgModule({
   declarations: [
-    ActivityManager,
-    ActivityList,
-    ActivityEditor,
-    UserHours,
-    ActivityOptions
+    ActivityManager
   ],
   imports: [
-    // MdInputModule,
-    IonicPageModule.forChild(ActivityManager),
+    ActivityListModule,
+    ActivityEditorModule,
+    IonicPageModule.forChild(ActivityManager)
   ],
   exports: [
     ActivityManager

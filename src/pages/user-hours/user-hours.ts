@@ -17,21 +17,29 @@ import { AppService } from '../../providers/app-service';
 export class UserHours 
 {
   hoursList: any[];
+  currentDate:string;
   constructor(public navCtrl: NavController, private appService: AppService)
   {
     this.appService.reportListObsr.subscribe(list =>
     {
       this.hoursList = list;
     });
+    this.currentDate=this.appService.getCurrentTime().dateFormated;
   }
   endReport(report)
   {
     this.appService.endActREport(report);
+    report.isActive = false;
   }
   startReport(report)
   {
-    
+    this.appService.startActReport(report);
   }
-
+  loadData()
+  {
+    this.appService.getActivities()
+      .then(() => this.appService.getTodaysReports())
+      .catch(() => { });
+  }
 
 }

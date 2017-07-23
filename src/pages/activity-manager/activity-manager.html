@@ -5,14 +5,6 @@
   Ionic pages and navigation.
 -->
 <ion-header no-border>
-  <ion-navbar hideBackButton="true" dir="ltr" color="dark">
-    <h6 padding-left [style.color]="'white'">PRIORITY</h6>
-    <ion-buttons end padding-right>
-      <button ion-button icon-only (click)="loadData()">
-        <ion-icon name="refresh"></ion-icon>
-      </button>
-    </ion-buttons>
-  </ion-navbar>
   <ion-toolbar>
     <!--<ion-searchbar></ion-searchbar>-->
     <h2>פעילויות לפרויקט</h2>
@@ -30,30 +22,22 @@
     </ion-chip>
     <ion-chip>
       <ion-label>UI</ion-label>
-      <button ion-button clear color="light">
+      <button ion-button clear color="chip">
          <ion-icon name="close"></ion-icon>
        </button>
     </ion-chip>
-   <button ion-button icon-only clear color="lightblue">
+    <button ion-button icon-only clear color="lightblue">
         <ion-icon name="add"></ion-icon>
       </button>
   </ion-toolbar>
 </ion-header>
-<ion-content>
-  <ion-split-pane dir="ltr">
-    <!-- the main content -->
-    <ion-content main #content dir="rtl">
-        <ion-row>
-          <ion-col col-7>
-            <activity-list></activity-list>
-          </ion-col>
-          <ion-col>
-            <user-hours></user-hours>
-          </ion-col>
-        </ion-row>
-    </ion-content>
-    <ion-menu [content]="content" dir="rtl">
+<ion-content dir="rtl">
+  <ion-row>
+    <ion-col col-3 col-sm-0>
       <activity-editor></activity-editor>
-    </ion-menu>
-  </ion-split-pane>
+    </ion-col>
+    <ion-col >
+      <activity-list></activity-list>
+    </ion-col>
+  </ion-row>
 </ion-content>

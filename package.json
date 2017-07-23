@@ -33,16 +33,14 @@
     "@ionic/storage": "2.0.1",
     "ionic-angular": "3.4.2",
     "ionicons": "3.0.0",
-    "rxjs": "5.4.0",
-    "sw-toolbox": "3.6.0",
-    "typescript": "2.3.4", 
-    "zone.js": "0.8.12",
-    
-    "vanilla-masker": "1.2.0",
     "moment": "2.18.1",
     "numeral": "2.0.6",
-    
-    "priority-ionic": "^1.0.3"
+    "priority-ionic": "1.0.4",
+    "rxjs": "5.4.0",
+    "sw-toolbox": "3.6.0",
+    "typescript": "2.3.4",
+    "vanilla-masker": "1.2.0",
+    "zone.js": "0.8.12"
   },
   "devDependencies": {
     "@ionic/app-scripts": "2.0.2",

@@ -81,6 +81,11 @@ export class ActivityList
     this.activityManagerArr = this.activities;
     this.isLoadingActs = false;
   }
+  isActContainsString(act, str: string)
+  {
+    let item = act.ACTDES;
+    return item && item.toLowerCase().indexOf(str.toLowerCase()) > -1;
+  }
   getActsBySearch(event)
   {
     let val = event.target.value;
@@ -91,8 +96,9 @@ export class ActivityList
     }
     this.activities = this.activityManagerArr.filter((act, index, arr) =>
     {
-      let item = act.ACTDES;
-      return (item.toLowerCase().indexOf(val.toLowerCase()) > -1);
+      let isHasChild = act.subActivities.length > 0 &&
+        act.subActivities.filter((subact, index, arr) => this.isActContainsString(subact, val)).length > 0;
+      return this.isActContainsString(act, val) || isHasChild;
     });
   }
   startReport(activity)

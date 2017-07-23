@@ -6,10 +6,17 @@
 -->
 <ion-header no-border>
 
-  <ion-navbar>
-    <ion-title padding-top padding-bottom>דיווח שעות</ion-title>
-  </ion-navbar>
-
+  <ion-navbar hideBackButton="true" dir="ltr" color="dark">
+      <h6 padding-left [style.color]="'white'">PRIORITY</h6>
+      <ion-buttons end padding-right>
+      <button ion-button icon-only (click)="loadData()">
+        <ion-icon name="refresh"></ion-icon>
+      </button>
+    </ion-buttons>
+    </ion-navbar> 
+    <ion-toolbar>
+      <ion-title text-center>{{currentDate}}</ion-title>
+    </ion-toolbar>
 </ion-header>
 
 

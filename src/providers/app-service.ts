@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ConfigurationService, FormService, ObjToIterable, Form } from 'priority-ionic';
+import { ConfigurationService, FormService, ObjToIterable, Form, ProfileConfig } from 'priority-ionic';
 import { Storage } from '@ionic/storage';
 import { Subject } from 'rxjs/Subject';
 
@@ -83,17 +83,17 @@ export class AppService
     {
         return this.configService.configuration ? this.configService.configuration.language : 1;
     }
-    getCompanyName()
+    getCompanyName(): ProfileConfig
     {
-        return this.configService.configuration ? this.configService.configuration.company : "";
+        return this.configService.configuration ? this.configService.configuration.profileConfig : { company: '' };
     }
     private setConfig()
     {
         this.configService.config({
             url: '',
-            tabulaini: '',
+            tabulaini: 'tabests.ini',
             language: 1,
-            company: '',
+            profileConfig: { company: 'geshbel' },
             appname: 'Time_Tracking',
             devicename: ''
         });
@@ -130,31 +130,30 @@ export class AppService
             let form = this.formService.getForm(formName);
             if (!form)
             {
-                this.formService.startParentForm(formName, this.getCompanyName(), isAutoRetrieve)
+                this.formService.startParentForm(formName, this.configService.configuration.profileConfig, isAutoRetrieve)
                     .then(resultform => resolve(resultform))
                     .catch(reason => reject(reason));
             }
             else
             {
-                resolve(form);
-                // form.isAlive()
-                //     .then(isAlive =>
-                //     {
-                //         if (isAlive)
-                //         {
-                //             resolve(form);
-                //         }
-                //         else
-                //         {
-                //             this.formService.startParentForm(formName, this.getCompanyName(), isAutoRetrieve)
-                //                 .then(resultform => resolve(resultform));
-                //         }
-                //     })
-                //     .catch(
-                //     reason =>
-                //     {
-                //         reject(reason)
-                //     });
+                form.isAlive()
+                    .then(isAlive =>
+                    {
+                        if (isAlive)
+                        {
+                            resolve(form);
+                        }
+                        else
+                        {
+                            this.formService.startParentForm(formName, this.getCompanyName(), isAutoRetrieve)
+                                .then(resultform => resolve(resultform));
+                        }
+                    })
+                    .catch(
+                    reason =>
+                    {
+                        reject(reason)
+                    });
             }
         });
     }
@@ -359,7 +358,7 @@ export class AppService
         };
 
         let hoursForm: Form;
-        this.formService.startParentForm(this.hoursFormName, this.getCompanyName())
+        this.getForm(this.hoursFormName)
             .then((form: Form) =>
             {
                 hoursForm = form;
