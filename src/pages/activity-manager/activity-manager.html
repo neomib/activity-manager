@@ -13,42 +13,44 @@
       </button>
     </ion-buttons>
   </ion-navbar>
-    <!--<ion-searchbar></ion-searchbar>-->
-    <ion-toolbar no-padding>
-       <h2 text-center>פעילויות לפרויקט</h2>
-    </ion-toolbar>
- 
-  <div text-center padding >
-  <ion-chip>
-    <ion-label>מובייל</ion-label>
-    <button ion-button clear color="chip" disabled>
+  <!--<ion-searchbar></ion-searchbar>-->
+  <ion-toolbar no-padding>
+    <ion-title text-center padding-top padding-bottom>פעילויות לפרויקט</ion-title>
+  </ion-toolbar>
+
+  <div text-center padding>
+    <ion-chip>
+      <ion-label>מובייל</ion-label>
+      <button ion-button clear color="chip" disabled>
     <ion-icon name="close"></ion-icon>
   </button>
-  </ion-chip>
-  <ion-chip>
-    <ion-label>פלטפורמה</ion-label>
-    <button ion-button clear color="chip" disabled>
+    </ion-chip>
+    <ion-chip>
+      <ion-label>פלטפורמה</ion-label>
+      <button ion-button clear color="chip" disabled>
          <ion-icon name="close"></ion-icon>
        </button>
-  </ion-chip>
-  <ion-chip>
-    <ion-label>UI</ion-label>
-    <button ion-button clear color="chip" disabled>
+    </ion-chip>
+    <ion-chip>
+      <ion-label>UI</ion-label>
+      <button ion-button clear color="chip" disabled>
          <ion-icon name="close"></ion-icon>
        </button>
-  </ion-chip>
-  <button ion-button icon-only clear color="lightblue" disabled class="add-project">
+    </ion-chip>
+    <button ion-button icon-only clear color="lightblue" disabled class="add-project">
         <ion-icon name="add"></ion-icon>
       </button>
   </div>
 </ion-header>
 <ion-content dir="rtl">
-  <ion-row>
-    <ion-col col-3 col-sm-0>
-      <activity-editor></activity-editor>
-    </ion-col>
-    <ion-col>
-      <activity-list></activity-list>
-    </ion-col>
-  </ion-row>
+  <ion-grid>
+    <ion-row nowrap>
+      <ion-col class="editor-col"> 
+        <activity-editor></activity-editor>
+      </ion-col>
+      <ion-col col-md-9 col-12>
+        <activity-list></activity-list>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 </ion-content>

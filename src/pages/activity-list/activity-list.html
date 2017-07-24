@@ -18,7 +18,7 @@
       </ion-card-header>
       <ion-card-content *ngIf="activity.subActivities.length>0">
         <ion-card *ngFor="let subAct of activity.subActivities" [style.borderColor]="getSubActColor(subAct)" class="sub-activity"
-          padding (mouseenter)="onmouseover(subAct)" (mouseleave)="onmouseout(subAct)">
+          padding (touchstart)="onmouseover(subAct)" (mouseenter)="onmouseover(subAct)" (mouseleave)="onmouseout(subAct)">
           <span>{{subAct["ACTDES"]}}</span>
           <ion-note>{{subAct["WBS"]}}</ion-note>
           <activity-options [activity]="subAct" *ngIf="subAct.showOpts"></activity-options>

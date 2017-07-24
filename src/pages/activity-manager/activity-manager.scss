@@ -39,11 +39,6 @@ activity-manager
     :not(ion-navbar)>.toolbar-content
     {
         text-align: center;
-        h2
-        {
-            // color: #2d9ec8;
-            margin-top: 10px;
-        }
     }
    ion-chip
    {
@@ -60,5 +55,9 @@ activity-manager
    .add-project
    {
        margin-top: -4px;
+   }
+   .editor-col
+   {
+       position: absolute;
    }
 }

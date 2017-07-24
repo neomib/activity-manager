@@ -2,7 +2,8 @@ import { NgModule } from '@angular/core';
 import { IonicPageModule } from 'ionic-angular';
 import { Main } from './main';
 import { ActivityManagerModule } from '../activity-manager/activity-manager.module';
-import {UserHoursModule} from '../user-hours/user-hours.module';
+import { UserHoursModule } from '../user-hours/user-hours.module';
+import { DocMenuModule } from '../../components/doc-menu/doc-menu.module';
 
 
 @NgModule({
@@ -10,12 +11,13 @@ import {UserHoursModule} from '../user-hours/user-hours.module';
     Main,
   ],
   imports: [
-     ActivityManagerModule,
+    ActivityManagerModule,
     UserHoursModule,
+    DocMenuModule,
     IonicPageModule.forChild(Main)
   ],
   exports: [
     Main
   ]
 })
-export class MainModule {}
+export class MainModule { }

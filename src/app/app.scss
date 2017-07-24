@@ -47,3 +47,44 @@ ion-spinner
     top: -10px;
     margin-left: -15px;
     }
+
+    /************ Screen adjustments ***************/
+     @media (min-width: 576px)
+   {
+       .activity-container
+       {
+         column-count: 2 !important;
+       }
+      .activity-container-narrow
+    {
+        max-width: 50% !important;
+         column-count: 1 !important;
+    }
+   }
+    @media (min-width: 768px)
+   {
+       .activity-container
+       {
+         column-count: 3 !important;
+       }
+       
+      .editor-col
+      {
+        position: relative !important;
+      }
+    .activity-container-narrow
+    {
+        max-width: 30% !important;
+         column-count: 1 !important;
+    }
+      
+   }
+     @media (min-width: 900px)
+   {
+       user-hours
+      {
+        position: static !important;
+      }
+      
+   }
+    

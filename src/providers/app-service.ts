@@ -373,7 +373,7 @@ export class AppService
             {
                 if (rows)
                 {
-                    if (rows[1]['ETIMEI'] == "00:00")
+                    if (rows[1] && rows[1]['ETIMEI'] == "00:00")
                         rows[1].isActive = true;
                     this.reportList = rows;
                 }
