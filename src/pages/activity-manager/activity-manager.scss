@@ -4,6 +4,10 @@ activity-manager
    {
        min-height: 30px  !important;
    }
+   ion-navbar + ion-toolbar .toolbar-background
+   {
+       background-color: rgba(248, 248, 248, 0.62);
+   }
      background-color: #c1eeee;
      
         /*margin: 30px;*/
@@ -37,7 +41,8 @@ activity-manager
         text-align: center;
         h2
         {
-            color: #2d9ec8;
+            // color: #2d9ec8;
+            margin-top: 10px;
         }
     }
    ion-chip
@@ -51,5 +56,9 @@ activity-manager
        {
            height: 20px;
        }
+   }
+   .add-project
+   {
+       margin-top: -4px;
    }
 }

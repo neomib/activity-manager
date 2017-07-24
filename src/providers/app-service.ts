@@ -162,6 +162,7 @@ export class AppService
     {
         return new Promise((resolve, reject) =>
         {
+            this.activityList.splice(0);
             let filter = {
                 or: 0,
                 ignorecase: 1,
