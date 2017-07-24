@@ -39,8 +39,8 @@ export class AppService
         this.userNameForLocalStorage = "priorityUsername";
         this.pswdForLocalStorage = "priorityPassword";
 
-        this.storage.get(this.userNameForLocalStorage).then(value => this.username = value);
-        this.storage.get(this.pswdForLocalStorage).then(value => this.password = value);
+        //this.storage.get(this.userNameForLocalStorage).then(value => this.username = value);
+        //this.storage.get(this.pswdForLocalStorage).then(value => this.password = value);
 
         this.activityListObsr = new Subject();
         this.activityList = [];
@@ -112,7 +112,7 @@ export class AppService
             this.configService.logIn(username, password).then(
                 () =>
                 {
-                    this.storeLoginData(username, password);
+                   // this.storeLoginData(username, password);
                     this.username = username;
                     this.password = password;
                     resolve();

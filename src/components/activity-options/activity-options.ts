@@ -22,12 +22,4 @@ export class ActivityOptions
   {
     this.appService.startActReport(this.activity);
   }
-  @HostListener('moueseover') onhover()
-  {
-    this.isShow = true;
-  }
-   @HostListener('blur') onblur()
-  {
-    this.isShow = false;
-  }
 }

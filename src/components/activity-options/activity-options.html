@@ -1,8 +1,15 @@
 <!-- Generated template for the ActivityOptions component -->
-<ion-row >
-  <ion-col>
-    <button ion-button clear class="start-activity" (click)="startReport(subAct)">
-              <ion-icon name="ios-play-outline" color="secondary"></ion-icon>
-            </button>
+<ion-row  dir="rtl">
+  <ion-col no-padding text-center>
+       
+        <button ion-button clear class="start-activity" disabled>
+              <ion-icon name="star" color="yellow"></ion-icon>
+        </button>
+        <button ion-button clear class="start-activity" disabled>
+              <ion-icon name="create" color="dark"></ion-icon>
+        </button>
+         <button ion-button clear class="start-activity" (click)="startReport()">
+              <ion-icon name="play" color="secondary"></ion-icon>
+        </button>
   </ion-col>
 </ion-row>

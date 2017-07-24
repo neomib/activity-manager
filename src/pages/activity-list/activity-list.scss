@@ -1,11 +1,4 @@
 activity-list {
-    ion-spinner
-    {
-            left: 50%;
-    position: absolute;
-    top: -10px;
-    margin-left: -15px;
-    }
    .toolbar-title
    {
        color:#a0d7d7;
@@ -50,5 +43,13 @@ activity-list {
     page-break-inside: avoid;           /* Theoretically FF 20+ */
     break-inside: avoid-column;         /* IE 11 */
      overflow: hidden;
+  }
+  activity-options
+  {
+    position: absolute;
+    bottom: 0;
+    background: rgba(236, 236, 236, 0.44);
+    width: 100%;
+    right: 0;
   }
 }

@@ -5,6 +5,10 @@ activity-editor {
  }
  .toolbar-title
  {
-     color:color($colors,dark)
+     color:color($colors,new)
+ }
+ ion-content
+ {
+     border: 1px solid color($colors,light);
  }
 }

@@ -105,4 +105,12 @@ export class ActivityList
   {
     this.appService.startActReport(activity);
   }
+  onmouseover(subact)
+  {
+    subact.showOpts=true;
+  }
+  onmouseout(subact)
+  {
+    subact.showOpts=false;
+  }
 }

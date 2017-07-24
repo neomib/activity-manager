@@ -4,4 +4,39 @@ user-hours {
  {
      background: transparent;
  }
+ h5
+ {
+    color:color($colors,light);
+    font-weight: 400;
+    font-size: 17px;
+ }
+ h3
+ {
+     white-space: normal;
+     color: white;
+     & + p
+     {
+         color:#ec9696 !important;
+     }
+ }
+ ion-content
+ {
+     background-color: color($colors,dark) !important;
+     ion-item
+     {
+         background-color: transparent !important;
+         .item-inner
+         {
+             border-color: #626263 !important;
+         }
+         ion-note
+         {
+             font-size: 13px;
+         }
+     }
+    .spinner-dots circle
+     {
+         fill: #ababab;
+     }
+ }
 }

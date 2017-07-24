@@ -18,11 +18,14 @@ export class UserHours
 {
   hoursList: any[];
   currentDate:string;
+  isShowSpinner:boolean;
   constructor(public navCtrl: NavController, private appService: AppService)
   {
+    this.isShowSpinner=true;
     this.appService.reportListObsr.subscribe(list =>
     {
       this.hoursList = list;
+      this.isShowSpinner=false;
     });
     this.currentDate=this.appService.getCurrentTime().dateFormated;
   }
@@ -35,11 +38,6 @@ export class UserHours
   {
     this.appService.startActReport(report);
   }
-  loadData()
-  {
-    this.appService.getActivities()
-      .then(() => this.appService.getTodaysReports())
-      .catch(() => { });
-  }
+  
 
 }

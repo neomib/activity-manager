@@ -66,6 +66,8 @@ export class ActivityEditor
   }
   save()
   {
+    if (this.title == "" || this.subject == "")
+      return;
     this.appService.createNewActivity(this.title, this.subject);
     this.title = {};
     this.subject = "";
