@@ -25,9 +25,7 @@ export class Login
   constructor(private nav: NavController,
     private platform: Platform,
     private messageHandler: MessageHandler,
-    private appService: AppService,
-    // private constants: Strings,
-    private changeRef: ChangeDetectorRef)
+    private appService: AppService)
   {
     // this.dirByLang = this.constants.dirByLang;
     // this.dirOpposite = this.constants.dirOpposite;
@@ -39,9 +37,8 @@ export class Login
     this.appService.login(this.usrValue, this.pswValue).then(
       res =>
       {
-        this.messageHandler.hideLoading();
         this.nav.setRoot("Main");
-        this.changeRef.detectChanges();
+        this.messageHandler.hideLoading();
       },
       reason =>
       {

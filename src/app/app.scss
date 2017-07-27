@@ -17,7 +17,34 @@
 .scroll-content
 {
     overflow: auto ;
+    scrollbar-base-color: transparent !important;
+  scrollbar-face-color: #cfcfcf;
+  scrollbar-3dlight-color: transparent !important;
+  scrollbar-highlight-color:transparent !important;
+  scrollbar-track-color: transparent !important;
+  scrollbar-arrow-color: transparent !important;
+  scrollbar-shadow-color: transparent !important;
+  scrollbar-dark-shadow-color: transparent !important;
+  scrollbar-arrow-color:  transparent;
+  ::-webkit-scrollbar-track
+  {
+
+    background-color: transparent;
+  }
+
+  ::-webkit-scrollbar
+  {
+    width: 8px;
+    background-color: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb
+  {
+    background-color:  #cfcfcf;
+
+  }
 }
+
 ion-card
       {
           ion-card-header
@@ -49,42 +76,42 @@ ion-spinner
     }
 
     /************ Screen adjustments ***************/
-     @media (min-width: 576px)
-   {
-       .activity-container
-       {
-         column-count: 2 !important;
-       }
-      .activity-container-narrow
-    {
-        max-width: 50% !important;
-         column-count: 1 !important;
-    }
-   }
-    @media (min-width: 768px)
-   {
-       .activity-container
-       {
-         column-count: 3 !important;
-       }
+  //    @media (min-width: 576px)
+  //  {
+  //      .activity-container
+  //      {
+  //        column-count: 2 !important;
+  //      }
+  //     .activity-container-narrow
+  //   {
+  //       max-width: 50% !important;
+  //        column-count: 1 !important;
+  //   }
+  //  }
+  //   @media (min-width: 768px)
+  //  {
+  //      .activity-container
+  //      {
+  //        column-count: 3 !important;
+  //      }
        
-      .editor-col
-      {
-        position: relative !important;
-      }
-    .activity-container-narrow
-    {
-        max-width: 30% !important;
-         column-count: 1 !important;
-    }
+  //     .editor-col
+  //     {
+  //       position: relative !important;
+  //     }
+  //   .activity-container-narrow
+  //   {
+  //       max-width: 30% !important;
+  //        column-count: 1 !important;
+  //   }
       
-   }
-     @media (min-width: 900px)
-   {
-       user-hours
-      {
-        position: static !important;
-      }
+  //  }
+  //    @media (min-width: 900px)
+  //  {
+  //      user-hours
+  //     {
+  //       position: static !important;
+  //     }
       
-   }
+  //  }
     

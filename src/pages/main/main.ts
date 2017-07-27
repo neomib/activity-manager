@@ -18,8 +18,14 @@ export class Main
 
   constructor(public navCtrl: NavController, public navParams: NavParams, private appService: AppService)
   {
+
   }
 
+  ionViewWillLoad()
+  {
+    if (!this.appService.getUserName())
+      this.navCtrl.setRoot('Login');
+  }
   ionViewDidLoad()
   {
     this.loadData();

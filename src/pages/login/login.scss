@@ -3,7 +3,7 @@ page-login
     
     ion-content
     {
-        background-color: #6cd1de !important;
+        background-color: color($colors,blue) !important;
     }
     > ion-content >div
    {
@@ -15,7 +15,7 @@ page-login
     margin: auto;
     >ion-card-header
     {
-        background-color: color($colors,dark);
+        background-color: color($colors,redorange);
         color: white !important;
     }
       ion-card
@@ -42,7 +42,7 @@ page-login
    .login-button
    {
        float: left;
-       background-color: rgba(27, 193, 186, 0.82);
+       background-color: #1a82a3;
        color: white;
        font-weight: bold;
    }

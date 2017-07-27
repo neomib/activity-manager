@@ -8,24 +8,57 @@
 <ion-header no-border>
   <ion-searchbar (ionInput)="getActsBySearch($event)"></ion-searchbar>
 </ion-header>
-<ion-content padding>
+<ion-content>
   <ion-spinner name="dots" *ngIf="isLoadingActs"></ion-spinner>
-  <div class="activity-container" [ngClass]="{'activity-container-narrow':activities.length<4}">
-    <div *ngFor="let activity of activities" [ngClass]="{'title-activity':activity.LEVEL=='3'}">
-      <ion-card-header>
-        {{activity["ACTDES"]}}
-        <ion-note>{{activity["WBS"]}}</ion-note>
-      </ion-card-header>
-      <ion-card-content *ngIf="activity.subActivities.length>0">
-        <ion-card *ngFor="let subAct of activity.subActivities" [style.borderColor]="getSubActColor(subAct)" class="sub-activity"
-          padding (touchstart)="onmouseover(subAct)" (mouseenter)="onmouseover(subAct)" (mouseleave)="onmouseout(subAct)">
-          <span>{{subAct["ACTDES"]}}</span>
-          <ion-note>{{subAct["WBS"]}}</ion-note>
-          <activity-options [activity]="subAct" *ngIf="subAct.showOpts"></activity-options>
-        </ion-card>
-      </ion-card-content>
+  <ion-row class="activity-container">
+    <ion-col>
+      <ion-content>
+        <ion-item *ngFor="let activity of displayActs" (click)="setCurrentActivity(activity)" [ngClass]="{'current-activity':activity.isActive}">
+          <!-- <ion-card-header> -->
+          {{activity["ACTDES"]}}
+          <ion-note>{{activity["WBS"]}}</ion-note>
+          <ion-badge item-end>{{activity.subActivities.length>0? activity.subActivities.length : ""}}</ion-badge>
+          <!-- </ion-card-header> -->
+          <!-- <ion-card-content *ngIf="activity.subActivities.length>0">
+         
+        </ion-card-content> -->
 
-    </div>
-  </div>
+        </ion-item>
+      </ion-content>
+    </ion-col>
+    <ion-col class="sub-acts-container">
+      <ion-content>
+        <ion-grid>
+          <ion-row>
+            <ion-col>
+              <ion-card *ngFor="let subAct of currentAct.subActDone" [style.borderRightColor]="getSubActColor(subAct)" class="sub-activity"
+                padding (touchstart)="onmouseover(subAct)" (mouseenter)="onmouseover(subAct)" (mouseleave)="onmouseout(subAct)">
+                <span>{{subAct["ACTDES"]}}</span>
+                <ion-note>{{subAct["WBS"]}}</ion-note>
+                <activity-options [activity]="subAct"></activity-options>
+              </ion-card>
+            </ion-col>
+            <ion-col>
+              <ion-card *ngFor="let subAct of currentAct.subActQA" [style.borderRightColor]="getSubActColor(subAct)" class="sub-activity"
+                padding (touchstart)="onmouseover(subAct)" (mouseenter)="onmouseover(subAct)" (mouseleave)="onmouseout(subAct)">
+                <span>{{subAct["ACTDES"]}}</span>
+                <ion-note>{{subAct["WBS"]}}</ion-note>
+                <activity-options [activity]="subAct"></activity-options>
+              </ion-card>
+            </ion-col>
+            <ion-col>
+              <ion-card *ngFor="let subAct of currentAct.subActOther" [style.borderRightColor]="getSubActColor(subAct)" class="sub-activity"
+                padding (touchstart)="onmouseover(subAct)" (mouseenter)="onmouseover(subAct)" (mouseleave)="onmouseout(subAct)">
+                <span>{{subAct["ACTDES"]}}</span>
+                <ion-note>{{subAct["WBS"]}}</ion-note>
+                <activity-options [activity]="subAct"></activity-options>
+              </ion-card>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-content>
+    </ion-col>
+
+  </ion-row>
 
 </ion-content>

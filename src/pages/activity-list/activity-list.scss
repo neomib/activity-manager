@@ -5,51 +5,84 @@ activity-list {
    }
   .title-activity
   {
-          font-size: bold;
-    color: blue;
+    font-size: bold;
     background-color: rgba(253, 253, 253, 0.7);
     margin-bottom: 16px;
     box-shadow: 0 0 2px #b9b7b7;
   }
   .activity-container
   {
-      column-count: 1;
+     // column-count: 1;
+     ion-item
+     {
+         border-left: 1px solid #dedede;
+         padding-left: 0;
+         .item-inner
+         {
+           background-color: color($colors,light);
+           padding: 10px;
+         }
+     }
+     .current-activity 
+     {
+         border-left: none;
+         .item-inner
+         {
+           background-color: white;
+         }
+     }
       ion-card-header
       {
          white-space: normal;
       }
       .sub-activity
       {
-          border-right-width: 3px;
-          border-right-style: solid;
           margin-bottom: 10px;
           color: black;
           position: relative;
           padding-left: 35px;
+        //   box-shadow: none;
+          border-right-width: 2px;
+          border-right-style: solid;
+          min-height: 100px;
+          margin-bottom: 5px;
+        //   border-top-color: color($colors,light);
+        //   border-bottom-color: color($colors,light);
+        //   border-left-color: color($colors,light);
+        //   border-right-width: 3px;
+        //   border-right-style: solid;
       }
       &.activity-container-narrow
       {
-          column-count: 1;
-          max-width: 100%;
+         // column-count: 1;
+         // max-width: 100%;
       }
+    .badge 
+    {
+    border-radius: 11px;
+    color: color($colors,primary);
+    border: 1px solid color($colors,primary);
+    background-color: transparent;
+    margin-left: 10px;
+    }
   }
   ion-note
   {
       display: block;
   }
-  .activity-container>div *
-  {
-     -webkit-column-break-inside: avoid; /* Chrome, Safari */
-    page-break-inside: avoid;           /* Theoretically FF 20+ */
-    break-inside: avoid-column;         /* IE 11 */
-     overflow: hidden;
-  }
+//   .activity-container>div *
+//   {
+//      -webkit-column-break-inside: avoid; /* Chrome, Safari */
+//     page-break-inside: avoid;           /* Theoretically FF 20+ */
+//     break-inside: avoid-column;         /* IE 11 */
+//      overflow: hidden;
+//   }
   activity-options
   {
-    position: absolute;
-    bottom: 0;
-    background: rgba(236, 236, 236, 0.44);
-    width: 100%;
-    right: 0;
+    // position: absolute;
+    // bottom: 0;
+    // background: rgba(236, 236, 236, 0.44);
+    // width: 100%;
+    // right: 0;
   }
 }

@@ -5,10 +5,10 @@
   Ionic pages and navigation.
 -->
 <ion-header no-border>
-  <ion-navbar hideBackButton="true" dir="ltr" color="light">
-    <h6 padding-left no-margin [style.color]="dark">PRIORITY</h6>
+  <ion-navbar hideBackButton="true" dir="ltr" color="redorange">
+    <h6 padding-left no-margin [style.color]="'white'">PRIORITY</h6>
     <ion-buttons end padding-right>
-      <button ion-button icon-only (click)="loadData()">
+      <button ion-button icon-only (click)="loadData()" color="white" clear>
         <ion-icon name="refresh"></ion-icon>
       </button>
     </ion-buttons>
@@ -18,32 +18,32 @@
     <ion-title text-center padding-top padding-bottom>פעילויות לפרויקט</ion-title>
   </ion-toolbar>
 
-  <div text-center padding>
+  <div text-center padding class="project-container">
     <ion-chip>
       <ion-label>מובייל</ion-label>
-      <button ion-button clear color="chip" disabled>
+      <button ion-button  color="lightblue" disabled>
     <ion-icon name="close"></ion-icon>
   </button>
     </ion-chip>
     <ion-chip>
       <ion-label>פלטפורמה</ion-label>
-      <button ion-button clear color="chip" disabled>
+      <button ion-button  color="lightblue" disabled>
          <ion-icon name="close"></ion-icon>
        </button>
     </ion-chip>
     <ion-chip>
       <ion-label>UI</ion-label>
-      <button ion-button clear color="chip" disabled>
+      <button ion-button  color="lightblue" disabled>
          <ion-icon name="close"></ion-icon>
        </button>
     </ion-chip>
-    <button ion-button icon-only clear color="lightblue" disabled class="add-project">
+    <button ion-button icon-only clear color="white" disabled class="add-project">
         <ion-icon name="add"></ion-icon>
       </button>
   </div>
 </ion-header>
 <ion-content dir="rtl">
-  <ion-grid>
+  <!-- <ion-grid>
     <ion-row nowrap>
       <ion-col class="editor-col"> 
         <activity-editor></activity-editor>
@@ -52,5 +52,6 @@
         <activity-list></activity-list>
       </ion-col>
     </ion-row>
-  </ion-grid>
+  </ion-grid> -->
+   <activity-list></activity-list>
 </ion-content>

@@ -25,32 +25,31 @@ export class MyApp
     });
     Constants.setRtlTranslations();
     platform.setDir("rtl", true);
-    window['priorityReady'] = this.priorityready;
   }
-  priorityready = () =>
-  {
-    this.messageHandler.showTransLoading('hide');
-    // if (!this.appServie.isLogInDataStored())
-    // {
-    this.rootPage = "Login";
-    this.messageHandler.hideLoading();
-    // }
-    // else
-    // {
-    //   this.appServie.login().then(
-    //     () =>
-    //     {
-    //       this.rootPage = ActiveTask;
-    //       this.messageHandler.hideLoading();
-    //     },
-    //     reason =>
-    //     {
-    //       this.rootPage = LoginPage;
-    //       this.messageHandler.hideLoading();
-    //     });
+  // priorityready = () =>
+  // {
+  //   this.messageHandler.showTransLoading('hide');
+  //   // if (!this.appServie.isLogInDataStored())
+  //   // {
+  //   this.rootPage = "Login";
+  //   this.messageHandler.hideLoading();
+  //   // }
+  //   // else
+  //   // {
+  //   //   this.appServie.login().then(
+  //   //     () =>
+  //   //     {
+  //   //       this.rootPage = ActiveTask;
+  //   //       this.messageHandler.hideLoading();
+  //   //     },
+  //   //     reason =>
+  //   //     {
+  //   //       this.rootPage = LoginPage;
+  //   //       this.messageHandler.hideLoading();
+  //   //     });
 
-    // }
-  }
+  //   // }
+  // }
   logout()
   {
     this.appServie.clearLogInData();
