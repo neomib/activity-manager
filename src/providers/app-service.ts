@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
-import { ConfigurationService, FormService, ObjToIterable, Form, ProfileConfig } from 'priority-ionic';
+import { ConfigurationService, FormService, ObjToIterable, PriorityService, MessageHandler } from 'priority-ionic';
+import { Form, ProfileConfig, ServerResponse, ServerResponseCode, ServerResponseType, Constants, MessageOptions } from 'priority-ionic';
 import { Storage } from '@ionic/storage';
 import { Subject } from 'rxjs/Subject';
 
@@ -30,7 +31,16 @@ export class AppService
     reportListObsr: Subject<any>;
     reportList: any[];
 
-    constructor(private configService: ConfigurationService, private formService: FormService, private storage: Storage, private objToIterable: ObjToIterable)
+    //projects
+    projectListObsr: Subject<any>;
+    projList: any[];
+
+    constructor(private configService: ConfigurationService,
+        private formService: FormService,
+        private storage: Storage,
+        private objToIterable: ObjToIterable,
+        private priorityService: PriorityService,
+        private messageHandler: MessageHandler)
     {
 
         this.activityFormName = "PROJACTS_ONE";
@@ -46,6 +56,9 @@ export class AppService
         this.activityList = [];
 
         this.reportListObsr = new Subject();
+
+        this.projectListObsr = new Subject();
+        this.projList = [{name:'PLATFORM',title:'פלטפורמה'}, {name:'MOBILE',title:'מובייל'}, {name:'UI',title:'UI'}];
     }
     // ***** Login *****
 
@@ -112,7 +125,7 @@ export class AppService
             this.configService.logIn(username, password).then(
                 () =>
                 {
-                   // this.storeLoginData(username, password);
+                    // this.storeLoginData(username, password);
                     this.username = username;
                     this.password = password;
                     resolve();
@@ -123,6 +136,34 @@ export class AppService
                 });
         });
     }
+    errorAndWarningMsgHandler = (serverMsg: ServerResponse) =>
+    {
+        if (serverMsg.code === ServerResponseCode.FailedPreviousRequest)
+        {
+            return;
+        }
+        let isError;
+        let options: MessageOptions = {};
+        if (serverMsg.fatal)
+        {
+            //If the error is a fatal error adds Constants.fatalErrorMsg to the message.
+            this.messageHandler.showErrorOrWarning(true, "<b>" + Constants.fatalErrorMsg + "</b>" + serverMsg.message);
+            return;
+        }
+
+        // Sets is'Error' and message title.
+        if (serverMsg.type == ServerResponseType.Error || serverMsg.type == ServerResponseType.APIError || serverMsg.code == ServerResponseCode.Stop)
+        {
+            isError = true;
+            options.title = serverMsg.code == ServerResponseCode.Information ? Constants.defaultMsgTitle : Constants.errorTitle;
+            this.messageHandler.showErrorOrWarning(isError, serverMsg.message, () => { }, () => { }, options);
+        }
+        else
+        {
+            this.formService.approveWarn(serverMsg.form);
+        }
+    }
+
     getForm(formName, isAutoRetrieve = 0): Promise<any>
     {
         return new Promise((resolve, reject) =>
@@ -130,7 +171,7 @@ export class AppService
             let form = this.formService.getForm(formName);
             if (!form)
             {
-                this.formService.startParentForm(formName, this.configService.configuration.profileConfig, isAutoRetrieve)
+                this.formService.startParentForm(formName, this.configService.configuration.profileConfig, isAutoRetrieve, this.errorAndWarningMsgHandler)
                     .then(resultform => resolve(resultform))
                     .catch(reason => reject(reason));
             }
@@ -145,7 +186,7 @@ export class AppService
                         }
                         else
                         {
-                            this.formService.startParentForm(formName, this.getCompanyName(), isAutoRetrieve)
+                            this.formService.startParentForm(formName, this.getCompanyName(), isAutoRetrieve, this.errorAndWarningMsgHandler)
                                 .then(resultform => resolve(resultform));
                         }
                     })
@@ -157,100 +198,26 @@ export class AppService
             }
         });
     }
-    /******************* Activities Management *************/
-    getActivities(): Promise<any>
+    loadData()
+    {
+        this.getProjects();
+        this.getTodaysReports()
+            .then(() => this.getActivities())
+            .catch(() => { });
+    }
+    setFilterAndGetActs(filter, previousSearch: Promise<any>): Promise<any>
     {
         return new Promise((resolve, reject) =>
         {
-            this.activityList.splice(0);
-            let filter = {
-                or: 0,
-                ignorecase: 1,
-                QueryValues:
-                [
-                    {
-                        "field": "ESHB_EPROJDES",
-                        "fromval": 'PLATFORM',
-                        "toval": "",
-                        "op": "=",
-                        "sort": 0,
-                        "isdesc": 0
-                    },
-                    {
-                        "field": "LEVEL",
-                        "fromval": "3",
-                        "toval": "",
-                        "op": ">=",
-                        "sort": 0,
-                        "isdesc": 1
-                    }]
-            };
-            let secondfilter = {
-                or: 0,
-                ignorecase: 1,
-                QueryValues:
-                [
-                    {
-                        "field": "ESHB_EPROJDES",
-                        "fromval": 'MOBILE',
-                        "toval": "",
-                        "op": "=",
-                        "sort": 0,
-                        "isdesc": 0
-                    },
-                    {
-                        "field": "LEVEL",
-                        "fromval": "3",
-                        "toval": "",
-                        "op": ">=",
-                        "sort": 0,
-                        "isdesc": 1
-                    }]
-            };
-            let thirdfilter = {
-                or: 0,
-                ignorecase: 1,
-                QueryValues:
-                [
-                    {
-                        "field": "ESHB_EPROJDES",
-                        "fromval": 'UI',
-                        "toval": "",
-                        "op": "=",
-                        "sort": 0,
-                        "isdesc": 0
-                    },
-                    {
-                        "field": "LEVEL",
-                        "fromval": "3",
-                        "toval": "",
-                        "op": ">=",
-                        "sort": 0,
-                        "isdesc": 1
-                    }]
-            };
-            this.formService.startFormAndGetRows(this.activityFormName, this.getCompanyName(), filter)
-                .then(form =>
+            let actsForm = this.formService.getForm(this.activityFormName);
+            previousSearch
+                .then(() =>
                 {
-                    let rows = this.objToArray(this.formService.getLocalRows(form));
-                    this.activityList = this.activityList.concat(rows);
-                    this.activityListObsr.next(this.activityList);
-                    return this.formService.setSearchFilter(form, secondfilter);
+                    return this.formService.setSearchFilter(actsForm, filter);
                 })
                 .then(() =>
                 {
-                    return this.formService.getRows(this.formService.getForm(this.activityFormName), 1);
-                })
-                .then((rows: any[]) =>
-                {
-                    rows = this.objToArray(rows);
-                    this.activityList = this.activityList.concat(rows);
-                    this.activityListObsr.next(this.activityList);
-                    return this.formService.setSearchFilter(this.formService.getForm(this.activityFormName), thirdfilter);
-                })
-                .then(() =>
-                {
-                    return this.formService.getRows(this.formService.getForm(this.activityFormName), 1);
+                    return this.formService.getRows(actsForm, 1);
                 })
                 .then((rows: any[]) =>
                 {
@@ -260,8 +227,47 @@ export class AppService
                     resolve();
                 })
                 .catch(() => reject());
-
         });
+    }
+    /******************* Activities Management *************/
+    getActivities()
+    {
+        this.activityList.splice(0);
+
+
+        this.getForm(this.activityFormName)
+            .then(form =>
+            {
+                let previousSearch = new Promise((resolve, reject) => resolve());
+                this.projList.map((value, index, arr) =>
+                {
+                    let filter = {
+                        or: 0,
+                        ignorecase: 1,
+                        QueryValues:
+                        [
+                            {
+                                "field": "ESHB_EPROJDES",
+                                "fromval": value,
+                                "toval": "",
+                                "op": "=",
+                                "sort": 0,
+                                "isdesc": 0
+                            },
+                            {
+                                "field": "LEVEL",
+                                "fromval": "3",
+                                "toval": "",
+                                "op": ">=",
+                                "sort": 0,
+                                "isdesc": 1
+                            }]
+                    };
+                    previousSearch=this.setFilterAndGetActs(filter, previousSearch);
+                    
+                });
+            })
+            .catch(() => { });
 
     }
     createNewActivity(parentAct, subject)
@@ -322,64 +328,67 @@ export class AppService
         };
     }
 
-    getTodaysReports()
+    getTodaysReports(): Promise<any>
     {
+        return new Promise((resolve, reject) =>
+        {
+            let today = this.getCurrentTime().dateStr;
+            let filter = {
+                or: 0,
+                ignorecase: 1,
+                QueryValues:
+                [
+                    {
+                        "field": "CURDATE",
+                        "fromval": today,
+                        "toval": "",
+                        "op": "=",
+                        "sort": 0,
+                        "isdesc": 0
+                    },
+                    {
+                        "field": "USERLOGIN",
+                        "fromval": this.getUserName(),
+                        "toval": "",
+                        "op": "=",
+                        "sort": 0,
+                        "isdesc": 0
+                    },
+                    {
+                        "field": "STIMEI",
+                        "fromval": "00:00",
+                        "toval": "",
+                        "op": "<>",
+                        "sort": 1,
+                        "isdesc": 1
+                    }
+                ]
+            };
 
-        let today = this.getCurrentTime().dateStr;//.dateFormated.replace(/\./g, "\/");
-        let filter = {
-            or: 0,
-            ignorecase: 1,
-            QueryValues:
-            [
+            let hoursForm: Form;
+            this.getForm(this.hoursFormName)
+                .then((form: Form) =>
                 {
-                    "field": "CURDATE",
-                    "fromval": today,
-                    "toval": "",
-                    "op": "=",
-                    "sort": 0,
-                    "isdesc": 0
-                },
+                    hoursForm = form;
+                    return this.formService.setSearchFilter(hoursForm, filter);
+                })
+                .then(() =>
                 {
-                    "field": "USERLOGIN",
-                    "fromval": this.getUserName(),
-                    "toval": "",
-                    "op": "=",
-                    "sort": 0,
-                    "isdesc": 0
-                },
+                    return this.formService.getRows(hoursForm, 1);
+                })
+                .then(rows =>
                 {
-                    "field": "STIMEI",
-                    "fromval": "00:00",
-                    "toval": "",
-                    "op": "<>",
-                    "sort": 1,
-                    "isdesc": 1
-                }
-            ]
-        };
-
-        let hoursForm: Form;
-        this.getForm(this.hoursFormName)
-            .then((form: Form) =>
-            {
-                hoursForm = form;
-                return this.formService.setSearchFilter(hoursForm, filter);
-            })
-            .then(() =>
-            {
-                return this.formService.getRows(hoursForm, 1);
-            })
-            .then(rows =>
-            {
-                if (rows)
-                {
-                    if (rows[1] && rows[1]['ETIMEI'] == "00:00")
-                        rows[1].isActive = true;
-                    this.reportList = rows;
-                }
-                this.reportListObsr.next(this.objToIterable.transform(rows));
-            })
-            .catch(() => { });
+                    resolve();
+                    if (rows)
+                    {
+                        if (rows[1] && rows[1]['ETIMEI'] == "00:00")
+                            rows[1].isActive = true;
+                        this.reportList = rows;
+                    }
+                    this.reportListObsr.next(this.objToIterable.transform(rows));
+                })
+                .catch(() => reject());
+        });
     }
     endActREport(report): Promise<any>
     {
@@ -480,6 +489,11 @@ export class AppService
                 // this.activeTask = null;
                 console.log(err);
             });
+    }
+    /////********** Projects ***************/
+    getProjects()
+    {
+        this.projectListObsr.next(this.projList);
     }
 
 }

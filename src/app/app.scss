@@ -18,7 +18,7 @@
 {
     overflow: auto ;
     scrollbar-base-color: transparent !important;
-  scrollbar-face-color: #cfcfcf;
+  scrollbar-face-color: transparent !important;
   scrollbar-3dlight-color: transparent !important;
   scrollbar-highlight-color:transparent !important;
   scrollbar-track-color: transparent !important;
@@ -40,7 +40,7 @@
 
   ::-webkit-scrollbar-thumb
   {
-    background-color:  #cfcfcf;
+    background-color:  transparent !important;
 
   }
 }

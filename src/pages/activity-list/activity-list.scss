@@ -13,13 +13,18 @@ activity-list {
   .activity-container
   {
      // column-count: 1;
+     >.col
+     {
+       padding-top: 0;
+     }
      ion-item
      {
-         border-left: 1px solid #dedede;
+         border-left: 1px solid color($colors,light);;
          padding-left: 0;
          .item-inner
          {
            background-color: color($colors,light);
+           color: color($colors,dark);
            padding: 10px;
          }
      }
@@ -84,5 +89,9 @@ activity-list {
     // background: rgba(236, 236, 236, 0.44);
     // width: 100%;
     // right: 0;
+  }
+  ion-searchbar
+  {
+    background-color: color($colors,prettylight) !important;
   }
 }

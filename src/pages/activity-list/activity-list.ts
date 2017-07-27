@@ -22,6 +22,7 @@ export class ActivityList
     this.isLoadingActs = false;
     this.activityManager = {};
     this.currentAct = {};
+    this.displayActs=[];
     this.appService.getKeyVkaue("priority-activities")
       .then(list =>
       {
@@ -61,13 +62,13 @@ export class ActivityList
     {
       case 'בוצעה':
       case 'התקבל':
-        return "green";
+        return "#28CC9E";
       case "חזר מ QA":
         return "crimson";
       case 'בדיקת QA':
         return '#d6d6d6';
     }
-    return "#1e6bc6";
+    return "#1F4E5F";
   }
 
   organizeActivities(list)

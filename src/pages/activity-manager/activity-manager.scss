@@ -6,9 +6,10 @@ activity-manager
    }
    ion-navbar + ion-toolbar .toolbar-background
    {
-       background-color: rgba(248, 248, 248, 0.62);
+    //    background-color: rgba(248, 248, 248, 0.62);
+    background-color: color($colors,prettylight);
    }
-     background-color: color($colors,redorange);
+     background-color: color($colors,lightblue);
      
         /*margin: 30px;*/
         box-shadow: 0 3px 10px grey;
@@ -44,16 +45,18 @@ activity-manager
    {
        height:20px;
        line-height: 20px;
-       border: 1px solid color($colors,white);
+       border: 1px solid color($colors,chip);
        background: transparent !important;
-       color: white;
-       button
+       color: color($colors,chip);
+       .button
        {
            height: 20px;
+           width: 29px;
+            height: 29px;
        }
         ion-label
         {
-            color: white;
+            color: color($colors,darkgray);
         }
    }
    .add-project
@@ -66,6 +69,6 @@ activity-manager
    }
     .project-container
     {
-        background-color: color($colors,blue);
+        background-color: color($colors,prettylight);
     }
 }

@@ -28,13 +28,8 @@ export class Main
   }
   ionViewDidLoad()
   {
-    this.loadData();
+    this.appService.loadData();
   }
-  loadData()
-  {
-    this.appService.getActivities()
-      .then(() => this.appService.getTodaysReports())
-      .catch(() => { });
-  }
+ 
 
 }

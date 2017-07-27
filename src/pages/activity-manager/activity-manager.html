@@ -5,7 +5,7 @@
   Ionic pages and navigation.
 -->
 <ion-header no-border>
-  <ion-navbar hideBackButton="true" dir="ltr" color="redorange">
+  <ion-navbar hideBackButton="true" dir="ltr" color="greenblue">
     <h6 padding-left no-margin [style.color]="'white'">PRIORITY</h6>
     <ion-buttons end padding-right>
       <button ion-button icon-only (click)="loadData()" color="white" clear>
@@ -19,27 +19,15 @@
   </ion-toolbar>
 
   <div text-center padding class="project-container">
-    <ion-chip>
-      <ion-label>מובייל</ion-label>
-      <button ion-button  color="lightblue" disabled>
-    <ion-icon name="close"></ion-icon>
-  </button>
-    </ion-chip>
-    <ion-chip>
-      <ion-label>פלטפורמה</ion-label>
-      <button ion-button  color="lightblue" disabled>
-         <ion-icon name="close"></ion-icon>
-       </button>
-    </ion-chip>
-    <ion-chip>
-      <ion-label>UI</ion-label>
-      <button ion-button  color="lightblue" disabled>
-         <ion-icon name="close"></ion-icon>
-       </button>
-    </ion-chip>
-    <button ion-button icon-only clear color="white" disabled class="add-project">
-        <ion-icon name="add"></ion-icon>
+    <ion-chip *ngFor="let project of projects | async">
+      <ion-label>{{project.title}}</ion-label>
+      <button ion-button clear color="chip" disabled>
+          <ion-icon name="close"></ion-icon>
       </button>
+    </ion-chip>
+    <button ion-button icon-only clear color="darkgray" disabled class="add-project">
+        <ion-icon name="add"></ion-icon>
+    </button>
   </div>
 </ion-header>
 <ion-content dir="rtl">

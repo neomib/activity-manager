@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, PopoverController } from 'ionic-angular';
 import { AppService } from '../../providers/app-service';
+import { Subject } from 'rxjs/Subject';
 
 /**
  * Generated class for the ActivityManager page.
@@ -15,15 +16,14 @@ import { AppService } from '../../providers/app-service';
 })
 export class ActivityManager
 {
-
+  projects: Subject<any>;
   constructor(public navCtrl: NavController, public navParams: NavParams, private appService: AppService)
   {
+    this.projects=this.appService.projectListObsr;
   }
   loadData()
   {
-    this.appService.getActivities()
-      .then(() => this.appService.getTodaysReports())
-      .catch(() => { });
+    this.appService.loadData();
   }
 
 
