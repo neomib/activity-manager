@@ -94,9 +94,9 @@ export class ActivityList
         if (act)
         {
           act.subActivities.push(value);
-          if (this.getisActDone(act))
+          if (this.getisActDone(value))
             act.subActDone.push(value);
-          else if (this.getisActQA(act))
+          else if (this.getisActQA(value))
             act.subActQA.push(value);
           else
             act.subActOther.push(value);

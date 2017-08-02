@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ConfigurationService, FormService, ObjToIterable, PriorityService, MessageHandler } from 'priority-ionic';
-import { Form, ProfileConfig, ServerResponse, ServerResponseCode, ServerResponseType, Constants, MessageOptions } from 'priority-ionic';
+import { Form, ProfileConfig, ServerResponse, ServerResponseCode, ServerResponseType, Constants, MessageOptions, Filter } from 'priority-ionic';
 import { Storage } from '@ionic/storage';
 import { Subject } from 'rxjs/Subject';
 
@@ -16,6 +16,7 @@ export class AppService
 
     activityFormName: string;
     hoursFormName: string;
+    todoListFormName: string;
 
     private userNameForLocalStorage: string;
     private pswdForLocalStorage: string;
@@ -35,6 +36,10 @@ export class AppService
     projectListObsr: Subject<any>;
     projList: any[];
 
+    //todolist
+    todoListObsr: Subject<any>;
+    todoList: any[];
+
     constructor(private configService: ConfigurationService,
         private formService: FormService,
         private storage: Storage,
@@ -45,6 +50,7 @@ export class AppService
 
         this.activityFormName = "PROJACTS_ONE";
         this.hoursFormName = "TRANSORDER_q";
+        this.todoListFormName = "TODOLIST";
 
         this.userNameForLocalStorage = "priorityUsername";
         this.pswdForLocalStorage = "priorityPassword";
@@ -58,7 +64,10 @@ export class AppService
         this.reportListObsr = new Subject();
 
         this.projectListObsr = new Subject();
-        this.projList = [{name:'PLATFORM',title:'פלטפורמה'}, {name:'MOBILE',title:'מובייל'}, {name:'UI',title:'UI'}];
+        this.projList = [{ name: 'PLATFORM', title: 'פלטפורמה' }, { name: 'MOBILE', title: 'מובייל' }, { name: 'UI', title: 'UI' }];
+
+        this.todoList = [];
+        this.todoListObsr = new Subject();
     }
     // ***** Login *****
 
@@ -203,6 +212,7 @@ export class AppService
         this.getProjects();
         this.getTodaysReports()
             .then(() => this.getActivities())
+            .then(() => this.getToDOList())
             .catch(() => { });
     }
     setFilterAndGetActs(filter, previousSearch: Promise<any>): Promise<any>
@@ -230,44 +240,51 @@ export class AppService
         });
     }
     /******************* Activities Management *************/
-    getActivities()
+    getActivities(): Promise<any>
     {
-        this.activityList.splice(0);
+        return new Promise((resolve, reject) =>
+        {
+            this.activityList.splice(0);
 
 
-        this.getForm(this.activityFormName)
-            .then(form =>
-            {
-                let previousSearch = new Promise((resolve, reject) => resolve());
-                this.projList.map((value, index, arr) =>
+            this.getForm(this.activityFormName)
+                .then(form =>
                 {
-                    let filter = {
-                        or: 0,
-                        ignorecase: 1,
-                        QueryValues:
-                        [
-                            {
-                                "field": "ESHB_EPROJDES",
-                                "fromval": value,
-                                "toval": "",
-                                "op": "=",
-                                "sort": 0,
-                                "isdesc": 0
-                            },
-                            {
-                                "field": "LEVEL",
-                                "fromval": "3",
-                                "toval": "",
-                                "op": ">=",
-                                "sort": 0,
-                                "isdesc": 1
-                            }]
-                    };
-                    previousSearch=this.setFilterAndGetActs(filter, previousSearch);
-                    
-                });
-            })
-            .catch(() => { });
+                    let previousSearch = new Promise((innerresolve, reject) => innerresolve());
+                    this.projList.map((value, index, arr) =>
+                    {
+                        let filter = {
+                            or: 0,
+                            ignorecase: 1,
+                            QueryValues:
+                            [
+                                {
+                                    "field": "ESHB_EPROJDES",
+                                    "fromval": value.name,
+                                    "toval": "",
+                                    "op": "=",
+                                    "sort": 0,
+                                    "isdesc": 0
+                                },
+                                {
+                                    "field": "LEVEL",
+                                    "fromval": "3",
+                                    "toval": "",
+                                    "op": ">=",
+                                    "sort": 0,
+                                    "isdesc": 1
+                                }]
+                        };
+                        previousSearch = this.setFilterAndGetActs(filter, previousSearch);
+                        if (index == this.projList.length - 1)
+                        {
+                            previousSearch.then(() => resolve());
+                        }
+
+                    });
+                })
+                .catch(() => reject());
+        });
 
     }
     createNewActivity(parentAct, subject)
@@ -451,34 +468,38 @@ export class AppService
         //this.activeTask = activity;
 
         let hoursForm: Form;
+        let rowind = 0;
+        let project = activity['DOCNO'] ? activity['DOCNO'] : activity['PROJDOCNO'];
+        let actNum = activity['PROJACT'] ? activity['PROJACT'] : activity['TODOREF'];
         this.getForm(this.hoursFormName)
             .then(form =>
             {
                 hoursForm = form;
-                return hoursForm.newRow();
+                return this.formService.newRow(hoursForm);
+            })
+            .then(rowInd =>
+            {
+                //project
+                rowind = rowInd;
+                return this.formService.updateField(hoursForm, rowind, "DOCNO", project);
+            })
+            .then(() =>
+            {
+                return this.formService.updateField(hoursForm, rowind, "PROJACTA", actNum);
             })
             .then(() =>
             {
                 //date
-                return hoursForm.fieldUpdate("CURDATE", dateObj.dateStr);
+                return this.formService.updateField(hoursForm, rowind, "CURDATE", dateObj.dateStr);
             })
             .then(() =>
             {
-                //project
-                return hoursForm.fieldUpdate("DOCNO", activity['DOCNO']);
-            })
-            .then(() =>
-            {
+                return this.formService.updateField(hoursForm, rowind, "STIMEI", dateObj.hoursStr + ":" + dateObj.minutesStr);
 
-                return hoursForm.fieldUpdate("WBS", activity['WBS']);
             })
             .then(() =>
             {
-                return hoursForm.fieldUpdate("STIMEI", dateObj.hoursStr + ":" + dateObj.minutesStr);
-            })
-            .then(() =>
-            {
-                return hoursForm.saveRow(0);
+                return this.formService.saveRow(hoursForm, rowind, 0);
             })
             .then(() =>
             {
@@ -495,5 +516,71 @@ export class AppService
     {
         this.projectListObsr.next(this.projList);
     }
+    /////********** Todo List ***************/
+    getToDOList(): Promise<any>
+    {
+        return new Promise((resolve, reject) =>
+        {
+            let date = new Date();
+            let lastMonth: string | number = date.getUTCMonth();
+            lastMonth = lastMonth < 10 ? '0' + lastMonth : lastMonth + '';
+            let year = date.getUTCFullYear().toString().substring(2);
+            let fromDate = this.getLang() == 1 ? "01/" + lastMonth + "/" + year : lastMonth + "/01/" + year;
+            fromDate = fromDate + " 00:00";
 
+            let filter: Filter = {
+                or: 0,
+                ignorecase: 1,
+                QueryValues: [
+                    {
+                        "field": "OWNERLOGIN",
+                        "fromval": this.getUserName(),
+                        "toval": "",
+                        "op": "=",
+                        "sort": 0,
+                        "isdesc": 0
+                    },
+                    {
+                        "field": "UDATE",
+                        "fromval": fromDate,
+                        "toval": "",
+                        "op": ">",
+                        "sort": 1,
+                        "isdesc": 1
+                    }]
+            };
+
+            let todoForm;
+            this.getForm(this.todoListFormName)
+                .then(form => 
+                {
+                    todoForm = form;
+                    return this.formService.setSearchFilter(form, filter);
+                })
+                .then(() => this.formService.getRows(todoForm, 1))
+                .then(todoRows =>
+                {
+
+                    todoRows = this.objToIterable.transform(todoRows);
+                    this.todoList = todoRows;
+                    this.todoListObsr.next(this.todoList);
+
+                    // let serviceFormConfig = Forms[this.appService.serviceCallFormName];
+                    // this.serviceCallsList = todoRows.filter(row => row.DOCDES == serviceFormConfig.title);
+
+                    // let orderFormConfig = Forms[this.appService.orderFormName];
+                    // this.ordersList = todoRows.filter(row => row.DOCDES == orderFormConfig.title);
+
+                    // return this.formService.endForm(todoForm);
+                })
+
+                .then(() => resolve())
+                .catch(() => { });
+        });
+    }
+    getToDoActivities()
+    {
+        if (this.todoList)
+            return this.todoList.filter(row => row.DOCDES == "פעילות לפרויקט");
+    }
 }

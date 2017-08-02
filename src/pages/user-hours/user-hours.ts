@@ -17,15 +17,26 @@ import { AppService } from '../../providers/app-service';
 export class UserHours 
 {
   hoursList: any[];
+  myTasks:any[];
   currentDate:string;
   isShowSpinner:boolean;
+  isShowTodayReports:boolean;
+
+  selectedSegment;
+  
   constructor(public navCtrl: NavController, private appService: AppService)
   {
+    this.selectedSegment = "todayReports";
     this.isShowSpinner=true;
+    this.isShowTodayReports=true;
     this.appService.reportListObsr.subscribe(list =>
     {
       this.hoursList = list;
       this.isShowSpinner=false;
+    });
+    this.appService.todoListObsr.subscribe(list =>
+    {
+     this.myTasks=this.appService.getToDoActivities();
     });
     this.currentDate=this.appService.getCurrentTime().dateFormated;
   }
@@ -38,6 +49,12 @@ export class UserHours
   {
     this.appService.startActReport(report);
   }
-  
+   onSegmentChanged(segmentButton)
+    {
+        if (segmentButton.value == "myTasks")
+           this.isShowTodayReports=false;
+        else
+            this.isShowTodayReports=true;
+    }
 
 }
