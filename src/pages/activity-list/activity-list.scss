@@ -27,6 +27,10 @@ activity-list {
            color: color($colors,dark);
            padding: 10px;
          }
+         ion-label
+         {
+           white-space: normal;
+         }
      }
      .current-activity 
      {
@@ -56,6 +60,15 @@ activity-list {
         //   border-left-color: color($colors,light);
         //   border-right-width: 3px;
         //   border-right-style: solid;
+        .activity-id
+        {
+          max-width: 70%;
+        }
+       
+       p
+       {
+            font-size: 1.1rem;
+       }
       }
       &.activity-container-narrow
       {
@@ -84,7 +97,9 @@ activity-list {
 //   }
   activity-options
   {
-    // position: absolute;
+    position: absolute;
+    left: 0;
+    top:8px;
     // bottom: 0;
     // background: rgba(236, 236, 236, 0.44);
     // width: 100%;
@@ -93,5 +108,13 @@ activity-list {
   ion-searchbar
   {
     background-color: color($colors,prettylight) !important;
+  }
+  .sub-acts-container
+  {
+    ion-card-header
+    {
+      color:white;
+      text-align: center;
+    }
   }
 }

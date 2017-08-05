@@ -4,5 +4,14 @@ page-main {
    {
                 height: 100%;
    }
+    .toolbar
+   {
+       min-height: 30px  !important;
+   }
+   .activity-manager-col
+   {
+       box-shadow: 1px 0px 4px 0px rgba(0,0,0,0.38);
+       z-index: 10;
+   }
    
 }

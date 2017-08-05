@@ -9,14 +9,15 @@ user-hours {
  }
  h5
  {
-    color:color($colors,light);
+    color:#2d5c7f;
     font-weight: 400;
-    font-size: 17px;
+    font-size: 14px;
+    padding-top: 16px;
  }
  h3
  {
      white-space: normal;
-     color: white;
+    //  color: white;
      & + p
      {
          color:#ec9696 !important;
@@ -24,8 +25,16 @@ user-hours {
  }
  ion-content
  {
-     background-color: color($colors,dark) !important;
+     .scroll-content
+     {
+         margin-top: 70px;
+     }
+     background-color: color($colors,white) !important;
     //  BORDER-RIGHT: 7PX SOLID color($colors,redorange);
+    .todays-reports-list
+    {
+        margin-top: 10px;
+    }
      ion-item
      {
          background-color: transparent !important;

@@ -30,6 +30,9 @@ export class Main
   {
     this.appService.loadData();
   }
- 
+  loadData()
+  {
+    this.appService.loadData();
+  }
 
 }

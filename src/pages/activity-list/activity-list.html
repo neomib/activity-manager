@@ -15,9 +15,8 @@
       <ion-content>
         <ion-item *ngFor="let activity of displayActs" (click)="setCurrentActivity(activity)" [ngClass]="{'current-activity':activity.isActive}">
           <!-- <ion-card-header> -->
-          <ion-note>{{activity["PROJACT"]}}</ion-note>
+          <ion-note>{{activity["PROJACT"] +" - "+ activity["WBS"] }}</ion-note>
           {{activity["ACTDES"]}}
-          <ion-note>{{activity["WBS"]}}</ion-note>
           <ion-badge item-end>{{activity.subActivities.length>0? activity.subActivities.length : ""}}</ion-badge>
           <!-- </ion-card-header> -->
           <!-- <ion-card-content *ngIf="activity.subActivities.length>0">
@@ -32,30 +31,33 @@
         <ion-grid>
           <ion-row>
             <ion-col col-12 col-lg-4>
+              <ion-card-header [style.backgroundColor]="'#2D5C7F'">לביצוע</ion-card-header>
               <ion-card *ngFor="let subAct of currentAct.subActOther" [style.borderRightColor]="getSubActColor(subAct)" class="sub-activity"
                 padding (touchstart)="onmouseover(subAct)" (mouseenter)="onmouseover(subAct)" (mouseleave)="onmouseout(subAct)">
-                <ion-note>{{subAct["PROJACT"]}}</ion-note>
-                <span>{{subAct["ACTDES"]}}</span>
-                <ion-note>{{subAct["WBS"]}}</ion-note>
-                <activity-options [activity]="subAct"></activity-options>
+                <ion-note class="activity-id">{{subAct["PROJACT"]+" - "+subAct["WBS"]}}</ion-note>
+                <h4>{{subAct["ACTDES"]}}</h4>
+                <p>{{subAct["STEPSTATUSDES"]}}</p>
+                <activity-options [activity]="subAct" *ngIf="subAct.showOpts"></activity-options>
               </ion-card>
             </ion-col>
             <ion-col col-12 col-lg-4>
+               <ion-card-header [style.backgroundColor]="'#F38181'">QA</ion-card-header>
               <ion-card *ngFor="let subAct of currentAct.subActQA" [style.borderRightColor]="getSubActColor(subAct)" class="sub-activity"
                 padding (touchstart)="onmouseover(subAct)" (mouseenter)="onmouseover(subAct)" (mouseleave)="onmouseout(subAct)">
-                <ion-note>{{subAct["PROJACT"]}}</ion-note>
-                <span>{{subAct["ACTDES"]}}</span>
-                <ion-note>{{subAct["WBS"]}}</ion-note>
-                <activity-options [activity]="subAct"></activity-options>
+                <ion-note>{{subAct["PROJACT"]+" - "+subAct["WBS"]}}</ion-note>
+                 <h4>{{subAct["ACTDES"]}}</h4>
+                 <p>{{subAct["STEPSTATUSDES"]}}</p>
+                <activity-options [activity]="subAct"*ngIf="subAct.showOpts" ></activity-options>
               </ion-card>
             </ion-col>
             <ion-col col-12 col-lg-4>
+              <ion-card-header [style.backgroundColor]="'#28CC9E'">בוצעה</ion-card-header>
               <ion-card *ngFor="let subAct of currentAct.subActDone" [style.borderRightColor]="getSubActColor(subAct)" class="sub-activity"
                 padding (touchstart)="onmouseover(subAct)" (mouseenter)="onmouseover(subAct)" (mouseleave)="onmouseout(subAct)">
-                <ion-note>{{subAct["PROJACT"]}}</ion-note>
-                <span>{{subAct["ACTDES"]}}</span>
-                <ion-note>{{subAct["WBS"]}}</ion-note>
-                <activity-options [activity]="subAct"></activity-options>
+                 <ion-note>{{subAct["PROJACT"]+" - "+subAct["WBS"]}}</ion-note>
+                 <h4>{{subAct["ACTDES"]}}</h4>
+                 <p>{{subAct["STEPSTATUSDES"]}}</p>
+                <activity-options [activity]="subAct" *ngIf="subAct.showOpts"></activity-options>
               </ion-card>
             </ion-col>
 

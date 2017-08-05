@@ -5,9 +5,8 @@
   Ionic pages and navigation.
 -->
 <ion-header no-border>
-  <!-- <h5 text-center>{{currentDate}}</h5> -->
   <ion-toolbar>
-    <ion-segment [(ngModel)]="selectedSegment" (ionChange)="onSegmentChanged($event)" dir="rtl">
+    <ion-segment [(ngModel)]="selectedSegment" (ionChange)="onSegmentChanged($event)" dir="rtl" color="darkblue">
       <ion-segment-button value="todayReports">
         היום
       </ion-segment-button>
@@ -15,25 +14,19 @@
         הפעילויות שלי
       </ion-segment-button>
     </ion-segment>
+     <h5 text-center no-margin *ngIf="isShowTodayReports">{{currentDate}}</h5> 
   </ion-toolbar>
 </ion-header>
 
-
-<ion-content padding color="dark">
+<ion-content  color="dark">
   <ion-spinner name="dots" *ngIf="isShowSpinner" text-center></ion-spinner>
-  <ion-list *ngIf="isShowTodayReports">
+  <ion-list *ngIf="isShowTodayReports" class="todays-reports-list">
     <ion-item *ngFor="let time of hoursList">
       <ion-note>{{"פעילות"+" "+time['PROJACT']}} </ion-note>
       <h3>{{time['ACTDES']}}</h3>
       <p>{{time.STIMEI+" - "+time.ETIMEI}}</p>
       <ion-row>
         <ion-col text-center>
-          <button ion-button clear class="start-activity" disabled>
-              <ion-icon name="star" color="yellow"></ion-icon>
-        </button>
-          <button ion-button clear class="start-activity" disabled>
-              <ion-icon name="create" color="darkgray"></ion-icon>
-        </button>
           <button ion-button *ngIf="time.isActive" clear class="start-activity" (click)="endReport(time)">
               <ion-icon name="pause" color="crimson"></ion-icon>
         </button>
@@ -57,12 +50,9 @@
       <ion-note>{{item['DOCDES'] +" "+item['TODOREF']}} </ion-note>
       <h3>{{item['DETAILS']}} </h3>
       <ion-row>
-        <ion-col text-center>
-          <button ion-button clear class="start-activity" disabled>
-              <ion-icon name="star" color="yellow"></ion-icon>
-        </button>
-          <button ion-button clear class="start-activity" disabled>
-              <ion-icon name="create" color="darkgray"></ion-icon>
+        <ion-col>
+          <button ion-button clear disabled>
+              <ion-icon name="ios-clipboard-outline" color="darkgray"></ion-icon>
         </button>
           <button ion-button  clear class="start-activity" (click)="startReport(item)">
               <ion-icon name="play" color="secondary"></ion-icon>
