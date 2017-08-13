@@ -240,6 +240,14 @@ export class AppService
         });
     }
     /******************* Activities Management *************/
+    getisActDone(act)
+    {
+        return act.STEPSTATUSDES == "בוצעה" || act.STEPSTATUSDES == "התקבל";
+    }
+    getisActQA(act)
+    {
+        return act.STEPSTATUSDES == "חזר מ QA" || act.STEPSTATUSDES == "בדיקת QA";
+    }
     getActivities(): Promise<any>
     {
         return new Promise((resolve, reject) =>
@@ -317,6 +325,58 @@ export class AppService
                 this.activityListObsr.next(this.activityList)
             })
             .catch();
+    }
+    finishActivity(activity): Promise<any>
+    {
+        return new Promise((resolve, reject) =>
+        {
+            let filter = {
+                or: 0,
+                ignorecase: 1,
+                QueryValues:
+                [
+                    {
+                        "field": "PROJACT",
+                        "fromval": activity.PROJACT,
+                        "toval": "",
+                        "op": "=",
+                        "sort": 0,
+                        "isdesc": 0
+                    }
+                ]
+            };
+            let activityForm: Form;
+            this.getForm(this.activityFormName)
+                .then(form =>
+                {
+                    activityForm = form;
+                    return this.formService.setSearchFilter(form, filter);
+                })
+                .then(() =>
+                {
+                    return activityForm.getRows(1);
+                })
+                .then(rows =>
+                {
+                    return activityForm.fieldUpdate("STEPSTATUSDES", "בוצעה")
+                })
+                .then(() =>
+                {
+                    return activityForm.saveRow(0);
+                })
+                .then(() => resolve())
+                .catch(() =>
+                {
+                    if (activityForm)
+                        this.formService.undoRow(activityForm)
+                            .then(() => reject());
+                    else
+                        reject();
+                });
+        });
+
+
+
     }
     /******************* Time Tracking *************/
     getCurrentTime()

@@ -48,14 +48,7 @@ export class ActivityList
     act.isActive = true;
     this.currentAct = act;
   }
-  getisActDone(act)
-  {
-    return act.STEPSTATUSDES == "בוצעה" || act.STEPSTATUSDES == "התקבל";
-  }
-  getisActQA(act)
-  {
-    return act.STEPSTATUSDES == "חזר מ QA" || act.STEPSTATUSDES == "בדיקת QA";
-  }
+ 
   getSubActColor(act)
   {
     switch (act.STEPSTATUSDES)
@@ -66,7 +59,7 @@ export class ActivityList
       case "חזר מ QA":
         return "crimson";
       case 'בדיקת QA':
-        return '#d6d6d6';
+        return '#b1b1b1';
     }
     return "#1F4E5F";
   }
@@ -94,9 +87,9 @@ export class ActivityList
         if (act)
         {
           act.subActivities.push(value);
-          if (this.getisActDone(value))
+          if (this.appService.getisActDone(value))
             act.subActDone.push(value);
-          else if (this.getisActQA(value))
+          else if (this.appService.getisActQA(value))
             act.subActQA.push(value);
           else
             act.subActOther.push(value);
@@ -144,7 +137,7 @@ export class ActivityList
   }
   onmouseover(subact)
   {
-    subact.showOpts = true;
+    subact.showOpts =  true;
   }
   onmouseout(subact)
   {

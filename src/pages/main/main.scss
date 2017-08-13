@@ -13,5 +13,9 @@ page-main {
        box-shadow: 1px 0px 4px 0px rgba(0,0,0,0.38);
        z-index: 10;
    }
+   >ion-content .scroll-content
+   {
+      overflow-x: hidden;
+   }
    
 }

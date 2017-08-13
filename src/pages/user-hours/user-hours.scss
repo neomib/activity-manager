@@ -3,9 +3,13 @@ user-hours {
     // left: 100px;
     background-color: color($colors,dark);
     z-index: -1;
+ ion-toolbar
+ {
+      margin-right: 1px;
+ }
  .toolbar-background
  {
-     background: transparent;
+    //  background: transparent;
  }
  h5
  {
@@ -13,14 +17,16 @@ user-hours {
     font-weight: 400;
     font-size: 14px;
     padding-top: 16px;
+    padding-bottom: 16px;
  }
  h3
  {
      white-space: normal;
+    //  max-width: 80%;
     //  color: white;
      & + p
      {
-         color:#ec9696 !important;
+         color:#f38181 !important;
      }
  }
  ion-content
@@ -34,22 +40,40 @@ user-hours {
     .todays-reports-list
     {
         margin-top: 10px;
+      .activity-play
+      {
+        float: left;
+       top: -28px;
+       }
+    }
+    .todo-list
+    {
+      .activity-play
+      {
+        float: left;
+        top: -46px;
+       }
     }
      ion-item
      {
          background-color: transparent !important;
-         .item-inner
-         {
-             border-color: #626263 !important;
-         }
+        //  .item-inner
+        //  {
+        //      border-color: #626263 !important;
+        //  }
          ion-note
          {
              font-size: 13px;
          }
+         ion-label
+        {
+               margin-bottom: -16px !important;
+        }
      }
     .spinner-dots circle
      {
          fill: #ababab;
      }
  }
+ 
 }

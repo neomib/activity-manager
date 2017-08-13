@@ -37,27 +37,26 @@
                 <ion-note class="activity-id">{{subAct["PROJACT"]+" - "+subAct["WBS"]}}</ion-note>
                 <h4>{{subAct["ACTDES"]}}</h4>
                 <p>{{subAct["STEPSTATUSDES"]}}</p>
-                <activity-options [activity]="subAct" *ngIf="subAct.showOpts"></activity-options>
+                <activity-options [activity]="subAct" [parentActivity]="currentAct" *ngIf="subAct.showOpts"></activity-options>
               </ion-card>
             </ion-col>
             <ion-col col-12 col-lg-4>
-               <ion-card-header [style.backgroundColor]="'#F38181'">QA</ion-card-header>
+              <ion-card-header [style.backgroundColor]="'#F38181'">QA</ion-card-header>
               <ion-card *ngFor="let subAct of currentAct.subActQA" [style.borderRightColor]="getSubActColor(subAct)" class="sub-activity"
                 padding (touchstart)="onmouseover(subAct)" (mouseenter)="onmouseover(subAct)" (mouseleave)="onmouseout(subAct)">
                 <ion-note>{{subAct["PROJACT"]+" - "+subAct["WBS"]}}</ion-note>
-                 <h4>{{subAct["ACTDES"]}}</h4>
-                 <p>{{subAct["STEPSTATUSDES"]}}</p>
-                <activity-options [activity]="subAct"*ngIf="subAct.showOpts" ></activity-options>
+                <h4>{{subAct["ACTDES"]}}</h4>
+                <p>{{subAct["STEPSTATUSDES"]}}</p>
+                <activity-options [activity]="subAct" [parentActivity]="currentAct" *ngIf="subAct.showOpts"></activity-options>
               </ion-card>
             </ion-col>
             <ion-col col-12 col-lg-4>
               <ion-card-header [style.backgroundColor]="'#28CC9E'">בוצעה</ion-card-header>
               <ion-card *ngFor="let subAct of currentAct.subActDone" [style.borderRightColor]="getSubActColor(subAct)" class="sub-activity"
                 padding (touchstart)="onmouseover(subAct)" (mouseenter)="onmouseover(subAct)" (mouseleave)="onmouseout(subAct)">
-                 <ion-note>{{subAct["PROJACT"]+" - "+subAct["WBS"]}}</ion-note>
-                 <h4>{{subAct["ACTDES"]}}</h4>
-                 <p>{{subAct["STEPSTATUSDES"]}}</p>
-                <activity-options [activity]="subAct" *ngIf="subAct.showOpts"></activity-options>
+                <ion-note>{{subAct["PROJACT"]+" - "+subAct["WBS"]}}</ion-note>
+                <h4>{{subAct["ACTDES"]}}</h4>
+                <p>{{subAct["STEPSTATUSDES"]}}</p>
               </ion-card>
             </ion-col>
 
