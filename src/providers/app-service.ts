@@ -215,6 +215,27 @@ export class AppService
             .then(() => this.getToDOList())
             .catch(() => { });
     }
+    getAllActsRows(form: Form,rowNum:number): Promise<any>
+    {
+        return new Promise((resolve, reject) =>
+        {
+            this.formService.getRows(form, rowNum)
+                .then((rows: any[]) =>
+                {
+                    rows = this.objToArray(rows);
+                    this.activityList = this.activityList.concat(rows);
+                    if (rows.length >= 100)
+                        this.getAllActsRows(form,Number(rows[rows.length-1].key)+1);
+                    else
+                    {
+                        this.activityListObsr.next(this.activityList);
+                        resolve();
+                    }
+
+                })
+                .catch(() => reject());
+        });
+    }
     setFilterAndGetActs(filter, previousSearch: Promise<any>): Promise<any>
     {
         return new Promise((resolve, reject) =>
@@ -227,13 +248,10 @@ export class AppService
                 })
                 .then(() =>
                 {
-                    return this.formService.getRows(actsForm, 1);
+                    return this.getAllActsRows(actsForm,1);
                 })
-                .then((rows: any[]) =>
+                .then(() =>
                 {
-                    rows = this.objToArray(rows);
-                    this.activityList = this.activityList.concat(rows);
-                    this.activityListObsr.next(this.activityList);
                     resolve();
                 })
                 .catch(() => reject());
