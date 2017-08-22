@@ -3,6 +3,7 @@ import { IonicPageModule } from 'ionic-angular';
 import { ActivityEditor } from './activity-editor';
 
 
+
 @NgModule({
   declarations: [
     ActivityEditor
@@ -14,4 +15,4 @@ import { ActivityEditor } from './activity-editor';
     ActivityEditor
   ]
 })
-export class ActivityEditorModule {}
+export class ActivityEditorModule { }

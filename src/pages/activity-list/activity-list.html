@@ -11,11 +11,12 @@
 <ion-content>
   <ion-spinner name="dots" *ngIf="isLoadingActs"></ion-spinner>
   <ion-row class="activity-container">
-    <ion-col>
+    <ion-col col-md-4 col-0>
       <ion-content>
+        <!--separate ion-content for scrolling-->
         <ion-item *ngFor="let activity of displayActs" (click)="setCurrentActivity(activity)" [ngClass]="{'current-activity':activity.isActive}">
           <!-- <ion-card-header> -->
-          <ion-note>{{activity["PROJACT"] +" - "+ activity["WBS"] }}</ion-note>
+          <ion-note>{{activity["WBS"] }}</ion-note>
           {{activity["ACTDES"]}}
           <ion-badge item-end>{{activity.subActivities.length>0? activity.subActivities.length : ""}}</ion-badge>
           <!-- </ion-card-header> -->
@@ -26,45 +27,50 @@
         </ion-item>
       </ion-content>
     </ion-col>
-    <ion-col class="sub-acts-container" col-md-8 col-12>
+    <ion-col class="sub-acts-container">
       <ion-content>
-        <ion-grid>
+        <!--separate ion-content for scrolling-->
+        <ion-grid margin-bottom *ngIf="displayActs && displayActs.length>0 " [ngClass]="{'has-editor': currentSubAct!==undefined}">
           <ion-row>
             <ion-col col-12 col-lg-4>
               <ion-card-header [style.backgroundColor]="'#2D5C7F'">לביצוע</ion-card-header>
               <ion-card *ngFor="let subAct of currentAct.subActOther" [style.borderRightColor]="getSubActColor(subAct)" class="sub-activity"
-                padding (touchstart)="onmouseover(subAct)" (mouseenter)="onmouseover(subAct)" (mouseleave)="onmouseout(subAct)">
-                <ion-note class="activity-id">{{subAct["PROJACT"]+" - "+subAct["WBS"]}}</ion-note>
+                padding (mouseenter)="onmouseover(subAct)" (mouseleave)="onmouseout(subAct)" (click)="selectSubAct(subAct)">
+                <ion-note class="activity-id">{{subAct["PROJACT"]}}</ion-note>
                 <h4>{{subAct["ACTDES"]}}</h4>
-                <p>{{subAct["STEPSTATUSDES"]}}</p>
+                <p>{{"באחריות "+subAct["OWNER"]}}</p>
                 <activity-options [activity]="subAct" [parentActivity]="currentAct" *ngIf="subAct.showOpts"></activity-options>
               </ion-card>
             </ion-col>
             <ion-col col-12 col-lg-4>
               <ion-card-header [style.backgroundColor]="'#F38181'">QA</ion-card-header>
               <ion-card *ngFor="let subAct of currentAct.subActQA" [style.borderRightColor]="getSubActColor(subAct)" class="sub-activity"
-                padding (touchstart)="onmouseover(subAct)" (mouseenter)="onmouseover(subAct)" (mouseleave)="onmouseout(subAct)">
-                <ion-note>{{subAct["PROJACT"]+" - "+subAct["WBS"]}}</ion-note>
+                padding (mouseenter)="onmouseover(subAct)" (mouseleave)="onmouseout(subAct)" (click)="selectSubAct(subAct)">
+                <ion-note>{{subAct["PROJACT"]}}</ion-note>
                 <h4>{{subAct["ACTDES"]}}</h4>
-                <p>{{subAct["STEPSTATUSDES"]}}</p>
+                <p>{{"באחריות "+subAct["OWNER"]}}</p>
                 <activity-options [activity]="subAct" [parentActivity]="currentAct" *ngIf="subAct.showOpts"></activity-options>
               </ion-card>
             </ion-col>
             <ion-col col-12 col-lg-4>
               <ion-card-header [style.backgroundColor]="'#28CC9E'">בוצעה</ion-card-header>
               <ion-card *ngFor="let subAct of currentAct.subActDone" [style.borderRightColor]="getSubActColor(subAct)" class="sub-activity"
-                padding (touchstart)="onmouseover(subAct)" (mouseenter)="onmouseover(subAct)" (mouseleave)="onmouseout(subAct)">
-                <ion-note>{{subAct["PROJACT"]+" - "+subAct["WBS"]}}</ion-note>
+                padding (mouseenter)="onmouseover(subAct)" (mouseleave)="onmouseout(subAct)" (click)="selectSubAct(subAct)">
+                <ion-note>{{subAct["PROJACT"]}}</ion-note>
                 <h4>{{subAct["ACTDES"]}}</h4>
-                <p>{{subAct["STEPSTATUSDES"]}}</p>
+                <p>{{"באחריות "+subAct["OWNER"]}}</p>
               </ion-card>
             </ion-col>
-
           </ion-row>
         </ion-grid>
       </ion-content>
     </ion-col>
-
+    <ion-col *ngIf="currentSubAct!==undefined" class="activity-editor">
+       <button ion-button icon-only clear color="dark" (click)="closeactivityEditor()" class="close-subact-btn">
+               <ion-icon name="close"></ion-icon>
+           </button>
+              <activity-editor [activity]="currentSubAct"></activity-editor>
+            </ion-col>
   </ion-row>
 
 </ion-content>

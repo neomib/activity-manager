@@ -21,11 +21,12 @@
 <ion-content color="dark">
   <ion-spinner name="dots" *ngIf="isShowSpinner" text-center></ion-spinner>
   <ion-list *ngIf="isShowTodayReports" class="todays-reports-list">
+    <ion-label text-center *ngIf="hoursList && hoursList.length<=0">לא קיימים דווחים להיום</ion-label>
     <ion-item *ngFor="let time of hoursList" padding-right>
-      <ion-note>{{"פעילות"+" "+time['PROJACT']}} </ion-note>
+      <ion-note>{{"פעילות"+" "+time['PROJACTA']}} </ion-note>
       <h3>{{time['ACTDES']}}</h3>
       <p>{{time.STIMEI+" - "+time.ETIMEI}}</p>
-      <button ion-button *ngIf="time.isActive"  class="activity-play" clear (click)="endReport(time)">
+      <button ion-button *ngIf="time.isActive" class="activity-play" clear (click)="endReport(time)">
               <ion-icon name="ios-pause-outline" color="crimson"></ion-icon>
         </button>
       <button ion-button *ngIf="!time.isActive" class="activity-play" clear (click)="startReport(time)">
@@ -44,10 +45,18 @@
   <ion-list *ngIf="!isShowTodayReports" class="todo-list">
     <ion-item *ngFor="let item of myTasks" padding-right>
       <ion-note>{{item['DOCDES'] +" "+item['TODOREF']}} </ion-note>
-      <h3>{{item['DETAILS']}} </h3>
-      <button ion-button clear class="activity-play" (click)="startReport(item)">
+      <ion-row>
+        <ion-col col-10>
+          <h3 padding-bottom>{{item['DETAILS']}} </h3>
+        </ion-col>
+        <ion-col col-2 >
+          <button ion-button clear class="activity-play" (click)="startReport(item)" no-padding>
               <ion-icon name="ios-play-outline" color="secondary"></ion-icon>
         </button>
+        </ion-col>
+      </ion-row>
+
+
 
     </ion-item>
   </ion-list>

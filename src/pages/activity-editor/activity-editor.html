@@ -5,39 +5,43 @@
   Ionic pages and navigation.
 -->
 
-<ion-header no-border padding-right padding-left pdding-top>
-    <ion-navbar  hideBackButton="true">
-        <!--<ion-buttons start>
-            <button ion-button icon-only (click)="leavePage()">
-        <ion-icon name="arrow-back"></ion-icon>
-      </button>
-        </ion-buttons>-->
-        <h4   color="new">פעילות חדשה</h4>
-        <ion-buttons end padding-top padding-bottom> 
+<ion-content>
+    <ion-toolbar text-right padding-right>
+        <ion-note text-right>{{activity.PROJACT}}</ion-note>
+        <h6 no-margin text-right>{{activity.ACTDES}}</h6>
+        <ion-buttons end padding-top padding-bottom>
             <button ion-button icon-only (click)="save()" color="new">
                 <ion-icon name="checkmark"></ion-icon>
             </button>
         </ion-buttons>
-    </ion-navbar>
-</ion-header>
-<ion-content >
-<ion-list  padding-right>
-        <ion-item>
-            <ion-label stacked>כותרת</ion-label>
-            <ion-input type="text" [value]="getActTitle(title)" (input)="titleChanged($event.target.value)"></ion-input>
-        </ion-item>
-
-        <button ion-item *ngFor="let item of titleList" (click)="chooseTitle(item)">
+    </ion-toolbar>
+    <ion-list>
+        <!--<button ion-item *ngFor="let item of titleList" (click)="chooseTitle(item)">
             {{getActTitle(item)}}
-        </button>
+        </button>-->
 
         <ion-item>
-            <ion-label stacked>נושא</ion-label>
-            <ion-input type="text" [(ngModel)]="subject" ></ion-input>
+            <ion-label stacked>רמה</ion-label>
+            <ion-input type="text" [(ngModel)]="activity.WBS"></ion-input>
+        </ion-item>
+        <ion-item>
+            <ion-label stacked>באחריות</ion-label>
+            <ion-input type="text" [value]="activity.OWNER" (input)="titleChanged($event.target.value)"></ion-input>
         </ion-item>
         <ion-item>
             <ion-label stacked>מספר שעות</ion-label>
-            <ion-input type="number" [(ngModel)]="hours" ></ion-input>
+            <ion-input type="number" [(ngModel)]="activity.HRQUANT"></ion-input>
+        </ion-item>
+        <ion-item>
+            <ion-label stacked>פרטים</ion-label>
+            <ion-textarea rows="3" [placeholder]="'הוסף טקסט (Ctrl + Enter לשמירה)'" dir="rtl" [(ngModel)]="text" (keypress)="onTextChange($event)"></ion-textarea>
+            <!--<ion-label class="add-text-btn">
+                <button ion-button outline>הוסף</button>
+            </ion-label>-->
+
+        </ion-item>
+        <ion-item>
+            <div class="activity-text" [innerHTML]="activityText"></div>
         </ion-item>
     </ion-list>
 </ion-content>

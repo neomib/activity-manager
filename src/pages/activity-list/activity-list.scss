@@ -13,10 +13,10 @@ activity-list {
   .activity-container
   {
      // column-count: 1;
-     >.col
+     >.col:not(.activity-editor)
      {
        padding-top: 0;
-     }
+     
      ion-item
      {
          border-left: 1px solid color($colors,light);;
@@ -32,12 +32,13 @@ activity-list {
            white-space: normal;
          }
      }
+     }
      .current-activity 
      {
          border-left: none;
          .item-inner
          {
-           background-color: white;
+           background-color: white !important;
          }
      }
       ion-card-header
@@ -111,10 +112,28 @@ activity-list {
   }
   .sub-acts-container
   {
+    .scroll-content
+    {
+      margin-bottom: 16px;
+    }
     ion-card-header
     {
       color:white;
       text-align: center;
     }
+     .has-editor ion-col
+        {
+          -webkit-box-flex: 0;
+          -webkit-flex: 0 0 100%;
+          -ms-flex: 0 0 100%;
+           flex: 0 0 100%;
+          width: 100%;
+           max-width: 100%;
+        }
+  }
+  .close-subact-btn
+  {
+    z-index: 11;
+   
   }
 }

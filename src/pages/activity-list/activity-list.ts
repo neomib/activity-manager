@@ -14,6 +14,7 @@ export class ActivityList
   activityManager;
   activityManagerArr;
   currentAct: any;
+  currentSubAct: any;
 
   isLoadingActs: boolean;
 
@@ -22,7 +23,7 @@ export class ActivityList
     this.isLoadingActs = false;
     this.activityManager = {};
     this.currentAct = {};
-    this.displayActs=[];
+    this.displayActs = [];
     this.appService.getKeyVkaue("priority-activities")
       .then(list =>
       {
@@ -38,8 +39,12 @@ export class ActivityList
       .catch(() => { });
     this.appService.activityListObsr.subscribe(list =>
     {
-      this.isLoadingActs = true;
+
       this.organizeActivities(list);
+    });
+    this.appService.loadDataObsr.subscribe(() =>
+    {
+      this.isLoadingActs = true;
     });
   }
   setCurrentActivity(act)
@@ -47,8 +52,9 @@ export class ActivityList
     this.currentAct.isActive = false;
     act.isActive = true;
     this.currentAct = act;
+    this.currentSubAct=undefined;
   }
- 
+
   getSubActColor(act)
   {
     switch (act.STEPSTATUSDES)
@@ -137,10 +143,18 @@ export class ActivityList
   }
   onmouseover(subact)
   {
-    subact.showOpts =  true;
+    subact.showOpts = true;
   }
   onmouseout(subact)
   {
     subact.showOpts = false;
+  }
+  selectSubAct(subAct)
+  {
+    this.currentSubAct = subAct;
+  }
+  closeactivityEditor()
+  {
+    this.currentSubAct=undefined;
   }
 }

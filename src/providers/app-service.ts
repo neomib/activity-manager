@@ -15,6 +15,7 @@ export class AppService
 {
 
     activityFormName: string;
+    activityTextFormName: string;
     hoursFormName: string;
     todoListFormName: string;
 
@@ -40,6 +41,7 @@ export class AppService
     todoListObsr: Subject<any>;
     todoList: any[];
 
+    loadDataObsr: Subject<any>;
     constructor(private configService: ConfigurationService,
         private formService: FormService,
         private storage: Storage,
@@ -49,6 +51,7 @@ export class AppService
     {
 
         this.activityFormName = "PROJACTS_ONE";
+        this.activityTextFormName = "PROJACTSTEXT";
         this.hoursFormName = "TRANSORDER_q";
         this.todoListFormName = "TODOLIST";
 
@@ -68,6 +71,7 @@ export class AppService
 
         this.todoList = [];
         this.todoListObsr = new Subject();
+        this.loadDataObsr = new Subject();
     }
     // ***** Login *****
 
@@ -207,33 +211,68 @@ export class AppService
             }
         });
     }
+    getSubForm(formName, parentForm: Form): Promise<any>
+    {
+        return new Promise((resolve, reject) =>
+        {
+            parentForm.isAlive()
+                .then(isAlive =>
+                {
+                    if (isAlive)
+                    {
+                        this.formService.startSubform(parentForm, formName)
+                            .then(resultform => resolve(resultform))
+                            .catch(() => reject());
+                    }
+                    else
+                    {
+                        this.formService.startParentForm(parentForm.name, this.getCompanyName())
+                            .then(form =>
+                            {
+                                this.formService.startSubform(form, formName)
+                                    .then(resultform => resolve(resultform))
+                                    .catch(() => reject());
+                            })
+                            .catch(() => reject());
+                    }
+                })
+                .catch(() => reject());
+
+
+        });
+    }
     loadData()
     {
+        this.loadDataObsr.next();
         this.getProjects();
         this.getTodaysReports()
             .then(() => this.getActivities())
             .then(() => this.getToDOList())
             .catch(() => { });
     }
-    getAllActsRows(form: Form,rowNum:number): Promise<any>
+    getAllActsRowsPerProject(form: Form, rowNum: number, resolve, reject)
+    {
+        this.formService.getRows(form, rowNum)
+            .then((rows: any[]) =>
+            {
+                rows = this.objToArray(rows);
+                this.activityList = this.activityList.concat(rows);
+                if (rows.length >= 100)
+                    this.getAllActsRowsPerProject(form, Number(rows[rows.length - 1].key) + 1, resolve, reject);
+                else
+                {
+                    this.activityListObsr.next(this.activityList);
+                    resolve();
+                }
+
+            })
+            .catch(() => reject());
+    }
+    getAllActsRows(form: Form, rowNum: number): Promise<any>
     {
         return new Promise((resolve, reject) =>
         {
-            this.formService.getRows(form, rowNum)
-                .then((rows: any[]) =>
-                {
-                    rows = this.objToArray(rows);
-                    this.activityList = this.activityList.concat(rows);
-                    if (rows.length >= 100)
-                        this.getAllActsRows(form,Number(rows[rows.length-1].key)+1);
-                    else
-                    {
-                        this.activityListObsr.next(this.activityList);
-                        resolve();
-                    }
-
-                })
-                .catch(() => reject());
+            this.getAllActsRowsPerProject(form, rowNum, resolve, reject);
         });
     }
     setFilterAndGetActs(filter, previousSearch: Promise<any>): Promise<any>
@@ -248,7 +287,7 @@ export class AppService
                 })
                 .then(() =>
                 {
-                    return this.getAllActsRows(actsForm,1);
+                    return this.getAllActsRows(actsForm, 1);
                 })
                 .then(() =>
                 {
@@ -392,8 +431,86 @@ export class AppService
                         reject();
                 });
         });
+    }
+    getActivityText(actNum): Promise<any>
+    {
+        return new Promise((resolve, reject) =>
+        {
+            let form;
+            let subform;
+            this.getForm(this.activityFormName)
+                .then(resultForm =>
+                {
+                    form = resultForm;
 
-
+                    let filter = {
+                        or: 0,
+                        ignorecase: 1,
+                        QueryValues:
+                        [
+                            {
+                                "field": "PROJACT",
+                                "fromval": actNum,
+                                "toval": "",
+                                "op": "=",
+                                "sort": 0,
+                                "isdesc": 0
+                            }]
+                    };
+                    return this.formService.setSearchFilter(form, filter);
+                })
+                 .then(() =>
+                {
+                    return this.formService.getRows(form,1);
+                })
+                .then(() =>
+                {
+                    return this.getSubForm(this.activityTextFormName, form);
+                })
+                .then(subformRes =>
+                {
+                    subform = subformRes;
+                    return this.formService.getRows(subform, 1);
+                })
+                .then(rows =>
+                {
+                    let text = "";
+                    if (rows && rows["1"] != null)
+                        text = rows["1"].htmltext;
+                    resolve(text);
+                    this.formService.endForm(subform);
+                })
+                .catch(() => reject());
+        });
+    }
+    addNewActivityText(form, rowInd, text): Promise<any>
+    {
+        return new Promise((resolve, reject) =>
+        {
+            let form;
+            let subform;
+            this.getForm(this.activityFormName)
+                .then(resultForm =>
+                {
+                    form = resultForm;
+                    return this.formService.setActiveRow(form, rowInd);
+                })
+                .then(() =>
+                {
+                    return this.getSubForm(this.activityTextFormName, form);
+                })
+                .then(subformRes =>
+                {
+                    subform = subformRes;
+                    this.formService.saveText(subform, text);
+                })
+                .then(() =>
+                {
+                    resolve();
+                    this.formService.endForm(subform);
+                })
+                .catch(() => reject());
+        });
 
     }
     /******************* Time Tracking *************/

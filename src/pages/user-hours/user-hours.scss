@@ -22,7 +22,7 @@ user-hours {
  h3
  {
      white-space: normal;
-    //  max-width: 80%;
+     max-width: 80%;
     //  color: white;
      & + p
      {
@@ -31,10 +31,10 @@ user-hours {
  }
  ion-content
  {
-     .scroll-content
-     {
-         margin-top: 70px;
-     }
+    //  .scroll-content
+    //  {
+    //     //  margin-top: 90px !important;
+    //  }
      background-color: color($colors,white) !important;
     //  BORDER-RIGHT: 7PX SOLID color($colors,redorange);
     .todays-reports-list
@@ -50,8 +50,9 @@ user-hours {
     {
       .activity-play
       {
-        float: left;
-        top: -46px;
+        top: -11px;
+        LEFT: 0;
+         POSITION: ABSOLUTE;
        }
     }
      ion-item
@@ -70,9 +71,13 @@ user-hours {
                margin-bottom: -16px !important;
         }
      }
-    .spinner-dots circle
+    .spinner-dots
      {
-         fill: #ababab;
+        top: -7px;
+         circle
+         {
+           fill: #ababab;
+         }
      }
  }
  

@@ -17,28 +17,46 @@ import { AppService } from '../../providers/app-service';
 export class UserHours 
 {
   hoursList: any[];
-  myTasks:any[];
-  currentDate:string;
-  isShowSpinner:boolean;
-  isShowTodayReports:boolean;
+  myTasks: any[];
+  currentDate: string;
+  isShowSpinner: boolean;
+  isShowTodayReports: boolean;
+ 
+  isLoadDataStarted: boolean;
+  isLoadReportsFinished:boolean;
+  isLoadTasksFinished:boolean;
 
   selectedSegment;
-  
+
   constructor(public navCtrl: NavController, private appService: AppService)
   {
     this.selectedSegment = "todayReports";
-    this.isShowSpinner=true;
-    this.isShowTodayReports=true;
+    this.isShowSpinner = true;
+    this.isShowTodayReports = true;
+    this.myTasks = [];
+    this.hoursList = [];
+    this.isLoadDataStarted = false;
+    this.appService.loadDataObsr.subscribe(() =>
+    {
+      this.isShowSpinner = true;
+      this.isLoadDataStarted = true;
+      this.isLoadReportsFinished=false;
+      this.isLoadTasksFinished=false;
+    });
     this.appService.reportListObsr.subscribe(list =>
     {
       this.hoursList = list;
-      this.isShowSpinner=false;
+      this.isShowSpinner = false;
+      this.isLoadReportsFinished=true;
     });
     this.appService.todoListObsr.subscribe(list =>
     {
-     this.myTasks=this.appService.getToDoActivities();
+      this.myTasks = this.appService.getToDoActivities();
+      this.isShowSpinner = false;
+      this.isLoadDataStarted = false;
+      this.isLoadTasksFinished=true;
     });
-    this.currentDate=this.appService.getCurrentTime().dateFormated;
+    this.currentDate = this.appService.getCurrentTime().dateFormated;
   }
   endReport(report)
   {
@@ -49,12 +67,21 @@ export class UserHours
   {
     this.appService.startActReport(report);
   }
-   onSegmentChanged(segmentButton)
+  onSegmentChanged(segmentButton)
+  {
+    this.isShowSpinner = false;
+    if (segmentButton.value == "myTasks")
     {
-        if (segmentButton.value == "myTasks")
-           this.isShowTodayReports=false;
-        else
-            this.isShowTodayReports=true;
+      if (!this.isLoadTasksFinished && this.isLoadDataStarted)
+        this.isShowSpinner = true;
+      this.isShowTodayReports = false;
     }
+    else
+    {
+      if (!this.isLoadReportsFinished && this.isLoadDataStarted)
+        this.isShowSpinner = true;
+      this.isShowTodayReports = true;
+    }
+  }
 
 }

@@ -1,6 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { NavController, NavParams, IonicPage } from 'ionic-angular';
-import { FormService, ObjToIterable } from 'priority-ionic';
+import { FormService, ObjToIterable, Form } from 'priority-ionic';
 import { AppService } from '../../providers/app-service';
 
 /**
@@ -21,21 +21,35 @@ export class ActivityEditor
   title = {};
   subject: string;
   hours: number;
+
+  text: string;
+  activityText: string;
+  textRows: number;
+  activity;
+
+  @Input('activity')
+  set setActivity(act)
+  {
+    this.activity = act;
+    this.appService.getActivityText(this.activity.PROJACT)
+      .then(text =>
+      {
+        this.activityText = text;
+      })
+      .catch(() => { });
+  }
   constructor(private appService: AppService,
     private formServie: FormService,
     private nav: NavController,
     private objToIterable: ObjToIterable)
   {
+    this.textRows = 1;
     this.list = this.appService.activityList;
     this.appService.activityListObsr.subscribe(list =>
     {
 
       this.list = list;
     });
-  }
-  ionViewDidLoad()
-  {
-    console.log('ionViewDidLoad ActivityEditor');
   }
   getActTitle(item)
   {
@@ -74,8 +88,21 @@ export class ActivityEditor
     this.titleList = [];
     this.hours = 0;
   }
-  leavePage()
+  closeactivityEditor()
   {
-    this.nav.pop();
+    this.activity = undefined;
+  }
+
+  ///******* text **********/
+
+  onTextChange(evnt)
+  {
+    let key = evnt.key;
+    if (key == "Enter")
+      this.textRows++;
+  }
+  getTextRows()
+  {
+    return this.textRows;
   }
 }

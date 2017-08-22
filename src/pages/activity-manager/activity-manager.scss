@@ -1,6 +1,10 @@
 activity-manager 
 {
-   
+   ion-spinner
+   {
+          z-index: 10;
+          top: -11px !important;
+   }
    ion-navbar + ion-toolbar .toolbar-background
    {
     //    background-color: rgba(248, 248, 248, 0.62);
