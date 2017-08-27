@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { NavController, NavParams, IonicPage } from 'ionic-angular';
+import { NavController, NavParams, IonicPage, PopoverController } from 'ionic-angular';
 import { AppService } from '../../providers/app-service';
 import { ObjToIterable } from 'priority-ionic';
 
@@ -18,20 +18,20 @@ export class ActivityList
 
   isLoadingActs: boolean;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, private appService: AppService, private objToIterable: ObjToIterable)
+  constructor(public navCtrl: NavController, public navParams: NavParams, private appService: AppService, private objToIterable: ObjToIterable, private popoverCtrl: PopoverController)
   {
     this.isLoadingActs = false;
     this.activityManager = {};
     this.currentAct = {};
     this.displayActs = [];
-    this.appService.getKeyVkaue("priority-activities")
+    this.appService.getKeyVkaue(this.appService.activitiesLocalStorage)
       .then(list =>
       {
         if (list)
         {
 
-          if (list.length > 0)
-            this.setCurrentActivity(list[0]);
+          if (list.length > 0 && list[0].headActivities.length > 0)
+            this.setCurrentActivity(list[0].headActivities[0]);
           this.displayActs = list;
         }
 
@@ -39,7 +39,7 @@ export class ActivityList
       .catch(() => { });
     this.appService.activityListObsr.subscribe(list =>
     {
-
+      this.isLoadingActs = true;
       this.organizeActivities(list);
     });
     this.appService.loadDataObsr.subscribe(() =>
@@ -52,7 +52,7 @@ export class ActivityList
     this.currentAct.isActive = false;
     act.isActive = true;
     this.currentAct = act;
-    this.currentSubAct=undefined;
+    this.currentSubAct = undefined;
   }
 
   getSubActColor(act)
@@ -77,48 +77,64 @@ export class ActivityList
       let WBS: string = value["WBS"];
       let level = Number(value["LEVEL"]);
       let project: string = value["DOCNO"];
+      let wbsParts = WBS.split(".");
+      let parentWBS = wbsParts[0] + "." + wbsParts[1];
+      let parentAct = this.activityManager[project + parentWBS];
 
-      if (level == 3)
+      let nextInd = index + 1;
+      if (level == 2 && nextInd < arr.length && Number(arr[nextInd].LEVEL) > 2)
       {
         this.activityManager[project + WBS] = value;
-        this.activityManager[project + WBS].subActDone = [];
-        this.activityManager[project + WBS].subActQA = [];
-        this.activityManager[project + WBS].subActOther = [];
-        this.activityManager[project + WBS].subActivities = [];
+        this.activityManager[project + WBS].headActivities = [];
       }
-      else
+      else if (level == 3)
       {
-        let parentWBS = WBS.substring(0, WBS.lastIndexOf("."));
-        let act = this.activityManager[project + parentWBS];
-        if (act)
+        if (parentAct)
         {
-          act.subActivities.push(value);
-          if (this.appService.getisActDone(value))
-            act.subActDone.push(value);
-          else if (this.appService.getisActQA(value))
-            act.subActQA.push(value);
-          else
-            act.subActOther.push(value);
+          let act = value;
+          act.subActDone = [];
+          act.subActQA = [];
+          act.subActOther = [];
+          act.subActivities = [];
+          parentAct.headActivities.push(act);
+        }
+      }
+      else if (level > 3)
+      {
+        if (parentAct)
+        {
+          let headAct = parentAct.headActivities[parentAct.headActivities.length - 1];
+          if (headAct)
+          {
+            headAct.subActivities.push(value);
+            if (this.appService.getisActDone(value))
+              headAct.subActDone.push(value);
+            else if (this.appService.getisActQA(value))
+              headAct.subActQA.push(value);
+            else
+              headAct.subActOther.push(value);
+          }
         }
       }
 
     });
     this.updateActivities();//updates this.activityManagerArr
-    this.appService.storeKEyValue("priority-activities", this.activityManagerArr);
+    this.appService.storeKeyValue(this.appService.activitiesLocalStorage, this.activityManagerArr);
   }
   updateActivities()
   {
     this.displayActs.splice(0);
     this.activityManagerArr = this.appService.objToArray(this.activityManager);
     this.displayActs = this.activityManagerArr;
-    if (this.displayActs.length > 0)
-      this.setCurrentActivity(this.displayActs[0]);
+    if (this.displayActs.length > 0 && this.displayActs[0].headActivities.length > 0)
+      this.setCurrentActivity(this.displayActs[0].headActivities[0]);
     this.isLoadingActs = false;
   }
   isActContainsString(act, str: string)
   {
     let item = act.ACTDES;
-    return item && item.toLowerCase().indexOf(str.toLowerCase()) > -1;
+    return (item && item.toLowerCase().indexOf(str.toLowerCase()) > -1)
+      || act.WBS.indexOf(str) > -1 || act.PROJACT.indexOf(str) > -1;
   }
   getActsBySearch(event)
   {
@@ -130,12 +146,17 @@ export class ActivityList
     }
     this.displayActs = this.activityManagerArr.filter((act, index, arr) =>
     {
-      let isHasChild = act.subActivities.length > 0 &&
-        act.subActivities.filter((subact, index, arr) => this.isActContainsString(subact, val)).length > 0;
-      return this.isActContainsString(act, val) || isHasChild;
+      let isHasHead = act.headActivities.filter(
+        (headact, index, arr) =>
+        {
+          let isHasChild = headact.subActivities.length > 0 &&
+            headact.subActivities.filter((subact, index, arr) => this.isActContainsString(subact, val)).length > 0;
+          return this.isActContainsString(headact, val) || isHasChild;
+        });
+      return this.isActContainsString(act, val) || isHasHead;
     });
-    if (this.displayActs.length > 0)
-      this.setCurrentActivity(this.displayActs[0]);
+    if (this.displayActs.length > 0 && this.displayActs[0].headActivities.length > 0)
+      this.setCurrentActivity(this.displayActs[0].headActivities[0]);
   }
   startReport(activity)
   {
@@ -152,9 +173,11 @@ export class ActivityList
   selectSubAct(subAct)
   {
     this.currentSubAct = subAct;
+    // let popover=this.popoverCtrl.create('ActivityEditor',{activity:this.currentSubAct});
+    // popover.present();
   }
   closeactivityEditor()
   {
-    this.currentSubAct=undefined;
+    this.currentSubAct = undefined;
   }
 }

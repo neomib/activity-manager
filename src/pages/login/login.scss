@@ -5,19 +5,29 @@ page-login
     {
         background-color:#86d5f5 !important;
     }
-    > ion-content >div
+    > ion-content .scroll-content
    {
      background-color: white;
     -webkit-box-shadow: 4px 4px 5px 0px grey;
     box-shadow: 5px 4px 8px rgba(65, 86, 75, 0.43);
-    max-height: calc(100% - 30%);
+    height: calc(100% - 30%);
     max-width: 600px;
     margin: auto;
+    padding-bottom: 0 !important;
     >ion-card-header
     {
         background-color: color($colors,dark);
         color: white !important;
     }
+    ion-list
+    {
+        top: 50%;
+        margin: auto;
+        width: 100%;
+        margin-top: -135px;
+        position: absolute;
+    }
+   
       ion-card
       {
           margin: auto !important;
@@ -50,4 +60,12 @@ page-login
    {
        text-align: center;
    }
+   ion-footer
+   {
+    height: 35%;
+    background-color: aliceblue;
+    z-index: 0;
+    background-color: #d3e3ea;
+   }
+
 }

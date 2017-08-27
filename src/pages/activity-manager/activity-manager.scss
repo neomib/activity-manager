@@ -72,4 +72,23 @@ activity-manager
     {
         background-color: color($colors,prettylight);
     }
+    .add-project-container
+    {
+        display: inline-block;
+        ion-list
+        {
+            position: absolute;
+            right: 50%;
+            width: 217px;
+            top: 109px;
+            -webkit-box-shadow: 0 0 2px #d2cfcf;
+            box-shadow: 0 0 2px #d2cfcf;
+            margin-right: -75px;
+        }
+        ion-spinner
+        {
+            top: 93px !important;
+            margin-left: -37px;
+        }
+    }
 }

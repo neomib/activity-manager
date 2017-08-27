@@ -10,8 +10,24 @@ activity-list {
     margin-bottom: 16px;
     box-shadow: 0 0 2px #b9b7b7;
   }
+  ion-list
+  {
+    border-bottom: none;
+  }
+  ion-list-header
+  {
+    background-color: color($colors,header) !important;
+  }
   .activity-container
   {
+    .head-activity-level
+    {
+      float: right;
+    }
+    .head-activity-proj
+    {
+      float: left;
+    }
      // column-count: 1;
      >.col:not(.activity-editor)
      {

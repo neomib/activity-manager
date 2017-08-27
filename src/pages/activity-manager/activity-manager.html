@@ -20,14 +20,25 @@
 
   <div text-center padding class="project-container">
     <ion-chip *ngFor="let project of projects | async">
-      <ion-label>{{project.title}}</ion-label>
-      <button ion-button clear color="chip" disabled>
+      <ion-label>{{project.PROJDES}}</ion-label>
+      <button ion-button clear color="chip" (click)="deleteProject(project)">
           <ion-icon name="close"></ion-icon>
       </button>
     </ion-chip>
-    <button ion-button icon-only clear color="darkgray" disabled class="add-project">
-        <ion-icon name="add"></ion-icon>
+    <div class="add-project-container">
+      <span *ngIf="getprojects().length<=0" [style.color]="'#48c0ee'">הוסף פרויקט</span>
+      <button ion-button icon-only clear color="primary" (click)="toggleAddProjInput()" class="add-project">
+        <ion-icon name="add" *ngIf="!isShowAddProjInput" ></ion-icon>
+        <ion-input #projInputElem *ngIf="isShowAddProjInput"   [style.color]="'#787878'" [(ngModel)]="projInput" (keypress)="keypressHandler($event)" (input)="searchForProject()" (click)="projInputClick($event)"></ion-input>
+        <ion-icon name="close" color="darkgray" *ngIf="isShowAddProjInput"></ion-icon>
     </button>
+    <ion-spinner name="dots" *ngIf="isShowSpinner"></ion-spinner>
+      <ion-list *ngIf="isShowAddProjInput && projSearchList && projSearchList.length>0"  no-lines>
+        <button ion-item *ngFor="let proj of projSearchList" (click)="projSelected(proj)">
+        {{proj.string1}}
+      </button>
+      </ion-list>
+    </div>
   </div>
 </ion-header>
 <ion-content dir="rtl">
@@ -41,5 +52,5 @@
       </ion-col>
     </ion-row>
   </ion-grid> -->
-   <activity-list></activity-list>
+  <activity-list></activity-list>
 </ion-content>

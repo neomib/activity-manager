@@ -6,31 +6,40 @@
 -->
 
 <ion-header no-border>
-  <ion-searchbar (ionInput)="getActsBySearch($event)"></ion-searchbar>
+  <ion-searchbar (ionInput)="getActsBySearch($event)" placeholder="חפש פעילות לפי נושא,רמה או מספר פעילות..."></ion-searchbar>
 </ion-header>
 <ion-content>
   <ion-spinner name="dots" *ngIf="isLoadingActs"></ion-spinner>
+  <ion-label text-center *ngIf="displayActs.length<=0 && !isLoadingActs">
+      לא קיימות פעילויות להצגה. אנא בחר לפחות פרויקט אחד כדי להמשיך.
+    </ion-label>
   <ion-row class="activity-container">
     <ion-col col-md-4 col-0>
       <ion-content>
         <!--separate ion-content for scrolling-->
-        <ion-item *ngFor="let activity of displayActs" (click)="setCurrentActivity(activity)" [ngClass]="{'current-activity':activity.isActive}">
-          <!-- <ion-card-header> -->
-          <ion-note>{{activity["WBS"] }}</ion-note>
-          {{activity["ACTDES"]}}
-          <ion-badge item-end>{{activity.subActivities.length>0? activity.subActivities.length : ""}}</ion-badge>
-          <!-- </ion-card-header> -->
-          <!-- <ion-card-content *ngIf="activity.subActivities.length>0">
+        <ion-list *ngFor="let parentActivity of displayActs" >
+          <ion-list-header no-margin >
+            {{parentActivity["ACTDES"]}}
+          </ion-list-header>
+          <ion-item *ngFor="let activity of parentActivity.headActivities" (click)="setCurrentActivity(activity)" [ngClass]="{'current-activity':activity.isActive}">
+            <!-- <ion-card-header> -->
+            <ion-note no-margin class="head-activity-level" >{{activity["WBS"] }}</ion-note>
+            <ion-note no-margin class="head-activity-proj">{{activity["PROJDES"]}}</ion-note>
+            {{activity["ACTDES"]}}
+            <ion-badge item-end>{{activity.subActivities.length>0? activity.subActivities.length : ""}}</ion-badge>
+            <!-- </ion-card-header> -->
+            <!-- <ion-card-content *ngIf="activity.subActivities.length>0">
          
         </ion-card-content> -->
 
-        </ion-item>
+          </ion-item>
+        </ion-list>
       </ion-content>
     </ion-col>
-    <ion-col class="sub-acts-container">
+    <ion-col class="sub-acts-container" *ngIf="currentSubAct===undefined">
       <ion-content>
         <!--separate ion-content for scrolling-->
-        <ion-grid margin-bottom *ngIf="displayActs && displayActs.length>0 " [ngClass]="{'has-editor': currentSubAct!==undefined}">
+        <ion-grid margin-bottom *ngIf="displayActs && displayActs.length>0 " > <!--[ngClass]="{'has-editor': currentSubAct!==undefined}"-->
           <ion-row>
             <ion-col col-12 col-lg-4>
               <ion-card-header [style.backgroundColor]="'#2D5C7F'">לביצוע</ion-card-header>
@@ -66,11 +75,11 @@
       </ion-content>
     </ion-col>
     <ion-col *ngIf="currentSubAct!==undefined" class="activity-editor">
-       <button ion-button icon-only clear color="dark" (click)="closeactivityEditor()" class="close-subact-btn">
+      <button ion-button icon-only clear color="dark" (click)="closeactivityEditor()" class="close-subact-btn">
                <ion-icon name="close"></ion-icon>
            </button>
-              <activity-editor [activity]="currentSubAct"></activity-editor>
-            </ion-col>
+      <activity-editor [activity]="currentSubAct"></activity-editor>
+    </ion-col>
   </ion-row>
 
 </ion-content>

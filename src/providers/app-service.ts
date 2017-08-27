@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ConfigurationService, FormService, ObjToIterable, PriorityService, MessageHandler } from 'priority-ionic';
-import { Form, ProfileConfig, ServerResponse, ServerResponseCode, ServerResponseType, Constants, MessageOptions, Filter } from 'priority-ionic';
+import { Form, ProfileConfig, ServerResponse, ServerResponseCode, ServerResponseType, Constants, Search, MessageOptions, Filter } from 'priority-ionic';
 import { Storage } from '@ionic/storage';
 import { Subject } from 'rxjs/Subject';
 
@@ -19,8 +19,11 @@ export class AppService
     hoursFormName: string;
     todoListFormName: string;
 
+    projectsLocalStorage: string;
+    activitiesLocalStorage: string;
     private userNameForLocalStorage: string;
     private pswdForLocalStorage: string;
+
     private username: string;
     private password: string;
 
@@ -55,8 +58,10 @@ export class AppService
         this.hoursFormName = "TRANSORDER_q";
         this.todoListFormName = "TODOLIST";
 
-        this.userNameForLocalStorage = "priorityUsername";
-        this.pswdForLocalStorage = "priorityPassword";
+        this.userNameForLocalStorage = "priority-username";
+        this.pswdForLocalStorage = "priority-password";
+        this.activitiesLocalStorage = "priority-activities";
+        this.projectsLocalStorage = "priority-projects";
 
         //this.storage.get(this.userNameForLocalStorage).then(value => this.username = value);
         //this.storage.get(this.pswdForLocalStorage).then(value => this.password = value);
@@ -67,11 +72,18 @@ export class AppService
         this.reportListObsr = new Subject();
 
         this.projectListObsr = new Subject();
-        this.projList = [{ name: 'PLATFORM', title: 'פלטפורמה' }, { name: 'MOBILE', title: 'מובייל' }, { name: 'UI', title: 'UI' }];
+        this.projList = [];
 
         this.todoList = [];
         this.todoListObsr = new Subject();
         this.loadDataObsr = new Subject();
+
+        this.getKeyVkaue(this.projectsLocalStorage)
+            .then(projResult =>
+            {
+                this.projList = projResult ? projResult : []
+            })
+            .catch(() => { });
     }
     // ***** Login *****
 
@@ -89,11 +101,11 @@ export class AppService
         this.storage.remove(this.userNameForLocalStorage);
         this.storage.remove(this.pswdForLocalStorage);
     }
-    storeKEyValue(key: string, value: any)
+    storeKeyValue(key: string, value: any)
     {
         this.storage.set(key, value);
     }
-    getKeyVkaue(key: string)
+    getKeyVkaue(key: string): Promise<any>
     {
         return this.storage.get(key);
     }
@@ -316,6 +328,12 @@ export class AppService
                 .then(form =>
                 {
                     let previousSearch = new Promise((innerresolve, reject) => innerresolve());
+                    if (this.projList.length <= 0)
+                    {
+                        this.activityListObsr.next(this.activityList);
+                        resolve();
+                        return;
+                    }
                     this.projList.map((value, index, arr) =>
                     {
                         let filter = {
@@ -324,8 +342,8 @@ export class AppService
                             QueryValues:
                             [
                                 {
-                                    "field": "ESHB_EPROJDES",
-                                    "fromval": value.name,
+                                    "field": "DOCNO",
+                                    "fromval": value.DOCNO,
                                     "toval": "",
                                     "op": "=",
                                     "sort": 0,
@@ -333,7 +351,7 @@ export class AppService
                                 },
                                 {
                                     "field": "LEVEL",
-                                    "fromval": "3",
+                                    "fromval": "2",
                                     "toval": "",
                                     "op": ">=",
                                     "sort": 0,
@@ -459,9 +477,9 @@ export class AppService
                     };
                     return this.formService.setSearchFilter(form, filter);
                 })
-                 .then(() =>
+                .then(() =>
                 {
-                    return this.formService.getRows(form,1);
+                    return this.formService.getRows(form, 1);
                 })
                 .then(() =>
                 {
@@ -710,6 +728,58 @@ export class AppService
     getProjects()
     {
         this.projectListObsr.next(this.projList);
+    }
+    searchProject(proj: string, isFirst: boolean): Promise<any>
+    {
+        return new Promise((resolve, reject) =>
+        {
+            this.getForm(this.activityFormName)
+                .then(form =>
+                {
+                    if (isFirst)
+                        return this.formService.openSearchOrChoose(form, "DOCNO", proj);
+                    return this.formService.search(form, proj);
+                })
+                .then((search: Search) =>
+                {
+                    resolve(search.SearchLine)
+                })
+                .catch(() => { });
+        });
+    }
+    clearSearch(): Promise<any>
+    {
+        return new Promise((resolve, reject) =>
+        {
+            this.getForm(this.activityFormName)
+                .then(form => this.formService.undoRow(form))
+                .then(() => resolve())
+                .catch(() => reject());
+        });
+    }
+    addProject(project)
+    {
+        this.clearSearch()
+            .then(() =>
+            {
+                let projInd = this.projList.indexOf(project);
+                if (projInd < 0)
+                {
+                    this.projList.push(project);
+                    this.storeKeyValue(this.projectsLocalStorage, this.projList);
+                    this.getActivities().then(() => { }).catch(() => { });
+                }
+            });
+    }
+    deleteProject(project)
+    {
+        let indexof = this.projList.indexOf(project);
+        if (indexof >= 0)
+        {
+            this.projList.splice(indexof, 1);
+            this.storeKeyValue(this.projectsLocalStorage, this.projList);
+            this.getActivities().then(() => { }).catch(() => { });
+        }
     }
     /////********** Todo List ***************/
     getToDOList(): Promise<any>

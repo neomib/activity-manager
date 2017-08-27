@@ -75,6 +75,15 @@ ion-spinner
     margin-left: -15px;
  
     }
+ ion-item.ng-valid:not(.input-has-focus)
+ {
+    border-color: #dedede !important; 
+   .item-inner
+   {
+      border-color: inherit!important;
+      box-shadow: inherit !important;
+   }
+  }
 
     /************ Screen adjustments ***************/
   //    @media (min-width: 576px)

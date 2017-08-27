@@ -31,12 +31,14 @@ export class ActivityEditor
   set setActivity(act)
   {
     this.activity = act;
-    this.appService.getActivityText(this.activity.PROJACT)
-      .then(text =>
-      {
-        this.activityText = text;
-      })
-      .catch(() => { });
+    this.appService.activityListObsr.subscribe(() =>
+    {
+      this.getActText();
+    });
+    if (this.appService.activityList.length > 0)
+    {
+      this.getActText();
+    }
   }
   constructor(private appService: AppService,
     private formServie: FormService,
@@ -56,6 +58,15 @@ export class ActivityEditor
     if (!item || !item.ACTDES)
       return "";
     return item.ACTDES;
+  }
+  getActText()
+  {
+    this.appService.getActivityText(this.activity.PROJACT)
+      .then(text =>
+      {
+        this.activityText = text;
+      })
+      .catch(() => { });
   }
   titleChanged(title: string)
   {
