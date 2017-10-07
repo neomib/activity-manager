@@ -27,15 +27,12 @@ export class ActivityEditor
   textRows: number;
   activity;
 
+
   @Input('activity')
   set setActivity(act)
   {
     this.activity = act;
-    this.appService.activityListObsr.subscribe(() =>
-    {
-      this.getActText();
-    });
-    if (this.appService.activityList.length > 0)
+    if (this.appService.activityList.length > 0 && !this.appService.activityListStart)
     {
       this.getActText();
     }
@@ -49,9 +46,9 @@ export class ActivityEditor
     this.list = this.appService.activityList;
     this.appService.activityListObsr.subscribe(list =>
     {
-
-      this.list = list;
+      this.getActText();
     });
+    
   }
   getActTitle(item)
   {

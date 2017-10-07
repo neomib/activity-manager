@@ -3,6 +3,16 @@ activity-list {
    {
        color:#a0d7d7;
    }
+   > ion-content
+   {
+     ion-col >ion-toolbar
+     {
+       cursor: pointer;
+       -webkit-box-shadow:-1px 5px 10px -5px #d1cdd1;
+       -moz-box-shadow: -1px 5px 10px -5px #d1cdd1;
+       box-shadow: -1px 5px 10px -5px #d1cdd1;
+     }
+   }
   .title-activity
   {
     font-size: bold;
@@ -22,17 +32,23 @@ activity-list {
   {
     .head-activity-level
     {
-      float: right;
+      font-size: 14px;
+      margin-bottom: 3px;
     }
     .head-activity-proj
     {
-      float: left;
+      // left: 16px;
+      // position: absolute;
+      // top: 20px;
+      font-size: 14px;
     }
      // column-count: 1;
+     >.col
+     {
+      padding-top: 0;
+     }
      >.col:not(.activity-editor)
      {
-       padding-top: 0;
-     
      ion-item
      {
          border-left: 1px solid color($colors,light);;
@@ -46,6 +62,7 @@ activity-list {
          ion-label
          {
            white-space: normal;
+           max-width: 90%;
          }
      }
      }
@@ -99,6 +116,7 @@ activity-list {
     border: 1px solid color($colors,primary);
     background-color: transparent;
     margin-left: 10px;
+    
     }
   }
   ion-note
@@ -150,6 +168,10 @@ activity-list {
   .close-subact-btn
   {
     z-index: 11;
-   
+   position: absolute;
+  }
+  .spinner-with-acts
+  {
+    left: 34% !important;
   }
 }

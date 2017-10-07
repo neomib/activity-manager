@@ -19,9 +19,10 @@ export class ActivityOptions
   {
     this.isShow = false;
   }
-  startReport()
+  startReport(event)
   {
     this.appService.startActReport(this.activity);
+    event.stopPropagation();
   }
   finishActivity()
   {

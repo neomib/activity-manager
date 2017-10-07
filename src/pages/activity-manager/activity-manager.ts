@@ -87,7 +87,7 @@ this.appService.deleteProject(proj);
           this.projSearchList = projList;
           this.isShowSpinner = false;
         })
-        .catch();
+        .catch(()=>{});
     }
     else
     {

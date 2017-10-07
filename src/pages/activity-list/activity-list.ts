@@ -16,11 +16,13 @@ export class ActivityList
   currentAct: any;
   currentSubAct: any;
 
+  searchVal: string;
   isLoadingActs: boolean;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, private appService: AppService, private objToIterable: ObjToIterable, private popoverCtrl: PopoverController)
   {
     this.isLoadingActs = false;
+    this.searchVal = "";
     this.activityManager = {};
     this.currentAct = {};
     this.displayActs = [];
@@ -37,9 +39,19 @@ export class ActivityList
 
       })
       .catch(() => { });
+    this.appService.activityListStartObsr.subscribe(list =>
+    {
+      this.activityManager = {};
+      this.isLoadingActs = true;
+      this.searchVal = "";
+    });
     this.appService.activityListObsr.subscribe(list =>
     {
-      this.isLoadingActs = true;
+      if (list && list.length <= 0)
+      {
+        this.currentAct = {};
+        this.currentSubAct = undefined;
+      }
       this.organizeActivities(list);
     });
     this.appService.loadDataObsr.subscribe(() =>
@@ -126,7 +138,7 @@ export class ActivityList
     this.displayActs.splice(0);
     this.activityManagerArr = this.appService.objToArray(this.activityManager);
     this.displayActs = this.activityManagerArr;
-    if (this.displayActs.length > 0 && this.displayActs[0].headActivities.length > 0)
+    if (this.displayActs.length > 0 && this.displayActs[0].headActivities.length > 0 && this.currentSubAct === undefined)
       this.setCurrentActivity(this.displayActs[0].headActivities[0]);
     this.isLoadingActs = false;
   }
@@ -134,7 +146,13 @@ export class ActivityList
   {
     let item = act.ACTDES;
     return (item && item.toLowerCase().indexOf(str.toLowerCase()) > -1)
-      || act.WBS.indexOf(str) > -1 || act.PROJACT.indexOf(str) > -1;
+      || act.WBS == str || act.PROJACT == str;
+  }
+  isHeadActivityContainsString(activity, val)
+  {
+    let isHasChild = activity.subActivities.length > 0 &&
+      activity.subActivities.filter((subact, index, arr) => this.isActContainsString(subact, val)).length > 0;
+    return this.isActContainsString(activity, val) || isHasChild;
   }
   getActsBySearch(event)
   {
@@ -146,14 +164,8 @@ export class ActivityList
     }
     this.displayActs = this.activityManagerArr.filter((act, index, arr) =>
     {
-      let isHasHead = act.headActivities.filter(
-        (headact, index, arr) =>
-        {
-          let isHasChild = headact.subActivities.length > 0 &&
-            headact.subActivities.filter((subact, index, arr) => this.isActContainsString(subact, val)).length > 0;
-          return this.isActContainsString(headact, val) || isHasChild;
-        });
-      return this.isActContainsString(act, val) || isHasHead;
+      let filteredHead = act.headActivities.filter((headact, index, arr) => this.isHeadActivityContainsString(headact, val));
+      return this.isActContainsString(act, val) || filteredHead.length > 0;
     });
     if (this.displayActs.length > 0 && this.displayActs[0].headActivities.length > 0)
       this.setCurrentActivity(this.displayActs[0].headActivities[0]);
@@ -179,5 +191,19 @@ export class ActivityList
   closeactivityEditor()
   {
     this.currentSubAct = undefined;
+  }
+  isHasProjects()
+  {
+    return this.appService.projList.length;
+  }
+  isDisplayAct(activity)
+  {
+    return this.searchVal != "" && !this.isHeadActivityContainsString(activity, this.searchVal);
+  }
+  eventHandler(evnt)
+  {
+    let key = evnt.key;
+    if (key == "Escape")
+      this.closeactivityEditor();
   }
 }

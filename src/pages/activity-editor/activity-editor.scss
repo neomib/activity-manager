@@ -1,4 +1,8 @@
 activity-editor {
+    ion-toolbar
+    {
+        padding-right: 10px !important;
+    }
  .toolbar-background
  {
      background: transparent;
@@ -25,5 +29,10 @@ activity-editor {
     //  position: absolute;
     //  left: 0;
     //  top: 10px;
+ }
+ .details-label
+ {
+    color: #999;
+    font-size: 1.2rem;
  }
 }

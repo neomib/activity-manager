@@ -28,7 +28,7 @@ export class Main
   }
   ionViewDidLoad()
   {
-    this.appService.loadData();
+      this.appService.loadData();
   }
   loadData()
   {

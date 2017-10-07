@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ConfigurationService, FormService, ObjToIterable, PriorityService, MessageHandler } from 'priority-ionic';
-import { Form, ProfileConfig, ServerResponse, ServerResponseCode, ServerResponseType, Constants, Search, MessageOptions, Filter } from 'priority-ionic';
+import { Form, ProfileConfig, ServerResponse, ServerResponseCode, ServerResponseType, Constants, Search, SearchAction, MessageOptions, Filter } from 'priority-ionic';
 import { Storage } from '@ionic/storage';
 import { Subject } from 'rxjs/Subject';
 
@@ -30,6 +30,8 @@ export class AppService
 
     // activity
     activityListObsr: Subject<any>;
+    activityListStartObsr: Subject<any>;
+    activityListStart: boolean;
     activityList: any[];
 
     //reports
@@ -67,7 +69,9 @@ export class AppService
         //this.storage.get(this.pswdForLocalStorage).then(value => this.password = value);
 
         this.activityListObsr = new Subject();
+        this.activityListStartObsr = new Subject();
         this.activityList = [];
+        this.activityListStart = false;
 
         this.reportListObsr = new Subject();
 
@@ -129,7 +133,7 @@ export class AppService
     {
         this.configService.config({
             url: '',
-            tabulaini: 'tabests.ini',
+            tabulaini: 'tabEsh.ini',
             language: 1,
             profileConfig: { company: 'geshbel' },
             appname: 'Time_Tracking',
@@ -169,15 +173,15 @@ export class AppService
         }
         let isError;
         let options: MessageOptions = {};
-        if (serverMsg.fatal)
+        if (serverMsg.fatal || serverMsg.type == ServerResponseType.APIError)
         {
             //If the error is a fatal error adds Constants.fatalErrorMsg to the message.
-            this.messageHandler.showErrorOrWarning(true, "<b>" + Constants.fatalErrorMsg + "</b>" + serverMsg.message);
+            //this.messageHandler.showErrorOrWarning(true, "<b>" + Constants.fatalErrorMsg + "</b>" + serverMsg.message);
             return;
         }
 
         // Sets is'Error' and message title.
-        if (serverMsg.type == ServerResponseType.Error || serverMsg.type == ServerResponseType.APIError || serverMsg.code == ServerResponseCode.Stop)
+        if (serverMsg.type == ServerResponseType.Error || serverMsg.code == ServerResponseCode.Stop)
         {
             isError = true;
             options.title = serverMsg.code == ServerResponseCode.Information ? Constants.defaultMsgTitle : Constants.errorTitle;
@@ -232,16 +236,16 @@ export class AppService
                 {
                     if (isAlive)
                     {
-                        this.formService.startSubform(parentForm, formName)
+                        this.formService.startSubform(parentForm, formName, this.errorAndWarningMsgHandler)
                             .then(resultform => resolve(resultform))
                             .catch(() => reject());
                     }
                     else
                     {
-                        this.formService.startParentForm(parentForm.name, this.getCompanyName())
+                        this.getForm(parentForm.name)
                             .then(form =>
                             {
-                                this.formService.startSubform(form, formName)
+                                this.formService.startSubform(form, formName, this.errorAndWarningMsgHandler)
                                     .then(resultform => resolve(resultform))
                                     .catch(() => reject());
                             })
@@ -262,18 +266,18 @@ export class AppService
             .then(() => this.getToDOList())
             .catch(() => { });
     }
-    getAllActsRowsPerProject(form: Form, rowNum: number, resolve, reject)
+    getAllActsRowsPerProject(form: Form, rowNum: number, resolve, reject, interNum: number = 0)
     {
         this.formService.getRows(form, rowNum)
             .then((rows: any[]) =>
             {
                 rows = this.objToArray(rows);
                 this.activityList = this.activityList.concat(rows);
-                if (rows.length >= 100)
-                    this.getAllActsRowsPerProject(form, Number(rows[rows.length - 1].key) + 1, resolve, reject);
+                this.activityListObsr.next(this.activityList);
+                if (rows.length >= 100 && interNum < 6)
+                    this.getAllActsRowsPerProject(form, Number(rows[rows.length - 1].key) + 1, resolve, reject, ++interNum);
                 else
                 {
-                    this.activityListObsr.next(this.activityList);
                     resolve();
                 }
 
@@ -293,6 +297,10 @@ export class AppService
         {
             let actsForm = this.formService.getForm(this.activityFormName);
             previousSearch
+                .then(() =>
+                {
+                    return this.formService.clearRows(actsForm);
+                })
                 .then(() =>
                 {
                     return this.formService.setSearchFilter(actsForm, filter);
@@ -321,9 +329,9 @@ export class AppService
     {
         return new Promise((resolve, reject) =>
         {
+            this.activityListStart = true;
+            this.activityListStartObsr.next();
             this.activityList.splice(0);
-
-
             this.getForm(this.activityFormName)
                 .then(form =>
                 {
@@ -331,9 +339,14 @@ export class AppService
                     if (this.projList.length <= 0)
                     {
                         this.activityListObsr.next(this.activityList);
+                        this.activityListStart = false;
                         resolve();
                         return;
                     }
+                    // let twoYearsAgo=new Date();
+                    // twoYearsAgo.setFullYear(twoYearsAgo.getFullYear()-1);
+                    // twoYearsAgo.setMonth(0);
+                    // twoYearsAgo.setDate(1);
                     this.projList.map((value, index, arr) =>
                     {
                         let filter = {
@@ -355,18 +368,27 @@ export class AppService
                                     "toval": "",
                                     "op": ">=",
                                     "sort": 0,
-                                    "isdesc": 1
-                                }]
+                                    "isdesc": 0
+                                },
+                            ]
                         };
-                        previousSearch = this.setFilterAndGetActs(filter, previousSearch);
+                        previousSearch = this.setFilterAndGetActs(filter, previousSearch).catch(() => { });
                         if (index == this.projList.length - 1)
                         {
-                            previousSearch.then(() => resolve());
+                            previousSearch.then(() =>
+                            {
+                                this.activityListStart = false;
+                                resolve();
+                            });
                         }
 
                     });
                 })
-                .catch(() => reject());
+                .catch(() =>
+                {
+                    this.activityListStart = false;
+                    reject();
+                });
         });
 
     }
@@ -399,7 +421,7 @@ export class AppService
                 this.activityList.push(this.formService.getFormRow(actForm, ind));
                 this.activityListObsr.next(this.activityList)
             })
-            .catch();
+            .catch(() => { });
     }
     finishActivity(activity): Promise<any>
     {
@@ -495,8 +517,8 @@ export class AppService
                     let text = "";
                     if (rows && rows["1"] != null)
                         text = rows["1"].htmltext;
-                    resolve(text);
                     this.formService.endForm(subform);
+                    resolve(text);
                 })
                 .catch(() => reject());
         });
@@ -683,7 +705,7 @@ export class AppService
         let hoursForm: Form;
         let rowind = 0;
         let project = activity['DOCNO'] ? activity['DOCNO'] : activity['PROJDOCNO'];
-        let actNum = activity['PROJACT'] ? activity['PROJACT'] : activity['TODOREF'];
+        let actNum = activity['PROJACT'] ? activity['PROJACT'] : (activity['PROJACTA'] ? activity['PROJACTA'] : activity['TODOREF']);
         this.getForm(this.hoursFormName)
             .then(form =>
             {
@@ -729,22 +751,63 @@ export class AppService
     {
         this.projectListObsr.next(this.projList);
     }
+    checkSearchCursor(searchForm: Form, search: Search): Promise<any>
+    {
+        return new Promise((resolve, reject) =>
+        {
+            if (search["stack_cursor"] == 5)
+                resolve(search.SearchLine);
+            else if (search["stack_cursor"] == 6)//by number
+            {
+                this.formService.search(searchForm, search.value, SearchAction.TypeChange)
+                    .then(() =>
+                    {
+                        return this.formService.search(searchForm, search.value, SearchAction.TypeChange);
+                    })
+                    .then(searchRes => resolve(searchRes.SearchLine))
+                    .catch(() => reject());
+            }
+            else if (search["stack_cursor"] == 7) //by foreign name 
+            {
+                this.formService.search(searchForm, search.value, SearchAction.TypeChange)
+                    .then((searchRes: Search) =>
+                    {
+                        resolve(searchRes.SearchLine);
+                    })
+                    .catch(() => reject());
+            }
+
+        });
+    }
     searchProject(proj: string, isFirst: boolean): Promise<any>
     {
         return new Promise((resolve, reject) =>
         {
+            let searchForm;
+            let isCursorByName = true;
             this.getForm(this.activityFormName)
                 .then(form =>
                 {
+                    searchForm = form;
                     if (isFirst)
                         return this.formService.openSearchOrChoose(form, "DOCNO", proj);
                     return this.formService.search(form, proj);
                 })
                 .then((search: Search) =>
                 {
-                    resolve(search.SearchLine)
+                    if (isFirst)
+                    {
+                        this.checkSearchCursor(searchForm, search)
+                            .then(searchlines => resolve(searchlines))
+                            .catch(() => reject());
+                    }
+                    else
+                    {
+                        resolve(search.SearchLine);
+
+                    }
                 })
-                .catch(() => { });
+                .catch(() => reject());
         });
     }
     clearSearch(): Promise<any>
@@ -767,7 +830,39 @@ export class AppService
                 {
                     this.projList.push(project);
                     this.storeKeyValue(this.projectsLocalStorage, this.projList);
-                    this.getActivities().then(() => { }).catch(() => { });
+                    this.activityListStart = true;
+                    this.activityListStartObsr.next();
+
+                    let filter = {
+                        or: 0,
+                        ignorecase: 1,
+                        QueryValues:
+                        [
+                            {
+                                "field": "DOCNO",
+                                "fromval": project.DOCNO,
+                                "toval": "",
+                                "op": "=",
+                                "sort": 0,
+                                "isdesc": 0
+                            },
+                            {
+                                "field": "LEVEL",
+                                "fromval": "2",
+                                "toval": "",
+                                "op": ">=",
+                                "sort": 0,
+                                "isdesc": 0
+                            },
+                        ]
+                    };
+                    let previousSearch = new Promise((innerresolve, reject) => innerresolve());
+                    this.setFilterAndGetActs(filter, previousSearch)
+                        .then(() =>
+                        {
+                            this.activityListStart = false;
+                        })
+                        .catch(() => { });
                 }
             });
     }
@@ -776,9 +871,14 @@ export class AppService
         let indexof = this.projList.indexOf(project);
         if (indexof >= 0)
         {
+            this.activityListStart = true;
+            this.activityListStartObsr.next();
+
             this.projList.splice(indexof, 1);
             this.storeKeyValue(this.projectsLocalStorage, this.projList);
-            this.getActivities().then(() => { }).catch(() => { });
+            this.activityList = this.activityList.filter((value, index, arr) => value.DOCNO != project.DOCNO);
+            this.activityListStart = false;
+            this.activityListObsr.next(this.activityList);
         }
     }
     /////********** Todo List ***************/

@@ -77,12 +77,17 @@ ion-spinner
     }
  ion-item.ng-valid:not(.input-has-focus)
  {
-    border-color: #dedede !important; 
+    border-color: transparent !important; 
+    box-shadow: none !important;
    .item-inner
    {
-      border-color: inherit!important;
-      box-shadow: inherit !important;
+      border-color: #dedede!important;
+      box-shadow: none !important;
    }
+  }
+  .displaynone
+  {
+    display: none;
   }
 
     /************ Screen adjustments ***************/

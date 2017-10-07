@@ -26,7 +26,7 @@
       </button>
     </ion-chip>
     <div class="add-project-container">
-      <span *ngIf="getprojects().length<=0" [style.color]="'#48c0ee'">הוסף פרויקט</span>
+      <span *ngIf="getprojects().length<=0" [style.color]="'#48c0ee'" (click)="toggleAddProjInput()" >הוסף פרויקט</span>
       <button ion-button icon-only clear color="primary" (click)="toggleAddProjInput()" class="add-project">
         <ion-icon name="add" *ngIf="!isShowAddProjInput" ></ion-icon>
         <ion-input #projInputElem *ngIf="isShowAddProjInput"   [style.color]="'#787878'" [(ngModel)]="projInput" (keypress)="keypressHandler($event)" (input)="searchForProject()" (click)="projInputClick($event)"></ion-input>
