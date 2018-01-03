@@ -24,10 +24,6 @@ user-hours {
      white-space: normal;
      max-width: 80%;
     //  color: white;
-     & + p
-     {
-         color:#f38181 !important;
-     }
  }
  ion-content
  {
@@ -37,9 +33,25 @@ user-hours {
     //  }
      background-color: color($colors,white) !important;
     //  BORDER-RIGHT: 7PX SOLID color($colors,redorange);
+    ion-list-header
+    {
+        border-top:none !important;
+        ion-label
+        {
+            margin:-2px !important;
+        }
+    }
+    .col-with-border
+    {
+        border-left:1px solid color($colors,lightgray);
+    }
     .todays-reports-list
     {
-        margin-top: 10px;
+        h3 + p
+        {
+            color:#f38181 !important;
+        }
+        
       .activity-play
       {
         float: left;
@@ -48,12 +60,39 @@ user-hours {
     }
     .todo-list
     {
-      .activity-play
-      {
-        top: -9px;
-        LEFT: 0;
-         POSITION: ABSOLUTE;
-       }
+        h3 
+        {
+            &+ p
+            {
+                font-size: 11px;
+                color: #949494;
+            }
+            
+        }
+        ion-list-header
+        {
+            margin-bottom: -13px;
+        }
+        button{
+            margin-right:-7px;
+        
+            ion-icon
+            {
+                margin-left: 5px;
+            }
+        }
+       
+    //   .activity-play
+    //   {
+    //     top: -9px;
+    //     LEFT: 0;
+    //      POSITION: ABSOLUTE;
+    //    }
+    button
+    {
+        min-width:101px;
+  
+    }
     }
      ion-item
      {
@@ -64,7 +103,7 @@ user-hours {
         //  }
          ion-note
          {
-             font-size: 13px;
+             font-size: 1.3rem;
          }
          ion-label
         {
@@ -73,7 +112,8 @@ user-hours {
      }
     .spinner-dots
      {
-        top: -7px;
+        top: 24px;
+        z-index: 10;
          circle
          {
            fill: #ababab;

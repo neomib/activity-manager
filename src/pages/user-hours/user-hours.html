@@ -5,59 +5,81 @@
   Ionic pages and navigation.
 -->
 <ion-header no-border>
-  <ion-toolbar color="prettylight" no-padding>
-    <ion-segment [(ngModel)]="selectedSegment" (ionChange)="onSegmentChanged($event)" dir="rtl" color="darkblue">
+
+  <!-- <ion-segment [(ngModel)]="selectedSegment" (ionChange)="onSegmentChanged($event)" dir="rtl" color="darkblue">
       <ion-segment-button value="todayReports">
         היום
       </ion-segment-button>
       <ion-segment-button value="myTasks">
         הפעילויות שלי
       </ion-segment-button>
-    </ion-segment>
-    <h5 text-center no-margin>{{currentDate}}</h5>
-  </ion-toolbar>
+    </ion-segment> -->
+
+
 </ion-header>
 
 <ion-content color="dark">
-  <ion-spinner name="dots" *ngIf="isShowSpinner" text-center></ion-spinner>
-  <ion-list *ngIf="isShowTodayReports" class="todays-reports-list">
-    <ion-label text-center *ngIf="hoursList && hoursList.length<=0">לא קיימים דווחים להיום</ion-label>
-    <ion-item *ngFor="let time of hoursList" padding-right>
-      <ion-note>{{"פעילות"+" "+time['PROJACTA']}} </ion-note>
-      <h3>{{time['ACTDES']}}</h3>
-      <p>{{time.STIMEI+" - "+time.ETIMEI}}</p>
-      <button ion-button *ngIf="time.isActive" class="activity-play" clear (click)="endReport(time)">
+  <ion-grid no-padding>
+    <ion-row>
+      <ion-col col-4 col-lg-3 class="col-with-border" >
+        <ion-spinner name="dots" *ngIf="isShowRepSpinner" text-center></ion-spinner>
+        <ion-list class="todays-reports-list">
+          <ion-list-header text-center no-padding no-margin margin-bottom color="green">
+            דיווחי שעות
+            <!-- <ion-toolbar color="prettylight" margin-top no-padding>
+              <h5 text-center no-margin>{{currentDate}}</h5>
+            </ion-toolbar>-->
+          </ion-list-header>
+          <ion-label text-center *ngIf="hoursList && hoursList.length<=0" color="gray">לא קיימים דווחים להיום</ion-label>
+          <ion-item *ngFor="let time of hoursList" padding-right>
+            <ion-note>{{"פעילות לפרויקט"+" "+time['PROJACTA']}} </ion-note>
+            <h3>{{time['ACTDES']}}</h3>
+            <p>{{time.STIMEI+" - "+time.ETIMEI}}</p>
+            <button ion-button *ngIf="time.isActive" class="activity-play" clear (click)="endReport(time)">
               <ion-icon name="ios-pause-outline" color="crimson"></ion-icon>
-        </button>
-      <button ion-button *ngIf="!time.isActive" class="activity-play" clear (click)="startReport(time)">
-              <ion-icon name="ios-play-outline" color="secondary"></ion-icon>
-        </button>
-      <!--<p>{{time['CURDATE']}}</p>-->
-      <!--<p style="text-align:center" *ngIf="task.isActive">
+            </button>
+            <button ion-button *ngIf="!time.isActive" class="activity-play" clear (click)="startReport(time)">
+              <ion-icon name="ios-play-outline" color="green"></ion-icon>
+            </button>
+            <!--<p>{{time['CURDATE']}}</p>-->
+            <!--<p style="text-align:center" *ngIf="task.isActive">
       <strong>{{activeHours+":"+activeMinutes+":"+activeSeconds}}</strong>
       <button ion-button round [style.backgroundColor]="activeIconColor" (click)="toggleTask()">
                   <ion-icon name="{{activeIconName}}"></ion-icon>
               </button>
     </p>-->
 
-    </ion-item>
-  </ion-list>
-  <ion-list *ngIf="!isShowTodayReports" class="todo-list">
-    <ion-item *ngFor="let item of myTasks" padding-right>
-      <ion-note>{{item['DOCDES'] +" "+item['TODOREF']}} </ion-note>
-      <ion-row>
-        <ion-col col-10>
-          <h3 padding-bottom>{{item['DETAILS']}} </h3>
-        </ion-col>
-        <ion-col col-2 >
-          <button ion-button clear class="activity-play" (click)="startReport(item)" no-padding>
-              <ion-icon name="ios-play-outline" color="secondary"></ion-icon>
-        </button>
-        </ion-col>
-      </ion-row>
-
-
-
-    </ion-item>
-  </ion-list>
+          </ion-item>
+        </ion-list>
+      </ion-col>
+      <ion-col col-4 class="col-with-border" [style.backgroundColor]="'#f4f4f4'">
+        <ion-spinner name="dots" *ngIf="isShowSpinner" text-center></ion-spinner>
+        <ion-list class="todo-list">
+          <ion-list-header text-center no-margin margin-bottom color="headerBlue">נושאים לביצוע</ion-list-header>
+          <ion-card *ngFor="let item of myTasks; " (click)="editActivity(item)" padding-right padding-top>
+            <ion-note>{{item['DOCDES'] +" "+item['TODOREF']}} </ion-note>
+            <!-- <ion-note item-end>{{item['UDATE'] }} </ion-note> -->
+            <h3>{{item['DETAILS']}} </h3>
+            <p>{{item['PROJDES']}}</p>
+            <ion-buttons margin-top margin-bottom no-margin>
+              <button ion-button small clear no-padding no-margin (click)="startReport(item)" color="green">
+                <ion-icon name="ios-play-outline"></ion-icon>
+                התחל לעבוד
+              </button>
+              <button ion-button small clear no-padding no-margin color="purple">
+                <ion-icon name="time"></ion-icon>
+                דווח שעות
+              </button>
+            </ion-buttons>
+          </ion-card>
+        </ion-list>
+      </ion-col>
+      <ion-col [style.backgroundColor]="'#fbfbfb'">
+        <ion-list class="favorite-list">
+          <ion-list-header text-center no-margin color="purple">פתקים</ion-list-header>
+          <sticky-notes></sticky-notes>
+        </ion-list>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 </ion-content>

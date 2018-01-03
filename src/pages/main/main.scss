@@ -1,5 +1,8 @@
 page-main {
 
+    .main-tab-button{
+      border-left: 1px solid #C0BFBF;
+    }
     ion-grid,ion-row
    {
                 height: 100%;
@@ -7,6 +10,15 @@ page-main {
     .toolbar
    {
        min-height: 30px  !important;
+      
+   }
+   ion-navbar + ion-toolbar .toolbar-background
+   {
+    //    background-color: rgba(248, 248, 248, 0.62);
+    background-color: color($colors,prettylight);
+   }
+   >ion-header .toolbar{
+    border-bottom: 1px solid color($colors,lightgray);
    }
    .activity-manager-col
    {
@@ -16,6 +28,10 @@ page-main {
    >ion-content .scroll-content
    {
       overflow-x: hidden;
+   }
+   .date
+   {
+      
    }
    
 }

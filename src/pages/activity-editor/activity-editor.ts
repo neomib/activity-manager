@@ -31,24 +31,31 @@ export class ActivityEditor
   @Input('activity')
   set setActivity(act)
   {
+    this.setAct(act);
+  }
+  constructor(private appService: AppService,
+    private formServie: FormService,
+    private nav: NavController,
+    private objToIterable: ObjToIterable,
+    private navParams: NavParams)
+  {
+    this.textRows = 1;
+    this.list = this.appService.activityList;
+    if (this.navParams.data.activity)
+      this.setAct(this.navParams.data.activity);
+    this.appService.activityListObsr.subscribe(list =>
+    {
+      this.getActText();
+    });
+
+  }
+  setAct(act)
+  {
     this.activity = act;
     if (this.appService.activityList.length > 0 && !this.appService.activityListStart)
     {
       this.getActText();
     }
-  }
-  constructor(private appService: AppService,
-    private formServie: FormService,
-    private nav: NavController,
-    private objToIterable: ObjToIterable)
-  {
-    this.textRows = 1;
-    this.list = this.appService.activityList;
-    this.appService.activityListObsr.subscribe(list =>
-    {
-      this.getActText();
-    });
-    
   }
   getActTitle(item)
   {

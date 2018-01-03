@@ -8,22 +8,31 @@
   <ion-navbar hideBackButton="true" dir="ltr" color="dark">
     <h6 padding-left no-margin [style.color]="'white'">PRIORITY</h6>
     <ion-buttons end padding-right>
+      <button class="date" color="white" clear ion-button>{{currentDate}}</button>
+      <button color="white" clear ion-button>{{appService.getUserName()}}</button>
       <button ion-button icon-only (click)="loadData()" color="white" clear>
         <ion-icon name="refresh"></ion-icon>
       </button>
+
     </ion-buttons>
   </ion-navbar>
+  <ion-toolbar no-padding color="lightGray">
+    <button ion-button text-center no-margin padding-top padding-bottom clear color="dark" class="main-tab-button">המשימות שלי</button>
+    <button ion-button clear color="dark">
+      <ion-icon name="add"></ion-icon>
+    </button>
+  </ion-toolbar>
 </ion-header>
 <ion-content>
   <ion-grid dir="rtl" no-padding>
     <ion-row nowrap>
-      <ion-col col-md-10 col-12 class="activity-manager-col">
+      <!-- <ion-col col-md-10 col-12 class="activity-manager-col">
         <activity-manager></activity-manager>
-      </ion-col>
+      </ion-col> -->
       <!-- <ion-col col-lg-1 col-2 >
         <doc-menu></doc-menu>
       </ion-col> -->
-      <ion-col col-md-2>
+      <ion-col>
         <user-hours></user-hours>
       </ion-col>
     </ion-row>

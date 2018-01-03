@@ -16,9 +16,10 @@ import { AppService } from '../../providers/app-service';
 export class Main
 {
 
+  currentDate:string;
   constructor(public navCtrl: NavController, public navParams: NavParams, private appService: AppService)
   {
-
+    this.currentDate = this.appService.getCurrentTime().dateFormated;
   }
 
   ionViewWillLoad()
@@ -28,7 +29,7 @@ export class Main
   }
   ionViewDidLoad()
   {
-      this.appService.loadData();
+      // this.appService.loadData();
   }
   loadData()
   {

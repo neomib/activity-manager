@@ -4,6 +4,7 @@ import { Main } from './main';
 import { ActivityManagerModule } from '../activity-manager/activity-manager.module';
 import { UserHoursModule } from '../user-hours/user-hours.module';
 import { DocMenuModule } from '../../components/doc-menu/doc-menu.module';
+import { ActivityEditorModule } from "../activity-editor/activity-editor.module";
 
 
 @NgModule({
@@ -14,6 +15,7 @@ import { DocMenuModule } from '../../components/doc-menu/doc-menu.module';
     ActivityManagerModule,
     UserHoursModule,
     DocMenuModule,
+    ActivityEditorModule,
     IonicPageModule.forChild(Main)
   ],
   exports: [

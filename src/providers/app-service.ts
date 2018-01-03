@@ -23,6 +23,7 @@ export class AppService
     activitiesLocalStorage: string;
     private userNameForLocalStorage: string;
     private pswdForLocalStorage: string;
+    private stickynoteStorage: string;
 
     private username: string;
     private password: string;
@@ -64,6 +65,7 @@ export class AppService
         this.pswdForLocalStorage = "priority-password";
         this.activitiesLocalStorage = "priority-activities";
         this.projectsLocalStorage = "priority-projects";
+        this.stickynoteStorage = "priority-stickynotes";
 
         //this.storage.get(this.userNameForLocalStorage).then(value => this.username = value);
         //this.storage.get(this.pswdForLocalStorage).then(value => this.password = value);
@@ -353,24 +355,24 @@ export class AppService
                             or: 0,
                             ignorecase: 1,
                             QueryValues:
-                            [
-                                {
-                                    "field": "DOCNO",
-                                    "fromval": value.DOCNO,
-                                    "toval": "",
-                                    "op": "=",
-                                    "sort": 0,
-                                    "isdesc": 0
-                                },
-                                {
-                                    "field": "LEVEL",
-                                    "fromval": "2",
-                                    "toval": "",
-                                    "op": ">=",
-                                    "sort": 0,
-                                    "isdesc": 0
-                                },
-                            ]
+                                [
+                                    {
+                                        "field": "DOCNO",
+                                        "fromval": value.DOCNO,
+                                        "toval": "",
+                                        "op": "=",
+                                        "sort": 0,
+                                        "isdesc": 0
+                                    },
+                                    {
+                                        "field": "LEVEL",
+                                        "fromval": "2",
+                                        "toval": "",
+                                        "op": ">=",
+                                        "sort": 0,
+                                        "isdesc": 0
+                                    },
+                                ]
                         };
                         previousSearch = this.setFilterAndGetActs(filter, previousSearch).catch(() => { });
                         if (index == this.projList.length - 1)
@@ -391,6 +393,38 @@ export class AppService
                 });
         });
 
+    }
+    retrieveActivity(actNum: string): Promise<any>
+    {
+        return new Promise((resolve, reject) =>
+        {
+
+            let filter = {
+                or: 0,
+                ignorecase: 1,
+                QueryValues:
+                    [
+                        {
+                            "field": "PROJACT",
+                            "fromval": actNum,
+                            "toval": "",
+                            "op": "=",
+                            "sort": 0,
+                            "isdesc": 0
+                        },
+                    ]
+            };
+            let form;
+            this.getForm(this.activityFormName)
+                .then(formres =>
+                {
+                    form = formres;
+                    return this.formService.setSearchFilter(form, filter);
+                })
+                .then(() => this.formService.getRows(form, 0))
+                .then(rows => resolve(rows[1] ? rows[1] : {}))
+                .catch(error => reject());
+        });
     }
     createNewActivity(parentAct, subject)
     {
@@ -431,16 +465,16 @@ export class AppService
                 or: 0,
                 ignorecase: 1,
                 QueryValues:
-                [
-                    {
-                        "field": "PROJACT",
-                        "fromval": activity.PROJACT,
-                        "toval": "",
-                        "op": "=",
-                        "sort": 0,
-                        "isdesc": 0
-                    }
-                ]
+                    [
+                        {
+                            "field": "PROJACT",
+                            "fromval": activity.PROJACT,
+                            "toval": "",
+                            "op": "=",
+                            "sort": 0,
+                            "isdesc": 0
+                        }
+                    ]
             };
             let activityForm: Form;
             this.getForm(this.activityFormName)
@@ -487,15 +521,15 @@ export class AppService
                         or: 0,
                         ignorecase: 1,
                         QueryValues:
-                        [
-                            {
-                                "field": "PROJACT",
-                                "fromval": actNum,
-                                "toval": "",
-                                "op": "=",
-                                "sort": 0,
-                                "isdesc": 0
-                            }]
+                            [
+                                {
+                                    "field": "PROJACT",
+                                    "fromval": actNum,
+                                    "toval": "",
+                                    "op": "=",
+                                    "sort": 0,
+                                    "isdesc": 0
+                                }]
                     };
                     return this.formService.setSearchFilter(form, filter);
                 })
@@ -589,32 +623,32 @@ export class AppService
                 or: 0,
                 ignorecase: 1,
                 QueryValues:
-                [
-                    {
-                        "field": "CURDATE",
-                        "fromval": today,
-                        "toval": "",
-                        "op": "=",
-                        "sort": 0,
-                        "isdesc": 0
-                    },
-                    {
-                        "field": "USERLOGIN",
-                        "fromval": this.getUserName(),
-                        "toval": "",
-                        "op": "=",
-                        "sort": 0,
-                        "isdesc": 0
-                    },
-                    {
-                        "field": "STIMEI",
-                        "fromval": "00:00",
-                        "toval": "",
-                        "op": "<>",
-                        "sort": 1,
-                        "isdesc": 1
-                    }
-                ]
+                    [
+                        {
+                            "field": "CURDATE",
+                            "fromval": today,
+                            "toval": "",
+                            "op": "=",
+                            "sort": 0,
+                            "isdesc": 0
+                        },
+                        {
+                            "field": "USERLOGIN",
+                            "fromval": this.getUserName(),
+                            "toval": "",
+                            "op": "=",
+                            "sort": 0,
+                            "isdesc": 0
+                        },
+                        {
+                            "field": "STIMEI",
+                            "fromval": "00:00",
+                            "toval": "",
+                            "op": "<>",
+                            "sort": 1,
+                            "isdesc": 1
+                        }
+                    ]
             };
 
             let hoursForm: Form;
@@ -650,15 +684,15 @@ export class AppService
                 or: 0,
                 ignorecase: 1,
                 QueryValues:
-                [
-                    {
-                        "field": "TRANS",
-                        "fromval": report["TRANS"],
-                        "toval": "",
-                        "op": "=",
-                        "sort": 0,
-                        "isdesc": 0
-                    }]
+                    [
+                        {
+                            "field": "TRANS",
+                            "fromval": report["TRANS"],
+                            "toval": "",
+                            "op": "=",
+                            "sort": 0,
+                            "isdesc": 0
+                        }]
             };
 
             let hoursForm: Form;
@@ -837,24 +871,24 @@ export class AppService
                         or: 0,
                         ignorecase: 1,
                         QueryValues:
-                        [
-                            {
-                                "field": "DOCNO",
-                                "fromval": project.DOCNO,
-                                "toval": "",
-                                "op": "=",
-                                "sort": 0,
-                                "isdesc": 0
-                            },
-                            {
-                                "field": "LEVEL",
-                                "fromval": "2",
-                                "toval": "",
-                                "op": ">=",
-                                "sort": 0,
-                                "isdesc": 0
-                            },
-                        ]
+                            [
+                                {
+                                    "field": "DOCNO",
+                                    "fromval": project.DOCNO,
+                                    "toval": "",
+                                    "op": "=",
+                                    "sort": 0,
+                                    "isdesc": 0
+                                },
+                                {
+                                    "field": "LEVEL",
+                                    "fromval": "2",
+                                    "toval": "",
+                                    "op": ">=",
+                                    "sort": 0,
+                                    "isdesc": 0
+                                },
+                            ]
                     };
                     let previousSearch = new Promise((innerresolve, reject) => innerresolve());
                     this.setFilterAndGetActs(filter, previousSearch)
@@ -947,5 +981,14 @@ export class AppService
     {
         if (this.todoList)
             return this.todoList.filter(row => row.DOCDES == "פעילות לפרויקט");
+    }
+    ///////// Sticky Notes ///////////////////
+    saveStickyNotes(stickyArr: string[])
+    {
+        this.storage.set(this.stickynoteStorage, stickyArr);
+    }
+    getStickyNote()
+    {
+        return this.storage.get(this.stickynoteStorage);
     }
 }
