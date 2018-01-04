@@ -69,10 +69,15 @@ export class UserHours implements OnInit
     this.appService.endActREport(report);
     report.isActive = false;
   }
-  startReport(report)
+  startReport(report,event)
   {
     this.appService.startActReport(report);
     this.isShowRepSpinner = true;
+    event.stopPropagation();
+  }
+  reportHours(item,event)
+  {
+    event.stopPropagation();
   }
   onSegmentChanged(segmentButton)
   {

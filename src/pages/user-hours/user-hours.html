@@ -24,7 +24,7 @@
       <ion-col col-4 col-lg-3 class="col-with-border" >
         <ion-spinner name="dots" *ngIf="isShowRepSpinner" text-center></ion-spinner>
         <ion-list class="todays-reports-list">
-          <ion-list-header text-center no-padding no-margin margin-bottom color="green">
+          <ion-list-header text-center no-padding no-margin margin-bottom color="new">
             דיווחי שעות
             <!-- <ion-toolbar color="prettylight" margin-top no-padding>
               <h5 text-center no-margin>{{currentDate}}</h5>
@@ -62,11 +62,11 @@
             <h3>{{item['DETAILS']}} </h3>
             <p>{{item['PROJDES']}}</p>
             <ion-buttons margin-top margin-bottom no-margin>
-              <button ion-button small clear no-padding no-margin (click)="startReport(item)" color="green">
+              <button ion-button small clear no-padding no-margin (click)="startReport(item,$event)" color="new">
                 <ion-icon name="ios-play-outline"></ion-icon>
                 התחל לעבוד
               </button>
-              <button ion-button small clear no-padding no-margin color="purple">
+              <button ion-button small clear no-padding no-margin color="purple" (click)="reportHours(item,$event)">
                 <ion-icon name="time"></ion-icon>
                 דווח שעות
               </button>
@@ -76,7 +76,7 @@
       </ion-col>
       <ion-col [style.backgroundColor]="'#fbfbfb'">
         <ion-list class="favorite-list">
-          <ion-list-header text-center no-margin color="purple">פתקים</ion-list-header>
+          <ion-list-header text-center no-margin color="purple">הלוח שלי</ion-list-header>
           <sticky-notes></sticky-notes>
         </ion-list>
       </ion-col>

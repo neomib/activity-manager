@@ -31,15 +31,18 @@ export class StickyNotes
             .catch(() => { });
     }
 
-    deleteNote(that)
+
+    delete = (event) =>
     {
-        return that.delete(that);
+        let parent = event.target.parentElement;
+        this.notes.splice(Number(parent.id)-1, 1);
+        this.appService.saveStickyNotes(this.notes);
+        parent.remove();
     }
-    delete(that)
+    textChanged=(event)=>
     {
-        let note = $(this).parent('.note');
-        note.hide("puff", { percent: 133 }, 250);
-        this.notes.splice(note[0].id, 1);
+        let parent = event.target.parentElement.parentElement;
+        this.notes[Number(parent.id)-1]=event.target.value;
         this.appService.saveStickyNotes(this.notes);
     }
     newNote(event)
@@ -64,21 +67,21 @@ export class StickyNotes
     }
     newNoteContent(text)
     {
-        let noteTemp = '<div class="note" id="' + this.notes.length + '">'
+        let noteTemp = '<ion-card class="note" id="' + this.notes.length + '">'
             + '<a href="javascript:;" class="button remove">X</a>'
-            + '<div class="note_cnt">'
+            + '<ion-card class="note_cnt">'
             + '<textarea class="cnt" >' + text + '</textarea>'
-            + '</div> '
-            + '</div>';
-        $(noteTemp).hide().appendTo("#board").show("fade", 150, 150)
-            .draggable().on('dragstart',
-            function ()
-            {
-                $(this).zIndex(++this.noteZindex);
-            });
+            + '</ion-card> '
+            + '</ion-card>';
+        $(noteTemp).hide().appendTo("#board").show("fade", 150, 150);
+            // .draggable().on('dragstart',
+            // function ()
+            // {
+            //     $(this).zIndex(++this.noteZindex);
+            // });
         let that = this;
-        $('.remove').click(this.deleteNote);
-        $('textarea').autogrow();
+        $('.remove').click(this.delete);
+        $('textarea').change(this.textChanged);
         $('.note')
     }
 }
