@@ -24,6 +24,7 @@ export class ActivityEditor
 
   text: string;
   activityText: string;
+  activityTextInput: string;
   textRows: number;
   activity;
 
@@ -43,19 +44,19 @@ export class ActivityEditor
     this.list = this.appService.activityList;
     if (this.navParams.data.activity)
       this.setAct(this.navParams.data.activity);
-    this.appService.activityListObsr.subscribe(list =>
-    {
-      this.getActText();
-    });
+    // this.appService.activityListObsr.subscribe(list =>
+    // {
+    //   this.getActText();
+    // });
 
   }
   setAct(act)
   {
     this.activity = act;
-    if (this.appService.activityList.length > 0 && !this.appService.activityListStart)
-    {
-      this.getActText();
-    }
+    // if (this.appService.activityList.length > 0 && !this.appService.activityListStart)
+    // {
+    this.getActText();
+    // }
   }
   getActTitle(item)
   {
@@ -110,14 +111,19 @@ export class ActivityEditor
 
   ///******* text **********/
 
-  onTextChange(evnt)
+  textChanged(event)
   {
-    let key = evnt.key;
-    if (key == "Enter")
-      this.textRows++;
+    let key = event.key;
+    if (event.ctrlKey && key == "Enter")
+    {
+      this.activityTextInput="";
+      let value = event.target.value;
+      value=value.replace(/\n/g,'</br>');
+      this.appService.addNewActivityText(value)
+        .then(text => this.activityText = text)
+        .catch(() => { });
+    }
+
   }
-  getTextRows()
-  {
-    return this.textRows;
-  }
+
 }

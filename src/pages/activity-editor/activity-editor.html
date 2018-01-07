@@ -4,45 +4,81 @@
   See http://ionicframework.com/docs/components/#navigation for more info on
   Ionic pages and navigation.
 -->
+<div>
+    <!-- <ion-toolbar> -->
+    <!-- <ion-note margin-top text-right>{{activity.PROJACT}}</ion-note> -->
 
-<ion-content>
-    <ion-toolbar text-right >
-        <ion-note margin-top text-right>{{activity.PROJACT}}</ion-note>
-        <h6 no-margin text-right [style.color]="'#1d86af'">{{activity.ACTDES}}</h6>
-        <ion-buttons no-margin end  >
+    <!-- <ion-row>
+            <ion-col col-md-4 col-12 [style.borderLeftWidth]="'1px'"> -->
+    <h6 [style.color]="'#1d86af'">{{activity.ACTDES}}</h6>
+    <ion-row>
+        <ion-col>
+        <!-- <ion-item> -->
+            <ion-note >באחריות</ion-note>
+            <ion-input class="header-input" type="text" [value]="activity.OWNER" (input)="titleChanged($event.target.value)"></ion-input>
+        <!-- </ion-item> -->
+    </ion-col>
+    <ion-col>
+        <!-- <ion-item> -->
+            <ion-note >בסטטוס</ion-note>
+            <ion-input class="header-input" type="text" [(ngModel)]="activity.STEPSTATUSDES"></ion-input>
+        <!-- </ion-item> -->
+    </ion-col>
+</ion-row>
+    <ion-header no-border>
+        <ion-textarea class="text-editor" [value]="activityTextInput" (keydown)="textChanged($event)"></ion-textarea>
+    </ion-header>
+    <!-- </ion-col>
+            <ion-col col-md-8 col-12> -->
+    <div class="activity-text">
+
+        <div margin [innerHTML]="activityText" disabled></div>
+        <ion-spinner color="chip" *ngIf="activityText==null"></ion-spinner>
+    </div>
+</div>
+
+<!-- </ion-col>
+        </ion-row> -->
+
+<!-- <ion-buttons no-margin end  >
             <button ion-button icon-only   (click)="save()" color="primary">
                 שמור
-                <!-- <ion-icon name="checkmark"></ion-icon> -->
+               
             </button>
-        </ion-buttons>
-    </ion-toolbar>
-    <ion-list margin-right>
-        <!--<button ion-item *ngFor="let item of titleList" (click)="chooseTitle(item)">
+        </ion-buttons> -->
+<!-- </ion-toolbar> -->
+
+
+<!--<button ion-item *ngFor="let item of titleList" (click)="chooseTitle(item)">
             {{getActTitle(item)}}
         </button>-->
+<!-- <ion-grid>
         <ion-row>
-            <ion-col col-12 col-md-6>
-                <ion-item>
+            <ion-col col-3> -->
+<!-- <ion-item>
                     <ion-label stacked>רמה</ion-label>
                     <ion-input type="text" [(ngModel)]="activity.WBS"></ion-input>
-                </ion-item>
-                <!-- <ion-item>
-                    <ion-label stacked>מספר שעות</ion-label>
-                    <ion-input type="number" [(ngModel)]="activity.HRQUANT"></ion-input>
                 </ion-item> -->
-            </ion-col>
-            <ion-col>
-                <ion-item>
+<!-- <ion-item>
                     <ion-label stacked>באחריות</ion-label>
                     <ion-input type="text" [value]="activity.OWNER" (input)="titleChanged($event.target.value)"></ion-input>
                 </ion-item>
                 <ion-item>
                     <ion-label stacked>סטטוס</ion-label>
                     <ion-input type="text" [(ngModel)]="activity.STEPSTATUSDES"></ion-input>
-                </ion-item>
+                </ion-item> -->
+<!-- <ion-item>
+                    <ion-label stacked>מספר שעות</ion-label>
+                    <ion-input type="number" [(ngModel)]="activity.HRQUANT"></ion-input>
+                </ion-item> -->
+<!-- </ion-col> -->
+<!-- <ion-col col-9>
+                <ion-input></ion-input>
+                <div class="activity-text" [innerHTML]="activityText" disabled></div>
             </ion-col>
         </ion-row>
-        <!-- <ion-item>
+    </ion-grid> -->
+<!-- <ion-item>
             <ion-label stacked>פרטים</ion-label>
             <ion-textarea rows="3" [placeholder]="'הוסף טקסט (Ctrl + Enter לשמירה)'" dir="rtl" [(ngModel)]="text" (keypress)="onTextChange($event)"></ion-textarea>
             <ion-label class="add-text-btn">
@@ -50,9 +86,9 @@
         </ion-label>
 
         </ion-item> -->
-        <ion-item>
+<!-- <ion-item>
                 <span stacked class="details-label">פרטים</span>
-            <div class="activity-text" [innerHTML]="activityText" disabled></div>
-        </ion-item>
-    </ion-list>
-</ion-content>
+           
+        </ion-item> -->
+
+<!-- </ion-content> -->

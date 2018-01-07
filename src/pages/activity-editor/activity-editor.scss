@@ -1,38 +1,88 @@
 activity-editor {
-    ion-toolbar
+    > div
     {
-        padding-right: 10px !important;
+        // padding:0 2%;
     }
- .toolbar-background
- {
-     background: transparent;
- }
- h6,ion-note
- {
-    //  color:color($colors,new)
-    // padding-right: 20px;
- }
- ion-content
- {
-    //  border: 1px solid color($colors,light);
- }
-//  ion-textarea
-//  {
-//      width: 85%;
-//  }
- .activity-text *
- {
-  white-space: normal;
- }
- .add-text-btn
- {
-    //  position: absolute;
-    //  left: 0;
-    //  top: 10px;
- }
+    // ion-toolbar
+    // {
+        h6
+        {
+            margin-top:20px;
+             margin-bottom: 20px;
+             margin-right: 16px;
+        //   text-align:center;
+        }
+        ion-row
+        {
+            //  margin-right: 30%;
+            //  margin-left: 30%;
+            margin-top:20px;
+            margin-right: 16px;
+            ion-col
+            {
+                border-color:color($colors,lightgray);
+            }
+        }
+        .header-input
+        {
+            position: absolute;
+            top: -18px;
+            right: 64px;
+            font-size: 22px;
+        }
+    // }
+   
+        > .item-block:not(.input-has-focus) .item-inner
+        {
+            border-bottom:0;
+        }
+
  .details-label
  {
     color: #999;
     font-size: 1.2rem;
  }
+ .text-editor
+ {
+    background-color: white;
+    border: 1px solid color($colors,gray);
+    border-radius: 2px;
+    height: 110px;
+ }
+ .activity-text
+ {
+    //  padding-top: 20px;
+     padding:20px 10px 0 10px;
+     background-color: color($colors,prettylight);
+     p
+     {
+         margin:0;
+     }
+     hr
+     {
+         background-color: color($colors,gray)
+     }
+    
+ }
+ ion-header
+     {
+         position: sticky;
+         padding: 10px 10px 0 10px;
+         background-color: white;
+     }
+ ion-spinner
+ {
+   top:auto;
+   bottom: 40%;
+ }
 }
+ion-popover
+ {
+     .popover-content
+     {
+         top:15% !important;
+         height:70%;
+         width:50% !important;
+     }
+   
+ }

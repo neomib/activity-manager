@@ -97,13 +97,17 @@ export class UserHours implements OnInit
   }
   editActivity(activity)
   {
-    this.appService.retrieveActivity(activity['TODOREF'])
-      .then(act =>
-      {
-        let popover = this.popoverCtrl.create('ActivityEditor', { activity: act });
+    // this.appService.retrieveActivity(activity['TODOREF'])
+    //   .then(act =>
+    //   {
+      activity.PROJACT=activity.TODOREF;
+      activity.OWNER=activity.OWNERLOGIN;
+      activity.STEPSTATUSDES=activity.STATDES;
+      activity.ACTDES=activity.DETAILS;
+        let popover = this.popoverCtrl.create('ActivityEditor', { activity: activity },{showBackdrop:true});
         popover.present();
-      })
-      .catch(error => { });
+      // })
+      // .catch(error => { });
 
 
   }

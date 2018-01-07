@@ -557,7 +557,7 @@ export class AppService
                 .catch(() => reject());
         });
     }
-    addNewActivityText(form, rowInd, text): Promise<any>
+    addNewActivityText(text): Promise<any>
     {
         return new Promise((resolve, reject) =>
         {
@@ -567,7 +567,7 @@ export class AppService
                 .then(resultForm =>
                 {
                     form = resultForm;
-                    return this.formService.setActiveRow(form, rowInd);
+                    return this.formService.setActiveRow(form, 1);
                 })
                 .then(() =>
                 {
@@ -576,11 +576,16 @@ export class AppService
                 .then(subformRes =>
                 {
                     subform = subformRes;
-                    this.formService.saveText(subform, text);
+                    return this.formService.saveText(subform, text);
                 })
                 .then(() =>
                 {
-                    resolve();
+                    let text;
+                    let rows = this.formService.getLocalRows(subform);
+                    if (rows && rows["1"])
+                        text = rows["1"].htmltext;
+
+                    resolve(text);
                     this.formService.endForm(subform);
                 })
                 .catch(() => reject());
