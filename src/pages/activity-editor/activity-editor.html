@@ -16,14 +16,15 @@
         <!-- <ion-item> -->
             <ion-note >באחריות</ion-note>
             <ion-input class="header-input" type="text" [value]="activity.OWNER" (input)="titleChanged($event.target.value)"></ion-input>
-        <!-- </ion-item> -->
-    </ion-col>
-    <ion-col>
-        <!-- <ion-item> -->
             <ion-note >בסטטוס</ion-note>
             <ion-input class="header-input" type="text" [(ngModel)]="activity.STEPSTATUSDES"></ion-input>
         <!-- </ion-item> -->
     </ion-col>
+    <!-- <ion-col> -->
+        <!-- <ion-item> -->
+           
+        <!-- </ion-item> -->
+    <!-- </ion-col> -->
 </ion-row>
     <ion-header no-border>
         <ion-textarea class="text-editor" [value]="activityTextInput" (keydown)="textChanged($event)"></ion-textarea>
