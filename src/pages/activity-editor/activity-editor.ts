@@ -1,5 +1,5 @@
-import { Component, Input } from '@angular/core';
-import { NavController, NavParams, IonicPage } from 'ionic-angular';
+import { Component, Input, ViewChild } from '@angular/core';
+import { NavController, NavParams, IonicPage, ViewController } from 'ionic-angular';
 import { FormService, ObjToIterable, Form } from 'priority-ionic';
 import { AppService } from '../../providers/app-service';
 
@@ -16,99 +16,101 @@ import { AppService } from '../../providers/app-service';
 })
 export class ActivityEditor
 {
-  list;
-  titleList: string[] = [];
-  title = {};
-  subject: string;
-  hours: number;
-
+  // text
   text: string;
-  activityText: string;
-  activityTextInput: string;
-  textRows: number;
+  textInput: string;
+
+  // activity details
   activity;
+  title: string;
+  comment: string;
+  status: string;
+  statusList;
+  owner: string;
+  actNumber: string;
 
+  //activity about
+  selectedSegment;
 
-  @Input('activity')
-  set setActivity(act)
-  {
-    this.setAct(act);
-  }
+  @ViewChild('titleElem') titleElem;
+
   constructor(private appService: AppService,
     private formServie: FormService,
     private nav: NavController,
     private objToIterable: ObjToIterable,
-    private navParams: NavParams)
+    private navParams: NavParams,
+    public viewCtrl: ViewController)
   {
-    this.textRows = 1;
-    this.list = this.appService.activityList;
+    this.selectedSegment = "activityState";
     if (this.navParams.data.activity)
       this.setAct(this.navParams.data.activity);
-    // this.appService.activityListObsr.subscribe(list =>
-    // {
-    //   this.getActText();
-    // });
-
+  }
+  dismiss()
+  {
+    this.viewCtrl.dismiss();
   }
   setAct(act)
   {
     this.activity = act;
-    // if (this.appService.activityList.length > 0 && !this.appService.activityListStart)
-    // {
+    this.actNumber = act.PROJACT;
+    this.title = act.ACTDES;
+    this.comment = act.PRIORITYDES || 'הוסף הערה לפעילות';
+    this.status = act.STEPSTATUSDES;
+    this.owner = act.OWNER;
     this.getActText();
-    // }
   }
-  getActTitle(item)
+  setStatus()
   {
-    if (!item || !item.ACTDES)
-      return "";
-    return item.ACTDES;
-  }
-  getActText()
-  {
-    this.appService.getActivityText(this.activity.PROJACT)
-      .then(text =>
+    this.appService.getActivityStatuses(this.actNumber)
+      .then(result =>
       {
-        this.activityText = text;
+
       })
       .catch(() => { });
   }
-  titleChanged(title: string)
+  getActText()
   {
-    if (title != '')
-    {
-      this.titleList = this.list.filter((item, index, array) =>
+    this.appService.getActivityText(this.actNumber)
+      .then(({ text, activity }) =>
       {
-        return item.LEVEL == "3" && this.getActTitle(item).toLocaleLowerCase().includes(title.toLocaleLowerCase())
+        this.activity = activity;
+        this.text = text;
       })
+      .catch(() => { });
+  }
+  getOwnerInitials()
+  {
+    // if (this.activity.ESH_USERNAME)
+    // {
+    //   let initials = this.activity.ESH_USERNAME.split(' ');
+    //   if (initials.length == 2)
+    //   {
+    //     return initials[0][0] + initials[1][0];
+    //   }
+    // }
+    // return '';
+    return this.owner ? this.owner[0] : '';
+  }
+  resizeTitle(event)
+  {
+    let element = this.titleElem._native.nativeElement;
+    let containerElement = this.titleElem._elementRef.nativeElement;
+    let height = element.scrollHeight;
 
-    }
-    else
+    if (event.inputType === 'deleteContentBackward')
     {
-      this.titleList = [];
+      let fontSize: string = element.style.fontSize;
+      fontSize = fontSize.substr(0, fontSize.length - 2);
+      let fontNumber = Number(fontSize);
+      if (height - fontNumber >= fontNumber && this.title.trim() !== this.title)
+      {
+        height = height - fontNumber;
+        this.title = this.title.trim();
+      }
     }
-
+    element.style.height = containerElement.style.height = height + "px";
+    event.stopPropagation();
   }
-  chooseTitle(activity)
-  {
-    this.title = activity;
-    this.titleList = [];
-  }
-  save()
-  {
-    if (this.title == "" || this.subject == "")
-      return;
-    this.appService.createNewActivity(this.title, this.subject);
-    this.title = {};
-    this.subject = "";
-    this.titleList = [];
-    this.hours = 0;
-  }
-  closeactivityEditor()
-  {
-    this.activity = undefined;
-  }
-
   ///******* text **********/
 
   textChanged(event)
@@ -116,14 +118,31 @@ export class ActivityEditor
     let key = event.key;
     if (event.ctrlKey && key == "Enter")
     {
-      this.activityTextInput="";
+      this.textInput = "";
       let value = event.target.value;
-      value=value.replace(/\n/g,'</br>');
+      value = value.replace(/\n/g, '</br>');
       this.appService.addNewActivityText(value)
-        .then(text => this.activityText = text)
+        .then(text => this.text = text)
         .catch(() => { });
     }
 
+  }
+  /*************************************** activity about */
+  onSegmentChanged(segmentButton)
+  {
+    // this.isShowSpinner = false;
+    // if (segmentButton.value == "myTasks")
+    // {
+    //   if (!this.isLoadTasksFinished && this.isLoadDataStarted)
+    //     this.isShowSpinner = true;
+    //   this.isShowTodayReports = false;
+    // }
+    // else
+    // {
+    //   if (!this.isLoadReportsFinished && this.isLoadDataStarted)
+    //     this.isShowSpinner = true;
+    //   this.isShowTodayReports = true;
+    // }
   }
 
 }

@@ -3,7 +3,6 @@ import { ConfigurationService, FormService, ObjToIterable, PriorityService, Mess
 import { Form, ProfileConfig, ServerResponse, ServerResponseCode, ServerResponseType, Constants, Search, SearchAction, MessageOptions, Filter } from 'priority-ionic';
 import { Storage } from '@ionic/storage';
 import { Subject } from 'rxjs/Subject';
-
 /*
   Generated class for the AppService provider.
 
@@ -394,7 +393,7 @@ export class AppService
         });
 
     }
-    retrieveActivity(actNum: string): Promise<any>
+    retrieveActivity(actNum: string): Promise<{ form: Form, activity: any }>
     {
         return new Promise((resolve, reject) =>
         {
@@ -421,8 +420,12 @@ export class AppService
                     form = formres;
                     return this.formService.setSearchFilter(form, filter);
                 })
-                .then(() => this.formService.getRows(form, 0))
-                .then(rows => resolve(rows[1] ? rows[1] : {}))
+                .then(() => this.formService.getRows(form, 1))
+                .then(rows => 
+                {
+                    let act = rows[1] ? rows[1] : undefined;
+                    resolve({ form: form, activity: act });
+                })
                 .catch(error => reject());
         });
     }
@@ -461,34 +464,11 @@ export class AppService
     {
         return new Promise((resolve, reject) =>
         {
-            let filter = {
-                or: 0,
-                ignorecase: 1,
-                QueryValues:
-                    [
-                        {
-                            "field": "PROJACT",
-                            "fromval": activity.PROJACT,
-                            "toval": "",
-                            "op": "=",
-                            "sort": 0,
-                            "isdesc": 0
-                        }
-                    ]
-            };
             let activityForm: Form;
-            this.getForm(this.activityFormName)
-                .then(form =>
+            this.retrieveActivity(activity.PROJACT)
+                .then(({ form, activity }) =>
                 {
                     activityForm = form;
-                    return this.formService.setSearchFilter(form, filter);
-                })
-                .then(() =>
-                {
-                    return activityForm.getRows(1);
-                })
-                .then(rows =>
-                {
                     return activityForm.fieldUpdate("STEPSTATUSDES", "בוצעה")
                 })
                 .then(() =>
@@ -506,39 +486,17 @@ export class AppService
                 });
         });
     }
-    getActivityText(actNum): Promise<any>
+    // activity text
+    getActivityText(actNum): Promise<{ text: string, activity }>
     {
         return new Promise((resolve, reject) =>
         {
-            let form;
             let subform;
-            this.getForm(this.activityFormName)
-                .then(resultForm =>
+            let act;
+            this.retrieveActivity(actNum)
+                .then(({ form, activity }) =>
                 {
-                    form = resultForm;
-
-                    let filter = {
-                        or: 0,
-                        ignorecase: 1,
-                        QueryValues:
-                            [
-                                {
-                                    "field": "PROJACT",
-                                    "fromval": actNum,
-                                    "toval": "",
-                                    "op": "=",
-                                    "sort": 0,
-                                    "isdesc": 0
-                                }]
-                    };
-                    return this.formService.setSearchFilter(form, filter);
-                })
-                .then(() =>
-                {
-                    return this.formService.getRows(form, 1);
-                })
-                .then(() =>
-                {
+                    act = activity;
                     return this.getSubForm(this.activityTextFormName, form);
                 })
                 .then(subformRes =>
@@ -552,7 +510,7 @@ export class AppService
                     if (rows && rows["1"] != null)
                         text = rows["1"].htmltext;
                     this.formService.endForm(subform);
-                    resolve(text);
+                    resolve({ text: text, activity: act });
                 })
                 .catch(() => reject());
         });
@@ -588,6 +546,22 @@ export class AppService
                     resolve(text);
                     this.formService.endForm(subform);
                 })
+                .catch(() => reject());
+        });
+
+    }
+
+    //activity status
+    getActivityStatuses(actNum: string): Promise<any>
+    {
+        return new Promise((resolve, reject) =>
+        {
+            this.retrieveActivity(actNum)
+                .then(({ form, activity }) =>
+                {
+                    return this.formService.openSearchOrChoose(form, "STEPSTATUSDES", activity.STEPSTATUSDES);
+                })
+                .then((search: Search) => resolve(search.ChooseLine))
                 .catch(() => reject());
         });
 

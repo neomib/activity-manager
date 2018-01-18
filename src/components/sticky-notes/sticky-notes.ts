@@ -35,11 +35,11 @@ export class StickyNotes
     delete = (event) =>
     {
         let parent = event.target.parentElement;
-        if (Number(parent.id)<0)
+        if (Number(parent.id) < 0)
             return;
         this.notes.splice(Number(parent.id), 1);
         this.appService.saveStickyNotes(this.notes);
-        parent.id=-1;
+        parent.id = -1;
         parent.remove();
     }
     textChanged = (event) =>

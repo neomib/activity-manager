@@ -1,88 +1,153 @@
 activity-editor {
-    > div
-    {
-        // padding:0 2%;
-    }
-    // ion-toolbar
-    // {
-        h6
-        {
-            margin-top:20px;
-             margin-bottom: 20px;
-             margin-right: 16px;
-        //   text-align:center;
+    ion-header {
+        padding: 10px;
+        background-color: white;
+        border-bottom: 1px solid #eaeaea;
+        position: sticky; //close icon
+        ion-icon {
+            float: left;
+            font-size: 20px;
         }
-        ion-row
+        .activity-number {
+            color: color($colors, chip);
+        }
+        .avatar-circle {
+            vertical-align: top;
+            margin-top: 4px;
+            margin-right: 20px;
+            margin-left: 3px;
+            display: inline-block;
+            width: 35px;
+            height: 35px; // background-color: color($colors,primary);
+            border: 1px solid color($colors, darkblue);
+            text-align: center;
+            border-radius: 50%;
+            -webkit-border-radius: 50%;
+            -moz-border-radius: 50%;
+        }
+        .initials {
+            position: relative;
+            /* 25% of parent */
+            top: 7px;
+            /* 50% of parent */
+            font-size: 17.5px;
+            /* 50% of parent */
+            line-height: 17.5px;
+            color: color($colors, darkblue);
+            font-weight: bold;
+        }
+    }
+    ion-grid {
+       height:calc(100% - 38px);
+        .row
         {
-            //  margin-right: 30%;
-            //  margin-left: 30%;
-            margin-top:20px;
-            margin-right: 16px;
-            ion-col
-            {
-                border-color:color($colors,lightgray);
+            height:100%;
+        }
+        .activity-info {
+            overflow: auto;
+            border-left: 1px solid #eaeaea;
+            ion-spinner {
+                top: auto;
+                bottom: 40%;
+            }
+            .activity-title-container {
+                padding-left: 20px;
+                padding-right:10px;
+                padding-bottom: 20px;
+                .activity-title {
+                    margin-bottom: 1px;
+                    margin-top: 5px;
+                    textarea {
+                        overflow: hidden;
+                        margin: 0;
+                        resize:none;
+                        padding: 5px 4px;
+                        width: 100%;
+                        font-size: 20px;
+                        color: color($colors, darkblue);
+                        border: 1px solid transparent;
+                        &:focus {
+                            border-radius: 2px;
+                            border-color: color($colors, darkblue);
+                        }
+                    }
+                    &+ion-note {
+                        margin-right: 10px;
+                        &+ion-label {
+                            margin-top: 30px;
+                        }
+                    }
+                }
+                .activity-comment {
+                    padding-left: 20px;
+                    textarea {
+                        resize:none;
+                        width: 100%;
+                        margin: 0;
+                        margin-right:5px;
+                        margin-top:-5px;
+                        padding: 5px 4px;
+                        color: color($colors, chip);
+                        border: 1px solid transparent;
+                        &:focus {
+                            border-radius: 2px;
+                            border-color: color($colors, darkblue);
+                        }
+                    }
+                }
+            }
+            .activity-text-container {
+                padding-left: 20px;
+                padding-right:15px;
+                background-color: color($colors,prettylight);
+                min-height: calc(100% - 79px);
+                ion-label {
+                    font-size: 17px;
+                    margin: 0;
+                    padding: 10px 0px;
+                }
+                .text-editor {
+                    margin-right: -1px;
+                    background-color: white;
+                    border: 1px solid color($colors, gray);
+                    border-radius: 2px;
+                    height: 110px;
+                }
+                .activity-text {
+                    padding: 20px 0px 0 0px;
+                    // height: calc(100% - 25%);
+                    // overflow: auto;
+                    // background-color: color($colors, prettylight);
+                    p {
+                        margin: 0;
+                    }
+                    hr {
+                        background-color: color($colors, gray);
+                    }
+                }
             }
         }
-        .header-input
-        {
-            position: absolute;
-            top: -18px;
-            right: 64px;
-            font-size: 22px;
+        .activity-about {
+            background-color: #f4f4f4;
         }
-    // }
-   
-        > .item-block:not(.input-has-focus) .item-inner
-        {
-            border-bottom:0;
-        }
-
- .details-label
- {
-    color: #999;
-    font-size: 1.2rem;
- }
- .text-editor
- {
-    background-color: white;
-    border: 1px solid color($colors,gray);
-    border-radius: 2px;
-    height: 110px;
- }
- .activity-text
- {
-    //  padding-top: 20px;
-     padding:20px 10px 0 10px;
-     background-color: color($colors,prettylight);
-     p
-     {
-         margin:0;
-     }
-     hr
-     {
-         background-color: color($colors,gray)
-     }
-    
- }
- ion-header
-     {
-         position: sticky;
-         padding: 10px 10px 0 10px;
-         background-color: white;
-     }
- ion-spinner
- {
-   top:auto;
-   bottom: 40%;
- }
+    }
 }
-ion-popover
- {
-     .popover-content
-     {
-         top:15% !important;
-         height:70%;
-         width:50% !important;
-     }
-   
- }
+
+ion-popover {
+    .popover-content {
+        top: 50px !important;
+        height: calc(100% - 100px);
+        width: 80% !important;
+        border-radius: 10px !important;
+        box-shadow: none !important;
+        border: 1px solid lightgray;
+        overflow: hidden;
+    }
+    ion-backdrop {
+        opacity: 0.07;
+    }
+    .popover-viewport
+    {
+        height:100%
+    }
+}
