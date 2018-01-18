@@ -68,12 +68,12 @@
             <h3>{{item['DETAILS']}} </h3>
             <p>{{item['PROJDES']}}</p>
             <ion-buttons margin-top margin-bottom no-margin>
-              <button ion-button small clear no-padding no-margin (click)="startReport(item,$event)" color="green">
-                <ion-icon name="ios-play-outline"></ion-icon>
+              <button ion-button small clear no-padding no-margin margin-left  (click)="startReport(item,$event)" color="green">
+                <ion-icon name="ios-play-outline" [style.marginLeft]="'5px'"></ion-icon>
                 התחל לעבוד
               </button>
-              <button ion-button small clear no-padding no-margin color="purple" (click)="reportHours(item,$event)">
-                <ion-icon name="time"></ion-icon>
+              <button ion-button small clear no-padding no-margin margin-left  color="purple" (click)="reportHours(item,$event)">
+                <ion-icon name="time" [style.marginLeft]="'5px'"></ion-icon>
                 דווח שעות
               </button>
             </ion-buttons>
