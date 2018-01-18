@@ -72,7 +72,7 @@ export class StickyNotes
     {
         index = index || this.notes.length;
         let noteTemp = '<ion-card class="note" id="' + index + '">'
-            + '<a href="javascript:;" class="button remove">X</a>'
+            + '<a href="javascript:;" class="button remove">✓</a>'
             + '<ion-card class="note_cnt">'
             + '<textarea class="cnt" >' + text + '</textarea>'
             + '</ion-card> '

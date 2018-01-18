@@ -18,13 +18,12 @@
 
 </ion-header>
 
-<ion-content color="dark">
-  <ion-grid no-padding>
+  <ion-grid no-padding class="container-grid">
     <ion-row>
-      <ion-col col-4 col-lg-3 class="col-with-border">
+      <ion-col col-12 col-md-4 class="col-with-border" >
         <ion-spinner name="dots" *ngIf="isShowRepSpinner" text-center></ion-spinner>
         <ion-list class="todays-reports-list">
-          <ion-list-header text-center no-padding no-margin margin-bottom color="green">
+          <ion-list-header text-center no-padding no-margin margin-bottom color="new">
             דיווחי שעות
             <!-- <ion-toolbar color="prettylight" margin-top no-padding>
               <h5 text-center no-margin>{{currentDate}}</h5>
@@ -59,7 +58,7 @@
           </ion-item>
         </ion-list>
       </ion-col>
-      <ion-col col-4 class="col-with-border" [style.backgroundColor]="'#f4f4f4'">
+      <ion-col col-md-4 col-12 class="col-with-border" [style.backgroundColor]="'#f4f4f4'">
         <ion-spinner name="dots" *ngIf="isShowSpinner" text-center></ion-spinner>
         <ion-list class="todo-list">
           <ion-list-header text-center no-margin margin-bottom color="headerBlue">נושאים לביצוע</ion-list-header>
@@ -69,12 +68,12 @@
             <h3>{{item['DETAILS']}} </h3>
             <p>{{item['PROJDES']}}</p>
             <ion-buttons margin-top margin-bottom no-margin>
-              <button ion-button small clear no-padding no-margin (click)="startReport(item,$event)" color="green">
-                <ion-icon name="ios-play-outline"></ion-icon>
+              <button ion-button small clear no-padding no-margin margin-left  (click)="startReport(item,$event)" color="green">
+                <ion-icon name="ios-play-outline" [style.marginLeft]="'5px'"></ion-icon>
                 התחל לעבוד
               </button>
-              <button ion-button small clear no-padding no-margin color="purple" (click)="reportHours(item,$event)">
-                <ion-icon name="time"></ion-icon>
+              <button ion-button small clear no-padding no-margin margin-left  color="purple" (click)="reportHours(item,$event)">
+                <ion-icon name="time" [style.marginLeft]="'5px'"></ion-icon>
                 דווח שעות
               </button>
             </ion-buttons>
@@ -89,4 +88,3 @@
       </ion-col>
     </ion-row>
   </ion-grid>
-</ion-content>
