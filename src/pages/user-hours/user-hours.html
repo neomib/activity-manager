@@ -21,17 +21,18 @@
   <ion-grid no-padding class="container-grid">
     <ion-row>
       <ion-col col-12 col-md-4 class="col-with-border" >
-        <ion-spinner name="dots" *ngIf="isShowRepSpinner" text-center></ion-spinner>
+        
         <ion-list class="todays-reports-list">
-          <ion-list-header text-center no-padding no-margin margin-bottom color="new">
+          <ion-list-header text-center no-padding no-margin margin-bottom color="hoursHeader">
             דיווחי שעות
             <!-- <ion-toolbar color="prettylight" margin-top no-padding>
               <h5 text-center no-margin>{{currentDate}}</h5>
             </ion-toolbar>-->
           </ion-list-header>
+          <ion-spinner name="dots"  duration="900" *ngIf="isShowRepSpinner" text-center></ion-spinner>
           <ion-item class="no-reports" center *ngIf="hoursList && hoursList.length<=0" color="chip">
-            <button ion-button icon-only clear>
-              <ion-icon name="paper" color="lightgray"></ion-icon>
+            <button ion-button icon-only clear disabled>
+              <ion-icon name="paper" color="gray"></ion-icon>
             </button>
             <span>
               לא קיימים דווחים להיום
@@ -40,39 +41,32 @@
           <ion-item *ngFor="let time of hoursList" padding-right>
             <ion-note>{{"פעילות לפרויקט"+" "+time['PROJACTA']}} </ion-note>
             <h3>{{time['ACTDES']}}</h3>
-            <p>{{time.STIMEI+" - "+time.ETIMEI}}</p>
-            <button ion-button *ngIf="time.isActive" class="activity-play" clear (click)="endReport(time)">
+            <p>{{getTime(time)}}</p>
+            <!-- <button ion-button *ngIf="time.isActive" class="activity-play" clear (click)="endReport(time)">
               <ion-icon name="ios-pause-outline" color="crimson"></ion-icon>
             </button>
             <button ion-button *ngIf="!time.isActive" class="activity-play" clear (click)="startReport(time)">
               <ion-icon name="ios-play-outline" color="green"></ion-icon>
-            </button>
-            <!--<p>{{time['CURDATE']}}</p>-->
-            <!--<p style="text-align:center" *ngIf="task.isActive">
-      <strong>{{activeHours+":"+activeMinutes+":"+activeSeconds}}</strong>
-      <button ion-button round [style.backgroundColor]="activeIconColor" (click)="toggleTask()">
-                  <ion-icon name="{{activeIconName}}"></ion-icon>
-              </button>
-    </p>-->
-
+            </button> -->
+            
           </ion-item>
         </ion-list>
       </ion-col>
       <ion-col col-md-4 col-12 class="col-with-border" [style.backgroundColor]="'#f4f4f4'">
         <ion-spinner name="dots" *ngIf="isShowSpinner" text-center></ion-spinner>
         <ion-list class="todo-list">
-          <ion-list-header text-center no-margin margin-bottom color="headerBlue">נושאים לביצוע</ion-list-header>
+          <ion-list-header text-center no-margin margin-bottom color="todoHeader">נושאים לביצוע</ion-list-header>
           <ion-card *ngFor="let item of myTasks; " (click)="editActivity(item)" padding-right padding-top>
             <ion-note>{{item['DOCDES'] +" "+item['TODOREF']}} </ion-note>
             <!-- <ion-note item-end>{{item['UDATE'] }} </ion-note> -->
             <h3>{{item['DETAILS']}} </h3>
             <p>{{item['PROJDES']}}</p>
             <ion-buttons margin-top margin-bottom no-margin>
-              <button ion-button small clear no-padding no-margin margin-left  (click)="startReport(item,$event)" color="green">
+              <button ion-button small clear no-padding no-margin margin-left  (click)="startReport(item,$event)" color="hoursHeader">
                 <ion-icon name="ios-play-outline" [style.marginLeft]="'5px'"></ion-icon>
                 התחל לעבוד
               </button>
-              <button ion-button small clear no-padding no-margin margin-left  color="purple" (click)="reportHours(item,$event)">
+              <button ion-button small clear no-padding no-margin margin-left  color="todoHeader" (click)="reportHours(item,$event)">
                 <ion-icon name="time" [style.marginLeft]="'5px'"></ion-icon>
                 דווח שעות
               </button>
@@ -82,7 +76,7 @@
       </ion-col>
       <ion-col [style.backgroundColor]="'#fbfbfb'">
         <ion-list class="favorite-list">
-          <ion-list-header text-center no-margin color="purple">הלוח שלי</ion-list-header>
+          <ion-list-header text-center no-margin color="notesHeader">הלוח שלי</ion-list-header>
           <sticky-notes></sticky-notes>
         </ion-list>
       </ion-col>

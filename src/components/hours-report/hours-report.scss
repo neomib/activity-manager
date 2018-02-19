@@ -1,0 +1,80 @@
+hours-report {
+    ion-header {
+        padding: 5px 10px 25px 10px ;
+        background-color: white;
+        // border-bottom: 1px solid #eaeaea;
+        position: sticky; //close icon
+        ion-icon {
+            float: left;
+            font-size:20px;
+        }
+    }
+>div
+{
+   position: relative;
+   ion-input
+   {
+    margin: 15px 15px 25px 15px;
+    width:auto;
+    input {
+        overflow: hidden;
+        margin: 0 !important;
+        padding: 5px 4px !important;
+        font-size: 16px !important;
+        color: color($colors, todoHeader) !important;
+        border: 1px solid transparent !important;
+            border-radius: 2px !important;
+            border-color: color($colors, darkblue) !important;
+            width:100% !important;
+   }
+   }
+   .datepicker[_ngcontent-c0]
+   {
+       position: static;
+       .datepicker__input
+       {
+           display: none;
+       }
+       .datepicker__calendar
+       {
+        //    top:0;
+        //    width:100%;
+        z-index: 0;
+        box-shadow: none;
+        height:22em;
+        position: relative;
+       }
+       .datepicker__calendar__nav
+       {
+           flex-direction: row-reverse;
+          .datepicker__calendar__nav__arrow
+          {
+          order: 1;
+           transform: scale(-1,1);
+          }
+          .datepicker__calendar__nav__arrow:first-child
+          {
+           order: 3;
+           transform: scale(-1,1);
+          }
+          .datepicker__calendar__nav__header
+          {
+              order:2
+          }
+       }
+   } 
+   h6
+   {
+       width: 100%;
+       text-align: center;
+       padding:5px 10px 10px 10px;
+   }
+  
+}
+}
+
+.hours-report-popover {
+    .popover-content {
+        width: 20.5em;
+    }
+}

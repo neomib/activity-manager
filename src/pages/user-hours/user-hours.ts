@@ -12,7 +12,7 @@ import { AppService } from '../../providers/app-service';
 @IonicPage()
 @Component({
   selector: 'user-hours',
-  templateUrl: 'user-hours.html'
+  templateUrl: 'user-hours.html',
 })
 export class UserHours implements OnInit
 {
@@ -56,27 +56,35 @@ export class UserHours implements OnInit
       this.isLoadTasksFinished = true;
       this.isShowSpinner = false;
     });
-  
+
   }
   ngOnInit()
   {
-    this.appService.getTodaysReports()
-      .then(() => this.appService.getToDOList())
-      .catch(() => { });
+    this.appService.loadData();
+  }
+  getTime(time)
+  {
+    if (time.STIMEI !== '00:00')
+      return time.STIMEI + " - " + time.ETIMEI;
+    return time.CQUANT + " שעות";
   }
   endReport(report)
   {
     this.appService.endActREport(report);
+    let dateObj = this.appService.getCurrentTime();
+    report.ETIMEI = dateObj.hoursStr + ":" + dateObj.minutesStr;
     report.isActive = false;
   }
-  startReport(report,event)
+  startReport(report, event)
   {
-    this.appService.startActReport(report);
+    this.appService.startActReport(report.TODOREF);
     this.isShowRepSpinner = true;
     event.stopPropagation();
   }
-  reportHours(item,event)
+  reportHours(item, event)
   {
+    let popover = this.popoverCtrl.create('HoursReport', { activity: item }, { showBackdrop: true, cssClass: "hours-report-popover" });
+    popover.present();
     event.stopPropagation();
   }
   onSegmentChanged(segmentButton)
@@ -100,14 +108,14 @@ export class UserHours implements OnInit
     // this.appService.retrieveActivity(activity['TODOREF'])
     //   .then(act =>
     //   {
-      activity.PROJACT=activity.TODOREF;
-      activity.OWNER=activity.OWNERLOGIN;
-      activity.STEPSTATUSDES=activity.STATDES;
-      activity.ACTDES=activity.DETAILS;
-        let popover = this.popoverCtrl.create('ActivityEditor', { activity: activity },{showBackdrop:true});
-        popover.present();
-      // })
-      // .catch(error => { });
+    activity.PROJACT = activity.TODOREF;
+    activity.OWNER = activity.OWNERLOGIN;
+    activity.STEPSTATUSDES = activity.STATDES;
+    activity.ACTDES = activity.DETAILS;
+    let popover = this.popoverCtrl.create('ActivityEditor', { activity: activity }, { showBackdrop: true, cssClass: 'activity-editor-popover' });
+    popover.present();
+    // })
+    // .catch(error => { });
 
 
   }

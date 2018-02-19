@@ -38,7 +38,7 @@ export class Login
       res =>
       {
         this.nav.setRoot("Main");
-        this.messageHandler.hideLoading();
+        // this.messageHandler.hideLoading();
       },
       reason =>
       {

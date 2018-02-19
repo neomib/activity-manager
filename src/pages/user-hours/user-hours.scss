@@ -7,10 +7,13 @@ user-hours {
  {
       margin-right: 1px;
  }
- .toolbar-background
- {
-    //  background: transparent;
- }
+ion-list-header
+{
+    ion-label
+    {
+        font-size: 16px;
+    }
+}
  h5
  {
     color:#2d5c7f;
@@ -23,104 +26,14 @@ user-hours {
  {
      white-space: normal;
      max-width: 80%;
+     font-weight: 500 !important;
+     & + p
+     {
+      font-size: 13px !important;
+     }
     //  color: white;
  }
- ion-content
- {
-    //  .scroll-content
-    //  {
-    //     //  margin-top: 90px !important;
-    //  }
-     background-color: color($colors,white) !important;
-    //  BORDER-RIGHT: 7PX SOLID color($colors,redorange);
-    ion-list-header
-    {
-        border-top:none !important;
-        ion-label
-        {
-            margin:-2px !important;
-        }
-    }
-    .col-with-border
-    {
-        border-left:1px solid color($colors,lightgray);
-    }
-    .todays-reports-list
-    {
-        height:100%;
-        h3 + p
-        {
-            color:#f38181 !important;
-        }
-        
-      .activity-play
-      {
-        float: left;
-       top: -25px;
-       }
-    }
-    .todo-list
-    {
-        h3 
-        {
-            &+ p
-            {
-                font-size: 11px;
-                color: #949494;
-            }
-            
-        }
-        ion-list-header
-        {
-            margin-bottom: -13px;
-        }
-        button{
-            margin-right:-7px;
-        
-            ion-icon
-            {
-                margin-left: 5px;
-            }
-        }
-       
-    //   .activity-play
-    //   {
-    //     top: -9px;
-    //     LEFT: 0;
-    //      POSITION: ABSOLUTE;
-    //    }
-    button
-    {
-        min-width:101px;
-  
-    }
-    }
-     ion-item
-     {
-         background-color: transparent !important;
-        //  .item-inner
-        //  {
-        //      border-color: #626263 !important;
-        //  }
-         ion-note
-         {
-             font-size: 1.3rem;
-         }
-         ion-label
-        {
-               margin-bottom: -16px !important;
-        }
-     }
-    .spinner-dots
-     {
-        top: 24px;
-        z-index: 10;
-         circle
-         {
-           fill: #ababab;
-         }
-     }
- }
+
  .no-reports
  {
      background-color: transparent;
@@ -168,6 +81,13 @@ user-hours {
      span
      {
          color: color($colors,chip)
+     }
+ }
+ .todays-reports-list
+ {
+     ion-spinner
+     {
+         top:43px;
      }
  }
  

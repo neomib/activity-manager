@@ -2,6 +2,8 @@ import { Component, Input, ViewChild } from '@angular/core';
 import { NavController, NavParams, IonicPage, ViewController } from 'ionic-angular';
 import { FormService, ObjToIterable, Form } from 'priority-ionic';
 import { AppService } from '../../providers/app-service';
+import { SearchResult } from 'priority-ionic/lib/entities/searchResult.class';
+import { MessageHandler } from 'priority-ionic/lib/popups/Message/message.handler';
 
 /**
  * Generated class for the ActivityEditor page.
@@ -25,12 +27,12 @@ export class ActivityEditor
   title: string;
   comment: string;
   status: string;
-  statusList;
   owner: string;
   actNumber: string;
 
   //activity about
   selectedSegment;
+  statuses: SearchResult[];
 
   @ViewChild('titleElem') titleElem;
 
@@ -39,15 +41,35 @@ export class ActivityEditor
     private nav: NavController,
     private objToIterable: ObjToIterable,
     private navParams: NavParams,
-    public viewCtrl: ViewController)
+    public viewCtrl: ViewController,
+    private messageHandler: MessageHandler)
   {
     this.selectedSegment = "activityState";
     if (this.navParams.data.activity)
       this.setAct(this.navParams.data.activity);
   }
+  ionViewWillLeave()
+  {
+    if (this.title !== this.activity.ACTDES ||
+      (this.comment !== this.activity.PRIORITYDES && this.comment !== 'הוסף הערה לפעילות')
+      || this.status !== this.activity.STEPSTATUSDES || this.owner !== this.activity.OWNER)
+    {
+      if (this.comment === 'הוסף הערה לפעילות')
+        this.comment = '';
+      this.appService.updateActivity(this.actNumber, this.title, this.comment, this.status, this.owner);
+    }
+
+  }
   dismiss()
   {
     this.viewCtrl.dismiss();
+  }
+  getStartDate()
+  {
+    if (!this.activity)
+      return '';
+    let date = new Date(this.activity.STARTDATE);
+    return this.appService.getTime(date).dateFormated;
   }
   setAct(act)
   {
@@ -61,22 +83,31 @@ export class ActivityEditor
   }
   setStatus()
   {
-    this.appService.getActivityStatuses(this.actNumber)
+    this.appService.getActivityStatuses(this.status)
       .then(result =>
       {
-
+        let currentStatus: SearchResult =
+          {
+            retval: this.status,
+            string1: this.status,
+            string2: this.status
+          };
+        this.statuses = [currentStatus, ...result];
       })
       .catch(() => { });
   }
   getActText()
   {
+    this.messageHandler.showTransLoading();
     this.appService.getActivityText(this.actNumber)
       .then(({ text, activity }) =>
       {
+        this.setStatus();
         this.activity = activity;
         this.text = text;
+        this.messageHandler.hideLoading();
       })
-      .catch(() => { });
+      .catch(() => this.messageHandler.hideLoading());
   }
   getOwnerInitials()
   {
@@ -130,19 +161,24 @@ export class ActivityEditor
   /*************************************** activity about */
   onSegmentChanged(segmentButton)
   {
-    // this.isShowSpinner = false;
-    // if (segmentButton.value == "myTasks")
+    // if (segmentButton.value == "activityAbout")
     // {
-    //   if (!this.isLoadTasksFinished && this.isLoadDataStarted)
-    //     this.isShowSpinner = true;
-    //   this.isShowTodayReports = false;
+    //   this.isShowInfoList = true;
+    //   this.isShowStateList=false;
     // }
-    // else
+    // else if(segmentButton.value == "activityState")
     // {
-    //   if (!this.isLoadReportsFinished && this.isLoadDataStarted)
-    //     this.isShowSpinner = true;
-    //   this.isShowTodayReports = true;
+    //   this.isShowStateList=true;
+    //   this.isShowInfoList = false;
     // }
+    // else{
+    //   this.isShowStateList=false;
+    //   this.isShowInfoList = false;
+    // }
+  }
+  isStatusChecked(status: SearchResult)
+  {
+    return status.string1 === this.status;
   }
 
 }

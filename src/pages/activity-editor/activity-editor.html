@@ -9,6 +9,7 @@
     <ion-icon name="close" color="chip" (click)="dismiss()"></ion-icon>
 </ion-header>
 <ion-grid no-padding>
+    <!-- <ion-spinner color="chip" *ngIf="text==null"></ion-spinner> -->
     <ion-row>
         <ion-col col-8 class="activity-info" no-padding>
             <div class="activity-title-container">
@@ -16,31 +17,68 @@
                 <ion-textarea class="activity-comment" type="text" [(ngModel)]="comment" rows="1"></ion-textarea>
             </div>
             <div class="activity-text-container">
-                <ion-label>טקסט</ion-label>
-                <ion-textarea class="text-editor" [value]="textInput" (keydown)="textChanged($event)"></ion-textarea>
+                <div>
+                    <ion-label>טקסט</ion-label>
+                    <ion-textarea class="text-editor" [value]="textInput" (keydown)="textChanged($event)"></ion-textarea>
+                </div>
                 <div class="activity-text">
                     <div [innerHTML]="text" disabled></div>
-                    <ion-spinner color="chip" *ngIf="text==null"></ion-spinner>
+
                 </div>
             </div>
         </ion-col>
         <ion-col col-4 class="activity-about" no-padding>
-            <ion-segment [(ngModel)]="selectedSegment" (ionChange)="onSegmentChanged($event)" dir="rtl" color="darkblue">
-                <ion-segment-button value="activityState">
-                    היום
-                </ion-segment-button>
-                <ion-segment-button value="activityAttachments">
-                    <ion-icon name="attach"></ion-icon>
-                </ion-segment-button>
-                <ion-segment-button value="activityAbout">
-                    <ion-icon name="about"></ion-icon>
-                </ion-segment-button>
-            </ion-segment>
-            <ion-note>פרויקט</ion-note>
-            <p no-margin>{{activity.PROJDES}}</p>
+            <div>
+                <ion-segment [(ngModel)]="selectedSegment" (ionChange)="onSegmentChanged($event)" dir="rtl" color="darkblue">
+                    <ion-segment-button value="activityState">
+                        <ion-icon name="checkbox-outline"></ion-icon>
+                    </ion-segment-button>
+                    <ion-segment-button value="activityAttachments">
+                        <ion-icon name="attach"></ion-icon>
+                    </ion-segment-button>
+                    <ion-segment-button value="activityAbout">
+                        <ion-icon name="information-circle"></ion-icon>
+                    </ion-segment-button>
+                </ion-segment>
+            </div>
+            <div [ngSwitch]="selectedSegment">
+                <ion-list *ngSwitchCase="'activityState'" no-lines class="state-list">
+                    <ion-note>באחראיות</ion-note>
+                    <ion-item>
+                        <ion-input type="text" [(ngModel)]="owner"></ion-input>
+                    </ion-item>
+                    <ion-content radio-group [(ngModel)]="status">
+                        <ion-note>סטטוס</ion-note>
+                        <ion-item *ngFor="let status of statuses">
+                            <ion-radio item-start [checked]="isStatusChecked(status)" [value]="status.retval"></ion-radio>
+                            <ion-label>{{status.string1}}</ion-label>
+                        </ion-item>
+                    </ion-content>
+                </ion-list>
 
-            <ion-note>רמה</ion-note>
-            <p no-margin>{{activity.LEVEL}}</p>
+                <ion-list *ngSwitchCase="'activityAbout'" no-lines class="info-list">
+                    <ion-item>
+                        <ion-note>תאריך התחלה</ion-note>
+                        <p no-margin>{{getStartDate()}}</p>
+                    </ion-item>
+                    <ion-item>
+                        <ion-note>פרויקט</ion-note>
+                        <p no-margin>{{activity.PROJDES}}</p>
+                    </ion-item>
+                    <ion-item>
+                        <ion-note>רמה</ion-note>
+                        <p no-margin>{{activity.WBS}}</p>
+                    </ion-item>
+                    <ion-item>
+                        <ion-note>עדיפות</ion-note>
+                        <p no-margin>{{activity.PRIORITY}}</p>
+                    </ion-item>
+                    <ion-item>
+                        <ion-note>כמות שעות</ion-note>
+                        <p no-margin>{{activity.HRQUANT}}</p>
+                    </ion-item>
+                </ion-list>
+            </div>
         </ion-col>
     </ion-row>
 </ion-grid>

@@ -47,6 +47,8 @@ export class AppService
     todoList: any[];
 
     loadDataObsr: Subject<any>;
+    loadDataInterval;
+
     constructor(private configService: ConfigurationService,
         private formService: FormService,
         private storage: Storage,
@@ -182,7 +184,8 @@ export class AppService
         }
 
         // Sets is'Error' and message title.
-        if (serverMsg.type == ServerResponseType.Error || serverMsg.code == ServerResponseCode.Stop)
+        if ((serverMsg.type == ServerResponseType.Error && serverMsg.code != ServerResponseCode.Information) ||
+            serverMsg.code == ServerResponseCode.Stop)
         {
             isError = true;
             options.title = serverMsg.code == ServerResponseCode.Information ? Constants.defaultMsgTitle : Constants.errorTitle;
@@ -260,12 +263,20 @@ export class AppService
     }
     loadData()
     {
-        this.loadDataObsr.next();
-        this.getProjects();
-        this.getTodaysReports()
-            .then(() => this.getActivities())
-            .then(() => this.getToDOList())
-            .catch(() => { });
+        let loadFunc = () =>
+        {
+            // this.messageHandler.showTransLoading();
+            this.loadDataObsr.next();
+            // this.getProjects();
+            this.getTodaysReports()
+                // .then(() => this.getActivities())
+                .then(() => this.getToDOList())
+                .then(() => this.messageHandler.hideLoading())
+                .catch(() => this.messageHandler.hideLoading());
+        };
+        loadFunc();
+        if (!this.loadDataInterval)
+            this.loadDataInterval = setInterval(loadFunc, 86400000);
     }
     getAllActsRowsPerProject(form: Form, rowNum: number, resolve, reject, interNum: number = 0)
     {
@@ -460,6 +471,44 @@ export class AppService
             })
             .catch(() => { });
     }
+    updateActivity(actNumber, title, comment, status, owner)
+    {
+        return new Promise((resolve, reject) =>
+        {
+            let activityForm: Form;
+            this.retrieveActivity(actNumber)
+                .then(({ form, activity }) =>
+                {
+                    activityForm = form;
+                    return activityForm.fieldUpdate("ACTDES", title)
+                })
+                .then(() =>
+                {
+                    return activityForm.fieldUpdate("PRIORITYDES", comment);
+                })
+                .then(() =>
+                {
+                    return activityForm.fieldUpdate("STEPSTATUSDES", status);
+                })
+                .then(() =>
+                {
+                    return activityForm.fieldUpdate("OWNER", owner);
+                })
+                .then(() =>
+                {
+                    return activityForm.saveRow(0);
+                })
+                .then(() => resolve())
+                .catch(() =>
+                {
+                    if (activityForm)
+                        this.formService.undoRow(activityForm)
+                            .then(() => reject());
+                    else
+                        reject();
+                });
+        });
+    }
     finishActivity(activity): Promise<any>
     {
         return new Promise((resolve, reject) =>
@@ -552,15 +601,11 @@ export class AppService
     }
 
     //activity status
-    getActivityStatuses(actNum: string): Promise<any>
+    getActivityStatuses(actStatus: string): Promise<any>
     {
         return new Promise((resolve, reject) =>
         {
-            this.retrieveActivity(actNum)
-                .then(({ form, activity }) =>
-                {
-                    return this.formService.openSearchOrChoose(form, "STEPSTATUSDES", activity.STEPSTATUSDES);
-                })
+            this.formService.openSearchOrChoose(this.formService.getForm(this.activityFormName), "STEPSTATUSDES", actStatus)
                 .then((search: Search) => resolve(search.ChooseLine))
                 .catch(() => reject());
         });
@@ -570,6 +615,10 @@ export class AppService
     getCurrentTime()
     {
         let date = new Date();
+        return this.getTime(date);
+    }
+    getTime(date: Date)
+    {
         let hours = date.getHours();
         let minutes = date.getMinutes();
 
@@ -621,7 +670,7 @@ export class AppService
                         },
                         {
                             "field": "STIMEI",
-                            "fromval": "00:00",
+                            "fromval": "25:00",
                             "toval": "",
                             "op": "<>",
                             "sort": 1,
@@ -646,7 +695,7 @@ export class AppService
                     resolve();
                     if (rows)
                     {
-                        if (rows[1] && rows[1]['ETIMEI'] == "00:00")
+                        if (rows[1] && rows[1]['STIMEI'] != "00:00" && rows[1]['ETIMEI'] == "00:00")
                             rows[1].isActive = true;
                         this.reportList = rows;
                     }
@@ -702,23 +751,28 @@ export class AppService
                 .catch(() => { reject(); });
         });
     }
-    startActReport(activity)
+    startActReport(actNum)
     {
-        let activitySubform;
-
-        let dateObj = this.getCurrentTime();
-
-        // activity.hours = dateObj.hours;
-        // activity.minutes = dateObj.minutes;
-        // activity.startDate = dateObj.date.toLocaleDateString();
-        // activity.dateStr = dateObj.dateStr;
-        // activity.dateFormated = dateObj.dateFormated;
-        //this.activeTask = activity;
+        this.retrieveActivity(actNum)
+            .then(({ form, activity }) =>
+            {
+                return this.formService.executeDirectActivation(form, "ESH_STARTWORK", "P");
+            })
+            .then(() =>
+            {
+                return this.getTodaysReports();
+            })
+            .catch(err =>
+            {
+                // this.activeTask = null;
+            });
+    }
+    newActReport(actNum, project, date: string, hours: number)
+    {
 
         let hoursForm: Form;
         let rowind = 0;
-        let project = activity['DOCNO'] ? activity['DOCNO'] : activity['PROJDOCNO'];
-        let actNum = activity['PROJACT'] ? activity['PROJACT'] : (activity['PROJACTA'] ? activity['PROJACTA'] : activity['TODOREF']);
+
         this.getForm(this.hoursFormName)
             .then(form =>
             {
@@ -727,7 +781,6 @@ export class AppService
             })
             .then(rowInd =>
             {
-                //project
                 rowind = rowInd;
                 return this.formService.updateField(hoursForm, rowind, "DOCNO", project);
             })
@@ -738,11 +791,11 @@ export class AppService
             .then(() =>
             {
                 //date
-                return this.formService.updateField(hoursForm, rowind, "CURDATE", dateObj.dateStr);
+                return this.formService.updateField(hoursForm, rowind, "CURDATE", date);
             })
             .then(() =>
             {
-                return this.formService.updateField(hoursForm, rowind, "STIMEI", dateObj.hoursStr + ":" + dateObj.minutesStr);
+                return this.formService.updateField(hoursForm, rowind, "CQUANT", hours);
 
             })
             .then(() =>
@@ -756,7 +809,8 @@ export class AppService
             .catch(err =>
             {
                 // this.activeTask = null;
-                console.log(err);
+                if (hoursForm)
+                    this.formService.undoRow(hoursForm);
             });
     }
     /////********** Projects ***************/

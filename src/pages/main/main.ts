@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { AppService } from '../../providers/app-service';
+import { MessageHandler } from 'priority-ionic';
 
 /**
  * Generated class for the Main page.
@@ -16,10 +17,14 @@ import { AppService } from '../../providers/app-service';
 export class Main
 {
 
-  currentDate:string;
-  constructor(public navCtrl: NavController, public navParams: NavParams, private appService: AppService)
+  currentDate: string;
+  constructor(public navCtrl: NavController, public navParams: NavParams, private appService: AppService, private messageHandler: MessageHandler)
   {
     this.currentDate = this.appService.getCurrentTime().dateFormated;
+    this.appService.loadDataObsr.subscribe(() =>
+    {
+      this.currentDate = this.appService.getCurrentTime().dateFormated;
+    });
   }
 
   ionViewWillLoad()
@@ -29,10 +34,11 @@ export class Main
   }
   ionViewDidLoad()
   {
-      // this.appService.loadData();
+    // this.loadData();
   }
   loadData()
   {
+    this.messageHandler.showTransLoading();
     this.appService.loadData();
   }
 

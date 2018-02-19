@@ -1,0 +1,8 @@
+<ion-header no-border>
+    <ion-icon name="close" color="chip" (click)="dismiss()"></ion-icon>
+</ion-header>
+<div>
+  <h6>{{actTitle}}</h6>
+<material-datepicker #dateField [(date)]="mydate" [showCalendar]="true" ></material-datepicker>
+<ion-input #hoursField type="number" [(ngModel)]="hours"></ion-input>
+</div>
