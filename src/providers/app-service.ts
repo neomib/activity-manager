@@ -17,6 +17,9 @@ export class AppService
     activityTextFormName: string;
     hoursFormName: string;
     todoListFormName: string;
+    followUpFormName: string;
+    iterationFormName: string;
+    iterationItemsFormName: string;
 
     projectsLocalStorage: string;
     activitiesLocalStorage: string;
@@ -46,6 +49,10 @@ export class AppService
     todoListObsr: Subject<any>;
     todoList: any[];
 
+    //todolist
+    iterationObsr: Subject<any>;
+    iterationItems: any[];
+
     loadDataObsr: Subject<any>;
     loadDataInterval;
 
@@ -61,6 +68,9 @@ export class AppService
         this.activityTextFormName = "PROJACTSTEXT";
         this.hoursFormName = "TRANSORDER_q";
         this.todoListFormName = "TODOLIST";
+        this.followUpFormName = "FOLLOWUPLIST";
+        this.iterationFormName = "ESH_ITERATIONS";
+        this.iterationItemsFormName = "ESH_ITERATIONITEMS";
 
         this.userNameForLocalStorage = "priority-username";
         this.pswdForLocalStorage = "priority-password";
@@ -84,6 +94,9 @@ export class AppService
         this.todoList = [];
         this.todoListObsr = new Subject();
         this.loadDataObsr = new Subject();
+
+        this.iterationItems = [];
+        this.iterationObsr = new Subject();
 
         this.getKeyVkaue(this.projectsLocalStorage)
             .then(projResult =>
@@ -224,10 +237,10 @@ export class AppService
                         }
                     })
                     .catch(
-                    reason =>
-                    {
-                        reject(reason)
-                    });
+                        reason =>
+                        {
+                            reject(reason)
+                        });
             }
         });
     }
@@ -271,12 +284,14 @@ export class AppService
             this.getTodaysReports()
                 // .then(() => this.getActivities())
                 .then(() => this.getToDOList())
+                .then(() => this.getIteration())
+                // .then(()=>this.getFollowUps())
                 .then(() => this.messageHandler.hideLoading())
                 .catch(() => this.messageHandler.hideLoading());
         };
         loadFunc();
         if (!this.loadDataInterval)
-            this.loadDataInterval = setInterval(loadFunc, 86400000);
+            this.loadDataInterval = setInterval(loadFunc, 18000000);
     }
     getAllActsRowsPerProject(form: Form, rowNum: number, resolve, reject, interNum: number = 0)
     {
@@ -1010,10 +1025,33 @@ export class AppService
                 .catch(() => { });
         });
     }
-    getToDoActivities()
+    getFollowUps()
     {
-        if (this.todoList)
-            return this.todoList.filter(row => row.DOCDES == "פעילות לפרויקט");
+        return new Promise((resolve, reject) =>
+        {
+            let followupForm;
+            this.getForm(this.followUpFormName)
+                .then(form => 
+                {
+                    followupForm = form;
+                    return this.formService.getRows(followupForm, 1);
+                })
+                .then(followupRows =>
+                {
+                    followupRows = this.objToArray(followupRows);
+                    this.todoList = this.todoList.concat(followupRows);
+                    this.todoListObsr.next(this.todoList);
+                })
+
+                .then(() => resolve())
+                .catch(() => { });
+        });
+
+    }
+    filterActivities(list)
+    {
+        if (list)
+            return list.filter(row => row.DOCDES == "פעילות לפרויקט");
     }
     ///////// Sticky Notes ///////////////////
     saveStickyNotes(stickyArr: string[])
@@ -1023,5 +1061,33 @@ export class AppService
     getStickyNote()
     {
         return this.storage.get(this.stickynoteStorage);
+    }
+
+    /********************** Iteration ************** */
+    getIteration()
+    {
+        return new Promise((resolve, reject) =>
+        {
+
+            this.getForm(this.iterationFormName, 1)
+                .then(form => this.formService.startSubFormAndGetRows(form, this.iterationItemsFormName))
+                .then(iterationItemsForm =>
+                {
+                    let iterationItems = this.objToIterable.transform(this.formService.getLocalRows(iterationItemsForm));
+                    this.iterationItems = iterationItems;
+                    this.iterationObsr.next(this.iterationItems);
+
+                    // let serviceFormConfig = Forms[this.appService.serviceCallFormName];
+                    // this.serviceCallsList = todoRows.filter(row => row.DOCDES == serviceFormConfig.title);
+
+                    // let orderFormConfig = Forms[this.appService.orderFormName];
+                    // this.ordersList = todoRows.filter(row => row.DOCDES == orderFormConfig.title);
+
+                    // return this.formService.endForm(todoForm);
+                })
+
+                .then(() => resolve())
+                .catch(() => { });
+        });
     }
 }

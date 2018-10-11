@@ -18,6 +18,7 @@ export class UserHours implements OnInit
 {
   hoursList: any[];
   myTasks: any[];
+  iterationItems:any[];
   isShowSpinner: boolean;
   isShowRepSpinner: boolean;
   isShowTodayReports: boolean;
@@ -51,11 +52,15 @@ export class UserHours implements OnInit
     });
     this.appService.todoListObsr.subscribe(list =>
     {
-      this.myTasks = this.appService.getToDoActivities();
+      this.myTasks = this.appService.filterActivities(list);
       this.isLoadDataStarted = false;
       this.isLoadTasksFinished = true;
       this.isShowSpinner = false;
     });
+    this.appService.iterationObsr.subscribe(list =>
+      {
+        this.iterationItems = this.appService.filterActivities(list);
+      });
 
   }
   ngOnInit()
@@ -75,9 +80,9 @@ export class UserHours implements OnInit
     report.ETIMEI = dateObj.hoursStr + ":" + dateObj.minutesStr;
     report.isActive = false;
   }
-  startReport(report, event)
+  startReport(actNum, event)
   {
-    this.appService.startActReport(report.TODOREF);
+    this.appService.startActReport(actNum);
     this.isShowRepSpinner = true;
     event.stopPropagation();
   }

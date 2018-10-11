@@ -5,12 +5,12 @@
   Ionic pages and navigation.
 -->
 <ion-header no-border>
-  <ion-navbar hideBackButton="true" dir="ltr" color="dark">
-    <h6 padding-left no-margin [style.color]="'white'">PRIORITY</h6>
+  <ion-navbar hideBackButton="true" dir="ltr">
+    <h6 padding-left no-margin [style.color]="'#343434'">PRIORITY</h6>
     <ion-buttons end padding-right>
-      <button class="date" color="white" clear ion-button>{{currentDate}}</button>
-      <button color="white" clear ion-button>{{appService.getUserName()}}</button>
-      <button ion-button icon-only (click)="loadData()" color="white" clear>
+      <button class="date"  clear ion-button>{{currentDate}}</button>
+      <button  clear ion-button>{{appService.getUserName()}}</button>
+      <button ion-button icon-only (click)="loadData()"  clear>
         <ion-icon name="refresh"></ion-icon>
       </button>
 
